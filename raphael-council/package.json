@@ -1,0 +1,78 @@
+{
+  "name": "raphael-council",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.16.0"
+  },
+  "scripts": {
+    "dev": "vinext dev",
+    "build": "vinext build",
+    "build:local": "node -e \"const {spawnSync}=require('node:child_process'); const r=spawnSync('npm',['run','build'],{stdio:'inherit',env:{...process.env,RAPHAEL_LOCAL_HOST:'1'},shell:true}); process.exit(r.status ?? 1)\"",
+    "start": "vinext start",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "test:characters": "node --test characters/*.test.mjs discord/*.test.mjs",
+    "test:images": "node --test images/*.test.mjs discord/image-adapter.test.mjs",
+    "test:images:e2e": "node --test images/e2e.integration.mjs",
+    "test:training": "node --test training/*.test.mjs",
+    "test:game": "node --test game/*.test.mjs maps/*.test.mjs",
+    "game:host": "node --env-file-if-exists=.env.local game/cli.mjs",
+    "game:backup": "node --env-file-if-exists=.env.local game/backup-cli.mjs",
+    "game:mission": "node --env-file-if-exists=.env.local game/mission-cli.mjs",
+    "game:council": "node --env-file-if-exists=.env.local game/council-cli.mjs",
+    "game:scene": "node --env-file-if-exists=.env.local game/scene-cli.mjs",
+    "game:content": "node --env-file-if-exists=.env.local game/content-cli.mjs",
+    "training:curate": "node training/curate.mjs",
+    "images:host": "node --env-file-if-exists=.env.local images/cli.mjs",
+    "dev:game": "node --env-file-if-exists=.env.local images/host.mjs dev",
+    "build:game": "node --env-file-if-exists=.env.local images/host.mjs build",
+    "start:game": "node --env-file-if-exists=.env.local images/host.mjs start",
+    "bot": "node --env-file-if-exists=.env.local discord/bot.mjs",
+    "bot:check": "node --env-file-if-exists=.env.local discord/bot.mjs --check",
+    "bot:publish": "node --env-file-if-exists=.env.local discord/bot.mjs --publish",
+    "test:recovery": "node --test recovery/*.test.mjs",
+    "recovery:checkpoint": "node recovery/npm-checkpoint.mjs",
+    "recovery:restore": "node recovery/npm-restore.mjs"
+  },
+  "dependencies": {
+    "@discord/embedded-app-sdk": "2.5.0",
+    "@discordjs/voice": "0.19.2",
+    "@napi-rs/canvas": "1.0.8",
+    "@napi-rs/canvas-win32-x64-msvc": "^1.0.8",
+    "@tesseract.js-data/eng": "1.0.0",
+    "discord.js": "14.27.0",
+    "next": "16.2.6",
+    "opusscript": "0.0.8",
+    "pdf-lib": "1.17.1",
+    "pdfjs-dist": "6.3.289",
+    "prism-media": "1.3.5",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "tesseract.js": "7.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "1.37.1",
+    "@cloudflare/workers-types": "4.20260515.1",
+    "@openai/sites-vite-plugin": "^0.1.0 || ^0.2.0",
+    "@tailwindcss/postcss": "4.2.1",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "@vitejs/plugin-rsc": "0.5.26",
+    "eslint": "9.39.4",
+    "eslint-config-next": "16.2.6",
+    "react-server-dom-webpack": "19.2.6",
+    "tailwindcss": "4.2.1",
+    "typescript": "5.9.3",
+    "vinext": "1.0.0-beta.3",
+    "vite": "8.0.13",
+    "wrangler": "4.92.0"
+  },
+  "overrides": {
+    "@discordjs/ws": {
+      "ws": "8.21.3"
+    }
+  },
+  "type": "module"
+}

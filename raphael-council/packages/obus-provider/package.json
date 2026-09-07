@@ -1,0 +1,12 @@
+{
+  "name": "@operator/obus-chronicle-provider",
+  "version": "0.1.0",
+  "description": "Explicit local-only chronicle processing through the private Obus game agent",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.16.0" },
+  "exports": { ".": "./dist/index.mjs" },
+  "files": ["dist/index.mjs", "README.md"],
+  "scripts": { "build": "node build.mjs", "test": "node --test package.test.mjs", "pack:artifact": "node pack.mjs" },
+  "devDependencies": { "esbuild": "0.27.3" }
+}

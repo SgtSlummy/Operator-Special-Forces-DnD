@@ -1,0 +1,38 @@
+{
+  "campaign": "greyharbor",
+  "title": "Bridge encounter — host-reviewed example",
+  "reviewedBy": "123456789012345670",
+  "mechanicsConfirmed": false,
+  "members": [
+    { "owner": "123456789012345670", "role": "host" },
+    { "owner": "123456789012345678", "role": "player" },
+    { "owner": "123456789012345679", "role": "player" }
+  ],
+  "map": {
+    "id": "bridge", "title": "Bridge approach", "width": 12, "height": 12,
+    "blocked": [{ "x": 5, "y": 0 }, { "x": 5, "y": 1 }],
+    "difficult": [{ "x": 3, "y": 3 }]
+  },
+  "players": [
+    {
+      "id": "hero-one", "owner": "123456789012345678", "team": "party", "x": 1, "y": 2,
+      "size": 1, "vision": 6, "initiativeTotal": 18, "expectedCharacterRevision": 1,
+      "weapon": { "name": "Reviewed bow", "ability": "dexterity", "proficient": true, "equipmentBonus": 0, "damageDice": 1, "damageDie": 8, "addAbilityToDamage": true, "rangeFeet": 60 }
+    },
+    {
+      "id": "hero-two", "owner": "123456789012345679", "team": "party", "x": 1, "y": 4,
+      "size": 1, "vision": 6, "initiativeTotal": 14, "expectedCharacterRevision": 1,
+      "weapon": { "name": "Reviewed blade", "ability": "strength", "proficient": true, "equipmentBonus": 0, "damageDice": 1, "damageDie": 8, "addAbilityToDamage": true, "rangeFeet": 5 }
+    }
+  ],
+  "npcs": [
+    {
+      "id": "training-sentinel", "name": "Training sentinel", "owner": null, "team": "opposition", "x": 6, "y": 3,
+      "size": 1, "hp": 24, "maxHp": 24, "ac": 13, "speed": 25, "vision": 6, "initiative": 10, "characterVersion": "original-example-v1",
+      "weapon": { "name": "Practice staff", "abilityScore": 12, "proficiencyBonus": 2, "proficient": true, "equipmentBonus": 0, "damageDice": 1, "damageDie": 6, "addAbilityToDamage": true, "rangeFeet": 5 }
+    }
+  ],
+  "effects": [
+    { "id": "embers", "name": "Lingering embers", "trigger": "enter", "damage": 2, "expiresAtTurn": 4, "visible": true, "cells": [{ "x": 3, "y": 2 }] }
+  ]
+}

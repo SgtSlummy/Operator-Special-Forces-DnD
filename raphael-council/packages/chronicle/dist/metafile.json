@@ -1,0 +1,275 @@
+{
+  "inputs": {
+    "chronicle/store.mjs": {
+      "bytes": 15227,
+      "imports": [
+        {
+          "path": "node:sqlite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "chronicle/report.mjs": {
+      "bytes": 3308,
+      "imports": [
+        {
+          "path": "@napi-rs/canvas",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "chronicle/service.mjs": {
+      "bytes": 16494,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs/promises",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "chronicle/store.mjs",
+          "kind": "import-statement",
+          "original": "./store.mjs"
+        },
+        {
+          "path": "chronicle/report.mjs",
+          "kind": "import-statement",
+          "original": "./report.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "discord/chronicle-adapter.mjs": {
+      "bytes": 15352,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "chronicle/store.mjs",
+          "kind": "import-statement",
+          "original": "../chronicle/store.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "chronicle/commands.mjs": {
+      "bytes": 10265,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "chronicle/dispatch.mjs": {
+      "bytes": 5925,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "chronicle/commands.mjs",
+          "kind": "import-statement",
+          "original": "./commands.mjs"
+        },
+        {
+          "path": "discord/chronicle-adapter.mjs",
+          "kind": "import-statement",
+          "original": "../discord/chronicle-adapter.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "discord/chronicle-core.mjs": {
+      "bytes": 5215,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "chronicle/service.mjs",
+          "kind": "import-statement",
+          "original": "../chronicle/service.mjs"
+        },
+        {
+          "path": "discord/chronicle-adapter.mjs",
+          "kind": "import-statement",
+          "original": "./chronicle-adapter.mjs"
+        },
+        {
+          "path": "chronicle/dispatch.mjs",
+          "kind": "import-statement",
+          "original": "../chronicle/dispatch.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "packages/chronicle/index.mjs": {
+      "bytes": 525,
+      "imports": [
+        {
+          "path": "discord/chronicle-core.mjs",
+          "kind": "import-statement",
+          "original": "../../discord/chronicle-core.mjs"
+        },
+        {
+          "path": "chronicle/store.mjs",
+          "kind": "import-statement",
+          "original": "../../chronicle/store.mjs"
+        },
+        {
+          "path": "chronicle/commands.mjs",
+          "kind": "import-statement",
+          "original": "../../chronicle/commands.mjs"
+        },
+        {
+          "path": "discord/chronicle-adapter.mjs",
+          "kind": "import-statement",
+          "original": "../../discord/chronicle-adapter.mjs"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "packages/chronicle/dist/index.mjs": {
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs/promises",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:sqlite",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@napi-rs/canvas",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [
+        "ChronicleCommandError",
+        "ChronicleCommands",
+        "ChronicleError",
+        "ChronicleStore",
+        "SESSION_COMMAND",
+        "createChronicleRuntime",
+        "createChronicleRuntimeCore"
+      ],
+      "entryPoint": "packages/chronicle/index.mjs",
+      "inputs": {
+        "discord/chronicle-core.mjs": {
+          "bytesInOutput": 4641
+        },
+        "chronicle/service.mjs": {
+          "bytesInOutput": 15849
+        },
+        "chronicle/store.mjs": {
+          "bytesInOutput": 15605
+        },
+        "chronicle/report.mjs": {
+          "bytesInOutput": 3325
+        },
+        "discord/chronicle-adapter.mjs": {
+          "bytesInOutput": 15391
+        },
+        "chronicle/dispatch.mjs": {
+          "bytesInOutput": 5517
+        },
+        "chronicle/commands.mjs": {
+          "bytesInOutput": 10255
+        },
+        "packages/chronicle/index.mjs": {
+          "bytesInOutput": 0
+        }
+      },
+      "bytes": 71058
+    }
+  }
+}

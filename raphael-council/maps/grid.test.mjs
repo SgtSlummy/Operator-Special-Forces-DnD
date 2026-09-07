@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { coordinate, parseCoordinate, findPath, stepCost, lineOfSight, visibleCells, octagonPoints } from './grid.mjs';
+const map = { width: 5, height: 5, blocked: [], difficult: [] };
+test('coordinates include multi-letter columns', () => { assert.equal(coordinate(26, 9), 'AA10'); assert.deepEqual(parseCoordinate('aa10'), { x: 26, y: 9 }); assert.throws(() => parseCoordinate('A0')); });
+test('diagonal house movement and terrain share exact cost', () => { const path = findPath(map, { x: 0, y: 0 }, { x: 2, y: 2 }); assert.equal(path.cost, 10); assert.equal(path.path.length, 2); assert.equal(stepCost({ ...map, difficult: [{ x: 1, y: 1 }] }, { x: 0, y: 0 }, { x: 1, y: 1 }), 10); });
+test('blocked corners cannot be cut by path or LOS', () => { const blocked = { ...map, blocked: [{ x: 1, y: 0 }, { x: 0, y: 1 }] }; assert.equal(findPath(blocked, { x: 0, y: 0 }, { x: 1, y: 1 }), null); assert.equal(lineOfSight(blocked, { x: 0, y: 0 }, { x: 1, y: 1 }), false); });
+test('large token footprint cannot pass a one-cell corridor', () => { const corridor = { width: 5, height: 5, blocked: [{ x: 2, y: 0 }, { x: 2, y: 1 }, { x: 2, y: 3 }, { x: 2, y: 4 }] }; assert.ok(findPath(corridor, { x: 0, y: 2 }, { x: 4, y: 2 })); assert.equal(findPath(corridor, { x: 0, y: 1 }, { x: 3, y: 1 }, { size: 2 }), null); });
+test('budget and occupied spaces constrain routes', () => { assert.equal(findPath(map, { x: 0, y: 0 }, { x: 4, y: 4 }, { budget: 15 }), null); assert.equal(findPath(map, { x: 0, y: 0 }, { x: 1, y: 1 }, { occupied: [{ x: 1, y: 1 }] }), null); });
+test('wall visible but cells behind it hidden; visibility radius enforced', () => { const wall = { ...map, blocked: [{ x: 1, y: 0 }] }; assert.equal(lineOfSight(wall, { x: 0, y: 0 }, { x: 1, y: 0 }), true); assert.equal(lineOfSight(wall, { x: 0, y: 0 }, { x: 2, y: 0 }), false); assert.equal(visibleCells(map, [{ x: 2, y: 2, vision: 1 }]).length, 9); });
+test('octagon has eight equal edges and square filler geometry', () => { const points = octagonPoints(0, 0, 100); const lengths = points.map((p, i) => Math.hypot(p[0] - points[(i + 1) % 8][0], p[1] - points[(i + 1) % 8][1])); assert.equal(points.length, 8); assert.ok(lengths.every(length => Math.abs(length - lengths[0]) < 1e-10)); });

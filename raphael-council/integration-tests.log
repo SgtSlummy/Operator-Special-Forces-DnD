@@ -1,0 +1,136 @@
+TAP version 13
+# (node:11824) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: retrieval excludes other campaigns, GM secrets, private records and non-exportable evidence before ranking
+ok 1 - retrieval excludes other campaigns, GM secrets, private records and non-exportable evidence before ranking
+  ---
+  duration_ms: 13.2468
+  type: 'test'
+  ...
+# Subtest: jobs serialize, retry once by request ID, and reject conflicting requests
+ok 2 - jobs serialize, retry once by request ID, and reject conflicting requests
+  ---
+  duration_ms: 36.3987
+  type: 'test'
+  ...
+# Subtest: Codex is excluded when off, enabled only for eligible jobs and reset after restart
+ok 3 - Codex is excluded when off, enabled only for eligible jobs and reset after restart
+  ---
+  duration_ms: 1.9737
+  type: 'test'
+  ...
+# Subtest: mixed consent and unrestricted remote adapters never receive evidence
+ok 4 - mixed consent and unrestricted remote adapters never receive evidence
+  ---
+  duration_ms: 0.9561
+  type: 'test'
+  ...
+# Subtest: adapter selects only verified installed Ollama and never calls general route or memory
+ok 5 - adapter selects only verified installed Ollama and never calls general route or memory
+  ---
+  duration_ms: 18.5629
+  type: 'test'
+  ...
+# (node:19276) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: browser OAuth state is one-use and sessions recheck membership
+ok 6 - browser OAuth state is one-use and sessions recheck membership
+  ---
+  duration_ms: 24.0947
+  type: 'test'
+  ...
+# Subtest: Activity and browser share identity with distinct cookies; logout invalidates server session
+ok 7 - Activity and browser share identity with distinct cookies; logout invalidates server session
+  ---
+  duration_ms: 2.6253
+  type: 'test'
+  ...
+# Subtest: origin boundary rejects arbitrary origins including forged proxy context
+ok 8 - origin boundary rejects arbitrary origins including forged proxy context
+  ---
+  duration_ms: 0.5734
+  type: 'test'
+  ...
+# (node:11992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: revision feed rejects forged cursors and identities and rechecks revoked access
+ok 9 - revision feed rejects forged cursors and identities and rechecks revoked access
+  ---
+  duration_ms: 24.8846
+  type: 'test'
+  ...
+# Subtest: journal uses the game session, bounded cursors and current membership
+ok 10 - journal uses the game session, bounded cursors and current membership
+  ---
+  duration_ms: 3.3877
+  type: 'test'
+  ...
+# Subtest: world/debrief routes enforce membership, origin and fixed player fields
+ok 11 - world/debrief routes enforce membership, origin and fixed player fields
+  ---
+  duration_ms: 4.0619
+  type: 'test'
+  ...
+# Subtest: counsel endpoints reject forged inputs and preserve game-session authority
+ok 12 - counsel endpoints reject forged inputs and preserve game-session authority
+  ---
+  duration_ms: 2.8618
+  type: 'test'
+  ...
+# Subtest: council routes require the current player session and cannot accept fabricated votes
+ok 13 - council routes require the current player session and cannot accept fabricated votes
+  ---
+  duration_ms: 2.7397
+  type: 'test'
+  ...
+# Subtest: one game cookie protects scene, image request, status and download without accepting image-only login
+ok 14 - one game cookie protects scene, image request, status and download without accepting image-only login
+  ---
+  duration_ms: 4.2439
+  type: 'test'
+  ...
+# Subtest: connect creates scoped HttpOnly cookie without returning the code; disconnect expires it
+ok 15 - connect creates scoped HttpOnly cookie without returning the code; disconnect expires it
+  ---
+  duration_ms: 2.2496
+  type: 'test'
+  ...
+# Subtest: state and map remain player-filtered and private
+ok 16 - state and map remain player-filtered and private
+  ---
+  duration_ms: 33.6734
+  type: 'test'
+  ...
+# Subtest: authentication and revocation protect every read, command and image
+ok 17 - authentication and revocation protect every read, command and image
+  ---
+  duration_ms: 1.9525
+  type: 'test'
+  ...
+# Subtest: forged identity, foreign origin and unsupported modifiers never reach a commit
+ok 18 - forged identity, foreign origin and unsupported modifiers never reach a commit
+  ---
+  duration_ms: 2.044
+  type: 'test'
+  ...
+# Subtest: HTTP action receipt is durable and only its owner can read it
+ok 19 - HTTP action receipt is durable and only its owner can read it
+  ---
+  duration_ms: 3.5724
+  type: 'test'
+  ...
+# Subtest: body limits and unexpected failures do not echo input or server paths
+ok 20 - body limits and unexpected failures do not echo input or server paths
+  ---
+  duration_ms: 1.9583
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 283.3522

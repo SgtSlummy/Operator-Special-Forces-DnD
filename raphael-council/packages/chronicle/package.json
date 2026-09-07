@@ -1,0 +1,29 @@
+{
+  "name": "@operator/chronicle",
+  "version": "0.1.1",
+  "private": true,
+  "description": "Dependency-injected session chronicle for an existing Discord gateway and private Obus provider.",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "exports": {
+    ".": "./dist/index.mjs"
+  },
+  "files": [
+    "dist/index.mjs",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22.16.0"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test package.test.mjs",
+    "pack:artifact": "node pack.mjs"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.8"
+  },
+  "devDependencies": {
+    "esbuild": "0.27.3"
+  }
+}

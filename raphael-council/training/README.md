@@ -1,0 +1,11 @@
+# Raphael narration training boundary
+
+The local curator prepares reviewed SFT or DPO examples for the Hugging Face LLM trainer workflow. It does not train, upload, call a provider, or claim that a fine-tuned model exists. Training improves narration/counsel style; deterministic game rules continue to own dice, resources, visibility and state mutation.
+
+Each input JSONL record requires `id`, pseudonymous `campaignGroup`, `review: { approved: true, privacyChecked: true, reviewerId }`, `rights: { kind: "original" | "licensed", evidence }`, `visibility: "player_safe"`, `purpose: "narration"`, `containsHiddenState: false`, and `sourceEventIds`. SFT additionally uses `messages` with user context and a final assistant response. DPO uses `prompt`, `chosen`, and `rejected` message arrays. Both preference answers must be safe to export; use weak writing or irrelevant repetition for negative examples, not real GM secrets.
+
+Run `node training/curate.mjs --input REVIEWED.jsonl --out NEW_OUTPUT_DIRECTORY --method sft`. Inputs and outputs belong outside public assets and source control. The CLI writes train/evaluation JSONL and a local provenance manifest without sending anything externally. Whole campaigns stay in a single split; duplicate content, unknown rights and missing review fail. Small fixtures prove formatting, not dataset adequacy or model quality. Credential pattern checks are incomplete by design: a reviewer must verify consent, personal data removal, hidden facts, source events and reuse rights.
+
+Before a real HF job, inspect the user's account access, approved dataset, chosen model/license, cost/runtime budget and private Hub destination. Validate the actual dataset with the trainer skill, include Trackio, ensure Hub checkpoint saving and secret-reference authentication, and submit through the available HF Jobs tool only when the training request and required inputs are concrete. No production dataset, model choice, training budget or Hub destination has been supplied in this task.
+
+Evaluate held-out campaigns for factual consistency, hidden-information leakage, agency preservation, unsupported rules claims and writing quality. Compare to the configured base narrator. Never allow fine-tuning to bypass the narrator schema or change persisted game state. Keep the previous narrator available for rollback.

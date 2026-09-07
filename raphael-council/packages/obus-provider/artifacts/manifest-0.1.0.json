@@ -1,0 +1,33 @@
+{
+  "name": "@operator/obus-chronicle-provider",
+  "version": "0.1.0",
+  "filename": "operator-obus-chronicle-provider-0.1.0.tgz",
+  "sha256": "4f038207f8550a3ca3413bf703af871b4dbfe6378360103ce79fe6c1fc1621f6",
+  "npmIntegrity": "sha512-uBW3xDd2esGFmsqvpablXxSuosw5jTTZACXfMSj/jiKhrxSJpp3rrDg0l2sfGI7Zsvktpt6+p8VKuxkHNV00cw==",
+  "bytes": 8757,
+  "unpackedBytes": 29026,
+  "bundleSha256": "2568cb108e40374a1f676226006f9c9b2dcd050528c6ce4497aa10f57f8805a6",
+  "node": ">=22.16.0",
+  "dependencies": {},
+  "exports": [
+    "ObusTransport",
+    "createObusChronicleProvider"
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "size": 6069,
+      "mode": 420
+    },
+    {
+      "path": "dist/index.mjs",
+      "size": 22461,
+      "mode": 420
+    },
+    {
+      "path": "package.json",
+      "size": 496,
+      "mode": 420
+    }
+  ]
+}

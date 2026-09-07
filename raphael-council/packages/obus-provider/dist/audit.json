@@ -1,0 +1,24 @@
+{
+  "name": "@operator/obus-chronicle-provider",
+  "version": "0.1.0",
+  "esbuild": "0.27.3",
+  "node": ">=22.16.0",
+  "dependencies": {},
+  "sources": {
+    "ai/obus.mjs": "b5d596d1deb6d4d6263d50a3dc9d2aa1ce81aecdf5fd7c201f72329917393f87",
+    "chronicle/obus-provider.mjs": "7f4fb6c17941e86fee2d272b6e2129e95307c0cc7885473d40abc1b9ae8319e6",
+    "packages/obus-provider/index.mjs": "85da411ab607342ca119f8049cea707f399e23cdbd25cd2ccd0ca4dddfcc6a11"
+  },
+  "externalImports": [
+    "node:crypto",
+    "node:fs",
+    "node:os",
+    "node:path"
+  ],
+  "bytes": 22461,
+  "sha256": "2568cb108e40374a1f676226006f9c9b2dcd050528c6ce4497aa10f57f8805a6",
+  "exports": [
+    "ObusTransport",
+    "createObusChronicleProvider"
+  ]
+}

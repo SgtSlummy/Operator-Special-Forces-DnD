@@ -1,0 +1,1500 @@
+TAP version 13
+# Subtest: conflicting evidence cannot silently choose a statistic
+ok 1 - conflicting evidence cannot silently choose a statistic
+  ---
+  duration_ms: 2.2971
+  type: 'test'
+  ...
+# Subtest: natural-language corrections are atomic and ambiguous instructions stay data
+ok 2 - natural-language corrections are atomic and ambiguous instructions stay data
+  ---
+  duration_ms: 0.4413
+  type: 'test'
+  ...
+# Subtest: explicit multiclass levels can be totaled without inventing modifiers
+ok 3 - explicit multiclass levels can be totaled without inventing modifiers
+  ---
+  duration_ms: 0.5687
+  type: 'test'
+  ...
+# Subtest: low-confidence OCR retains a candidate but blocks approval until player confirmation
+ok 4 - low-confidence OCR retains a candidate but blocks approval until player confirmation
+  ---
+  duration_ms: 1.169
+  type: 'test'
+  ...
+# (node:9208) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fillable and flattened PDFs preserve explicit core statistics
+ok 5 - fillable and flattened PDFs preserve explicit core statistics
+  ---
+  duration_ms: 554.8034
+  type: 'test'
+  ...
+# Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+# Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+# Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+# Subtest: scanned, rotated and mixed PDFs work in the offline isolated worker
+ok 6 - scanned, rotated and mixed PDFs work in the offline isolated worker
+  ---
+  duration_ms: 10182.8618
+  type: 'test'
+  ...
+# Subtest: worker preload actually denies outbound connections
+ok 7 - worker preload actually denies outbound connections
+  ---
+  duration_ms: 83.448
+  type: 'test'
+  ...
+# Subtest: incomplete and conflicting sheets stay unresolved
+ok 8 - incomplete and conflicting sheets stay unresolved
+  ---
+  duration_ms: 100.8407
+  type: 'test'
+  ...
+# Subtest: malformed, oversized, and excessive-page PDFs fail closed
+ok 9 - malformed, oversized, and excessive-page PDFs fail closed
+  ---
+  duration_ms: 291.0193
+  type: 'test'
+  ...
+# (node:31396) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: invalid edition never starts a job and worker failure leaves no source or character
+ok 10 - invalid edition never starts a job and worker failure leaves no source or character
+  ---
+  duration_ms: 73.5468
+  type: 'test'
+  ...
+# Subtest: cancellation interrupts active OCR, deletes the PDF, and blocks a late result
+ok 11 - cancellation interrupts active OCR, deletes the PDF, and blocks a late result
+  ---
+  duration_ms: 69.8718
+  type: 'test'
+  ...
+# Subtest: restart removes only importer-owned orphan files and expired drafts
+ok 12 - restart removes only importer-owned orphan files and expired drafts
+  ---
+  duration_ms: 60.4677
+  type: 'test'
+  ...
+# Subtest: isolated worker has an enforced deadline
+ok 13 - isolated worker has an enforced deadline
+  ---
+  duration_ms: 50.0362
+  type: 'test'
+  ...
+# (node:388) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: approval is atomic, idempotent, and survives restart
+ok 14 - approval is atomic, idempotent, and survives restart
+  ---
+  duration_ms: 66.8736
+  type: 'test'
+  ...
+# Subtest: updated PDF approval cannot restore any live resources or history
+ok 15 - updated PDF approval cannot restore any live resources or history
+  ---
+  duration_ms: 5.3144
+  type: 'test'
+  ...
+# Subtest: ownership, campaign, stale correction and required statistics are enforced
+ok 16 - ownership, campaign, stale correction and required statistics are enforced
+  ---
+  duration_ms: 4.0785
+  type: 'test'
+  ...
+# Subtest: duplicate submissions do not create a second job; concurrent imports are bounded
+ok 17 - duplicate submissions do not create a second job; concurrent imports are bounded
+  ---
+  duration_ms: 1.3059
+  type: 'test'
+  ...
+# Subtest: restart fails interrupted jobs, preserves review drafts, and expiry removes abandoned data
+ok 18 - restart fails interrupted jobs, preserves review drafts, and expiry removes abandoned data
+  ---
+  duration_ms: 3.1672
+  type: 'test'
+  ...
+# Subtest: a newer saved character revision prevents lost updates
+ok 19 - a newer saved character revision prevents lost updates
+  ---
+  duration_ms: 2.0638
+  type: 'test'
+  ...
+# Subtest: anonymous form mappings require known geometry, not just a TextN field name
+ok 20 - anonymous form mappings require known geometry, not just a TextN field name
+  ---
+  duration_ms: 2.2387
+  type: 'test'
+  ...
+# Subtest: sparse OCR can interleave columns without losing a positively located template
+ok 21 - sparse OCR can interleave columns without losing a positively located template
+  ---
+  duration_ms: 0.653
+  type: 'test'
+  ...
+# (node:7076) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: private map updates persist encrypted response credentials and retry after restart without repeating play
+ok 22 - private map updates persist encrypted response credentials and retry after restart without repeating play
+  ---
+  duration_ms: 275.0546
+  type: 'test'
+  ...
+# Subtest: automatic updates stop on lost membership, expiry or replacement by a newer private card
+ok 23 - automatic updates stop on lost membership, expiry or replacement by a newer private card
+  ---
+  duration_ms: 110.8924
+  type: 'test'
+  ...
+# Subtest: concurrent workers claim one response and a replaced watch cannot send late
+ok 24 - concurrent workers claim one response and a replaced watch cannot send late
+  ---
+  duration_ms: 125.3668
+  type: 'test'
+  ...
+# Subtest: another player receives movement on their own private board without owner statistics
+ok 25 - another player receives movement on their own private board without owner statistics
+  ---
+  duration_ms: 80.7257
+  type: 'test'
+  ...
+# Subtest: private board is available without mutation and hides unseen actors
+ok 26 - private board is available without mutation and hides unseen actors
+  ---
+  duration_ms: 54.4006
+  type: 'test'
+  ...
+# Subtest: movement modal previews before committing and repeated confirmation moves once
+ok 27 - movement modal previews before committing and repeated confirmation moves once
+  ---
+  duration_ms: 128.5186
+  type: 'test'
+  ...
+# Subtest: attack confirmation reuses the saved roll and delivery displays its breakdown
+ok 28 - attack confirmation reuses the saved roll and delivery displays its breakdown
+  ---
+  duration_ms: 132.1601
+  type: 'test'
+  ...
+# Subtest: another member cannot submit or confirm stolen controls
+ok 29 - another member cannot submit or confirm stolen controls
+  ---
+  duration_ms: 43.8466
+  type: 'test'
+  ...
+# Subtest: membership, channel and stale revisions are enforced server-side
+ok 30 - membership, channel and stale revisions are enforced server-side
+  ---
+  duration_ms: 45.4227
+  type: 'test'
+  ...
+# (node:29716) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: companion is discoverable from the tactical board and adventure entry without removing play buttons
+not ok 31 - companion is discoverable from the tactical board and adventure entry without removing play buttons
+  ---
+  duration_ms: 49.9851
+  type: 'test'
+  location: 'C:\\Users\\Hermes\\OneDrive\\Documents\\ChatGPT\\Operator Special Forces Dungeon and Dragons\\raphael-council\\discord\\companion-adapter.test.mjs:51:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    10 !== 9
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 9
+  actual: 10
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Hermes/OneDrive/Documents/ChatGPT/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/discord/companion-adapter.test.mjs:57:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: shared character groups and notes are delivered privately without truncating long sheet values
+ok 32 - shared character groups and notes are delivered privately without truncating long sheet values
+  ---
+  duration_ms: 36.47
+  type: 'test'
+  ...
+# Subtest: all source characters, including whitespace and Markdown, survive pagination
+ok 33 - all source characters, including whitespace and Markdown, survive pagination
+  ---
+  duration_ms: 0.4981
+  type: 'test'
+  ...
+# Subtest: visible other characters reveal public shared fields and never read the requesting player’s sheet
+ok 34 - visible other characters reveal public shared fields and never read the requesting player’s sheet
+  ---
+  duration_ms: 2.9644
+  type: 'test'
+  ...
+# Subtest: menus and character details stay read-only during a pause and another character’s turn
+ok 35 - menus and character details stay read-only during a pause and another character’s turn
+  ---
+  duration_ms: 34.586
+  type: 'test'
+  ...
+# Subtest: copied selectors/pages and changed membership or visibility cannot expose character data
+ok 36 - copied selectors/pages and changed membership or visibility cannot expose character data
+  ---
+  duration_ms: 4.5238
+  type: 'test'
+  ...
+# Subtest: visible actor and effect lists are complete beyond the board preview limits
+ok 37 - visible actor and effect lists are complete beyond the board preview limits
+  ---
+  duration_ms: 63.0079
+  type: 'test'
+  ...
+# Subtest: own saved rolls, historical map snapshots and journal are privately browsable without repeating actions
+ok 38 - own saved rolls, historical map snapshots and journal are privately browsable without repeating actions
+  ---
+  duration_ms: 86.5696
+  type: 'test'
+  ...
+# Subtest: unexpected routes, selector values, channel and storage failures fail privately without raw errors
+ok 39 - unexpected routes, selector values, channel and storage failures fail privately without raw errors
+  ---
+  duration_ms: 3.4126
+  type: 'test'
+  ...
+# Subtest: private acknowledgement happens before any game projection, sheet read or historical map rendering
+ok 40 - private acknowledgement happens before any game projection, sheet read or historical map rendering
+  ---
+  duration_ms: 50.0623
+  type: 'test'
+  ...
+# Subtest: catalog contains the complete intended deck
+ok 41 - catalog contains the complete intended deck
+  ---
+  duration_ms: 4.1315
+  type: 'test'
+  ...
+# Subtest: card home: V2 payload, scoped routes, bounded layout
+ok 42 - card home: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 1.0571
+  type: 'test'
+  ...
+# Subtest: card lobby: V2 payload, scoped routes, bounded layout
+ok 43 - card lobby: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.2726
+  type: 'test'
+  ...
+# Subtest: card hero: V2 payload, scoped routes, bounded layout
+ok 44 - card hero: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.3403
+  type: 'test'
+  ...
+# Subtest: card missions: V2 payload, scoped routes, bounded layout
+ok 45 - card missions: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.2561
+  type: 'test'
+  ...
+# Subtest: card brief: V2 payload, scoped routes, bounded layout
+ok 46 - card brief: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.2345
+  type: 'test'
+  ...
+# Subtest: card decision: V2 payload, scoped routes, bounded layout
+ok 47 - card decision: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.1573
+  type: 'test'
+  ...
+# Subtest: card scene: V2 payload, scoped routes, bounded layout
+ok 48 - card scene: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.6671
+  type: 'test'
+  ...
+# Subtest: card review: V2 payload, scoped routes, bounded layout
+ok 49 - card review: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.4147
+  type: 'test'
+  ...
+# Subtest: card check: V2 payload, scoped routes, bounded layout
+ok 50 - card check: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.6849
+  type: 'test'
+  ...
+# Subtest: card result: V2 payload, scoped routes, bounded layout
+ok 51 - card result: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.705
+  type: 'test'
+  ...
+# Subtest: card turn: V2 payload, scoped routes, bounded layout
+ok 52 - card turn: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.1552
+  type: 'test'
+  ...
+# Subtest: card counsel: V2 payload, scoped routes, bounded layout
+ok 53 - card counsel: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.1009
+  type: 'test'
+  ...
+# Subtest: card share: V2 payload, scoped routes, bounded layout
+ok 54 - card share: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.1012
+  type: 'test'
+  ...
+# Subtest: card world: V2 payload, scoped routes, bounded layout
+ok 55 - card world: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.0981
+  type: 'test'
+  ...
+# Subtest: card journal: V2 payload, scoped routes, bounded layout
+ok 56 - card journal: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.0918
+  type: 'test'
+  ...
+# Subtest: card party: V2 payload, scoped routes, bounded layout
+ok 57 - card party: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.8903
+  type: 'test'
+  ...
+# Subtest: card debrief: V2 payload, scoped routes, bounded layout
+ok 58 - card debrief: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.2116
+  type: 'test'
+  ...
+# Subtest: card downtime: V2 payload, scoped routes, bounded layout
+ok 59 - card downtime: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.1318
+  type: 'test'
+  ...
+# Subtest: card paused: V2 payload, scoped routes, bounded layout
+ok 60 - card paused: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.2104
+  type: 'test'
+  ...
+# Subtest: card saved: V2 payload, scoped routes, bounded layout
+ok 61 - card saved: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.1105
+  type: 'test'
+  ...
+# Subtest: card stale: V2 payload, scoped routes, bounded layout
+ok 62 - card stale: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.0913
+  type: 'test'
+  ...
+# Subtest: card help: V2 payload, scoped routes, bounded layout
+ok 63 - card help: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.089
+  type: 'test'
+  ...
+# Subtest: card host: V2 payload, scoped routes, bounded layout
+ok 64 - card host: V2 payload, scoped routes, bounded layout
+  ---
+  duration_ms: 0.0962
+  type: 'test'
+  ...
+# Subtest: modal sceneimage: initial callback, current labels, validated submission
+ok 65 - modal sceneimage: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.6271
+  type: 'test'
+  ...
+# Subtest: modal importpdf: initial callback, current labels, validated submission
+ok 66 - modal importpdf: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.3572
+  type: 'test'
+  ...
+# Subtest: modal importcorrect: initial callback, current labels, validated submission
+ok 67 - modal importcorrect: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.1409
+  type: 'test'
+  ...
+# Subtest: modal join: initial callback, current labels, validated submission
+ok 68 - modal join: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.2934
+  type: 'test'
+  ...
+# Subtest: modal hero: initial callback, current labels, validated submission
+ok 69 - modal hero: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.1665
+  type: 'test'
+  ...
+# Subtest: modal act: initial callback, current labels, validated submission
+ok 70 - modal act: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0892
+  type: 'test'
+  ...
+# Subtest: modal speak: initial callback, current labels, validated submission
+ok 71 - modal speak: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0944
+  type: 'test'
+  ...
+# Subtest: modal look: initial callback, current labels, validated submission
+ok 72 - modal look: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0794
+  type: 'test'
+  ...
+# Subtest: modal support: initial callback, current labels, validated submission
+ok 73 - modal support: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0877
+  type: 'test'
+  ...
+# Subtest: modal counsel: initial callback, current labels, validated submission
+ok 74 - modal counsel: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0758
+  type: 'test'
+  ...
+# Subtest: modal question: initial callback, current labels, validated submission
+ok 75 - modal question: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.1444
+  type: 'test'
+  ...
+# Subtest: modal proposal: initial callback, current labels, validated submission
+ok 76 - modal proposal: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0812
+  type: 'test'
+  ...
+# Subtest: modal equipment: initial callback, current labels, validated submission
+ok 77 - modal equipment: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0683
+  type: 'test'
+  ...
+# Subtest: modal ability: initial callback, current labels, validated submission
+ok 78 - modal ability: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0701
+  type: 'test'
+  ...
+# Subtest: modal note: initial callback, current labels, validated submission
+ok 79 - modal note: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0674
+  type: 'test'
+  ...
+# Subtest: modal correction: initial callback, current labels, validated submission
+ok 80 - modal correction: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0681
+  type: 'test'
+  ...
+# Subtest: modal downtime: initial callback, current labels, validated submission
+ok 81 - modal downtime: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.0705
+  type: 'test'
+  ...
+# Subtest: modal setup: initial callback, current labels, validated submission
+ok 82 - modal setup: initial callback, current labels, validated submission
+  ---
+  duration_ms: 0.067
+  type: 'test'
+  ...
+# Subtest: scene offers free expression and pause; story alternatives are equally styled
+ok 83 - scene offers free expression and pause; story alternatives are equally styled
+  ---
+  duration_ms: 0.1756
+  type: 'test'
+  ...
+# Subtest: private cards cannot be made shared through render context
+ok 84 - private cards cannot be made shared through render context
+  ---
+  duration_ms: 0.1366
+  type: 'test'
+  ...
+# Subtest: role and pending-state presentation hides or disables controls without empty rows
+ok 85 - role and pending-state presentation hides or disables controls without empty rows
+  ---
+  duration_ms: 0.8141
+  type: 'test'
+  ...
+# Subtest: renders are repeatable and do not apply game changes or mutate definitions
+ok 86 - renders are repeatable and do not apply game changes or mutate definitions
+  ---
+  duration_ms: 0.4785
+  type: 'test'
+  ...
+# Subtest: sample opening payloads contain only authored public information
+ok 87 - sample opening payloads contain only authored public information
+  ---
+  duration_ms: 0.8403
+  type: 'test'
+  ...
+# Subtest: invalid, noncanonical, unknown and overlong IDs are rejected
+ok 88 - invalid, noncanonical, unknown and overlong IDs are rejected
+  ---
+  duration_ms: 0.5106
+  type: 'test'
+  ...
+# Subtest: invalid context and oversized text fail before payload delivery
+ok 89 - invalid context and oversized text fail before payload delivery
+  ---
+  duration_ms: 0.368
+  type: 'test'
+  ...
+# Subtest: modal validation rejects missing, blank, duplicate, unexpected and oversized input
+ok 90 - modal validation rejects missing, blank, duplicate, unexpected and oversized input
+  ---
+  duration_ms: 0.5305
+  type: 'test'
+  ...
+# Subtest: player words stay data, including attempts to assert authority
+ok 91 - player words stay data, including attempts to assert authority
+  ---
+  duration_ms: 0.1521
+  type: 'test'
+  ...
+# (node:28312) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: image controls remain accessible on all required deck states and the working entry desk
+ok 92 - image controls remain accessible on all required deck states and the working entry desk
+  ---
+  duration_ms: 2.1003
+  type: 'test'
+  ...
+# Subtest: anytime image request is private, costs no action or time, and returns an inline attachment
+ok 93 - anytime image request is private, costs no action or time, and returns an inline attachment
+  ---
+  duration_ms: 3.0285
+  type: 'test'
+  ...
+# Subtest: focus uses only visible subject IDs; blank requests the whole scene and prompt injection is refused
+ok 94 - focus uses only visible subject IDs; blank requests the whole scene and prompt injection is refused
+  ---
+  duration_ms: 7.4747
+  type: 'test'
+  ...
+# Subtest: current campaign membership is checked on every click and form submission
+ok 95 - current campaign membership is checked on every click and form submission
+  ---
+  duration_ms: 3.2765
+  type: 'test'
+  ...
+# Subtest: stolen forms, job cards and browser access controls are rejected for another valid member
+ok 96 - stolen forms, job cards and browser access controls are rejected for another valid member
+  ---
+  duration_ms: 0.8143
+  type: 'test'
+  ...
+# Subtest: forms are tied to their origin and scene revision; old deck entry deliberately reads current scene
+ok 97 - forms are tied to their origin and scene revision; old deck entry deliberately reads current scene
+  ---
+  duration_ms: 1.9211
+  type: 'test'
+  ...
+# Subtest: durable request ID deduplication and status refresh survive handler recreation
+ok 98 - durable request ID deduplication and status refresh survive handler recreation
+  ---
+  duration_ms: 0.6767
+  type: 'test'
+  ...
+# Subtest: queued image automatically replaces its private progress card when the same job becomes ready
+ok 99 - queued image automatically replaces its private progress card when the same job becomes ready
+  ---
+  duration_ms: 0.6038
+  type: 'test'
+  ...
+# Subtest: completed image still arrives as an earlier view if its current scene disappears while rendering
+ok 100 - completed image still arrives as an earlier view if its current scene disappears while rendering
+  ---
+  duration_ms: 0.8131
+  type: 'test'
+  ...
+# Subtest: failed jobs and transport/provider failures stay private and disclose no raw errors
+ok 101 - failed jobs and transport/provider failures stay private and disclose no raw errors
+  ---
+  duration_ms: 1.2176
+  type: 'test'
+  ...
+# Subtest: browser access is private and file transport separates binary data without changing importer JSON
+ok 102 - browser access is private and file transport separates binary data without changing importer JSON
+  ---
+  duration_ms: 0.8118
+  type: 'test'
+  ...
+# Subtest: oversized image retains its private browser-access recovery control
+ok 103 - oversized image retains its private browser-access recovery control
+  ---
+  duration_ms: 0.4128
+  type: 'test'
+  ...
+# Subtest: every image status and missing-image setup retain Distance & reach without another paid request
+ok 104 - every image status and missing-image setup retain Distance & reach without another paid request
+  ---
+  duration_ms: 6.4946
+  type: 'test'
+  ...
+# Subtest: distance and reach reply is private, numeric and read-only during pauses or another player’s turn
+ok 105 - distance and reach reply is private, numeric and read-only during pauses or another player’s turn
+  ---
+  duration_ms: 14.4314
+  type: 'test'
+  ...
+# Subtest: coordinate questions and own-character choices resolve only visible authorized options
+ok 106 - coordinate questions and own-character choices resolve only visible authorized options
+  ---
+  duration_ms: 4.8549
+  type: 'test'
+  ...
+# Subtest: reach cards and forms are owner-bound and tactical membership is rechecked on submission
+ok 107 - reach cards and forms are owner-bound and tactical membership is rechecked on submission
+  ---
+  duration_ms: 2.3617
+  type: 'test'
+  ...
+# Subtest: stale distance forms are rejected before answering, and forged field names cannot change game state
+ok 108 - stale distance forms are rejected before answering, and forged field names cannot change game state
+  ---
+  duration_ms: 3.6863
+  type: 'test'
+  ...
+# Subtest: unknown, ambiguous and hidden targets reveal no secret state; IDs disambiguate repeated names
+ok 109 - unknown, ambiguous and hidden targets reveal no secret state; IDs disambiguate repeated names
+  ---
+  duration_ms: 5.6676
+  type: 'test'
+  ...
+# Subtest: raw tactical errors and malformed reach interactions remain private
+ok 110 - raw tactical errors and malformed reach interactions remain private
+  ---
+  duration_ms: 0.3975
+  type: 'test'
+  ...
+# (node:9064) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Warning: UnknownErrorException: Ensure that the `standardFontDataUrl` API parameter is provided.
+# Subtest: protocol integration: upload, private review, correction, approval, restart and saved character
+ok 111 - protocol integration: upload, private review, correction, approval, restart and saved character
+  ---
+  duration_ms: 3718.0006
+  type: 'test'
+  ...
+# Subtest: Discord scope uses authenticated current membership; neither host status nor text grants access
+ok 112 - Discord scope uses authenticated current membership; neither host status nor text grants access
+  ---
+  duration_ms: 0.5919
+  type: 'test'
+  ...
+# Subtest: private views reject another player even when both are campaign members
+ok 113 - private views reject another player even when both are campaign members
+  ---
+  duration_ms: 0.9119
+  type: 'test'
+  ...
+# Subtest: attachment validation rejects URL substitution, excessive files and type/size tricks
+ok 114 - attachment validation rejects URL substitution, excessive files and type/size tricks
+  ---
+  duration_ms: 4.6236
+  type: 'test'
+  ...
+# Subtest: configuration is fail-closed and credentials are not echoed
+ok 115 - configuration is fail-closed and credentials are not echoed
+  ---
+  duration_ms: 0.4811
+  type: 'test'
+  ...
+# Subtest: long source content is paginated and cannot create mentions or pretend to be UI authority
+ok 116 - long source content is paginated and cannot create mentions or pretend to be UI authority
+  ---
+  duration_ms: 0.6102
+  type: 'test'
+  ...
+# Subtest: My Hero exposes a PDF import without player commands
+ok 117 - My Hero exposes a PDF import without player commands
+  ---
+  duration_ms: 1.3001
+  type: 'test'
+  ...
+# (node:7528) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: mission desk and saved counsel are private; repeated advice spends once
+ok 118 - mission desk and saved counsel are private; repeated advice spends once
+  ---
+  duration_ms: 10.8439
+  type: 'test'
+  ...
+# Subtest: shared debrief requires preview and confirmation; repeats do not reapply consequences
+ok 119 - shared debrief requires preview and confirmation; repeats do not reapply consequences
+  ---
+  duration_ms: 7.8987
+  type: 'test'
+  ...
+# Subtest: stolen, foreign-channel and stale world controls cannot consume counsel
+ok 120 - stolen, foreign-channel and stale world controls cannot consume counsel
+  ---
+  duration_ms: 5.7902
+  type: 'test'
+  ...
+# (node:14504) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: approved sheet values feed the game profile and source HP cannot heal runtime HP
+ok 121 - approved sheet values feed the game profile and source HP cannot heal runtime HP
+  ---
+  duration_ms: 9.6482
+  type: 'test'
+  ...
+# Subtest: stale character or forged weapon score is rejected before campaign creation
+ok 122 - stale character or forged weapon score is rejected before campaign creation
+  ---
+  duration_ms: 3.197
+  type: 'test'
+  ...
+# Subtest: unhandled existing conditions cannot disappear during bootstrap
+ok 123 - unhandled existing conditions cannot disappear during bootstrap
+  ---
+  duration_ms: 1.9603
+  type: 'test'
+  ...
+# (node:20128) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: character options and details are private, authorized and use live game values
+ok 124 - character options and details are private, authorized and use live game values
+  ---
+  duration_ms: 51.9917
+  type: 'test'
+  ...
+# Subtest: clicking visible non-owned tokens exposes public details only and never opens a private sheet
+ok 125 - clicking visible non-owned tokens exposes public details only and never opens a private sheet
+  ---
+  duration_ms: 2.883
+  type: 'test'
+  ...
+# Subtest: hidden, stale, malformed and forged character requests are rejected without disclosure
+ok 126 - hidden, stale, malformed and forged character requests are rejected without disclosure
+  ---
+  duration_ms: 19.1461
+  type: 'test'
+  ...
+# Subtest: both character endpoints recheck access and membership after revocation
+ok 127 - both character endpoints recheck access and membership after revocation
+  ---
+  duration_ms: 2.6544
+  type: 'test'
+  ...
+# (node:22828) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: matched approved fields and live encounter details share a complete display projection
+ok 128 - matched approved fields and live encounter details share a complete display projection
+  ---
+  duration_ms: 22.3216
+  type: 'test'
+  ...
+# Subtest: visible other players and enemies expose only public token fields without reading any sheet
+ok 129 - visible other players and enemies expose only public token fields without reading any sheet
+  ---
+  duration_ms: 7.4355
+  type: 'test'
+  ...
+# Subtest: host-controlled NPC live statistics do not inherit an unrelated host sheet
+ok 130 - host-controlled NPC live statistics do not inherit an unrelated host sheet
+  ---
+  duration_ms: 5.1135
+  type: 'test'
+  ...
+# Subtest: a newer approved import does not replace the active encounter profile
+ok 131 - a newer approved import does not replace the active encounter profile
+  ---
+  duration_ms: 35.8954
+  type: 'test'
+  ...
+# Subtest: a matching revision with a different snapshot digest also omits source fields
+ok 132 - a matching revision with a different snapshot digest also omits source fields
+  ---
+  duration_ms: 4.0921
+  type: 'test'
+  ...
+# Subtest: missing approved data and local non-Discord owners still receive live details
+ok 133 - missing approved data and local non-Discord owners still receive live details
+  ---
+  duration_ms: 6.2918
+  type: 'test'
+  ...
+# Subtest: unhandled database failures and corrupt records propagate instead of becoming empty success
+ok 134 - unhandled database failures and corrupt records propagate instead of becoming empty success
+  ---
+  duration_ms: 3.9361
+  type: 'test'
+  ...
+# Subtest: stale revisions, unknown actors, malformed scopes, and arbitrary owner fields fail closed
+ok 135 - stale revisions, unknown actors, malformed scopes, and arbitrary owner fields fail closed
+  ---
+  duration_ms: 5.8374
+  type: 'test'
+  ...
+# Subtest: options and character details never reveal actors outside the current visible view
+ok 136 - options and character details never reveal actors outside the current visible view
+  ---
+  duration_ms: 5.9843
+  type: 'test'
+  ...
+# Subtest: current turn, spent action, movement and pause values remain factual and independent
+ok 137 - current turn, spent action, movement and pause values remain factual and independent
+  ---
+  duration_ms: 19.4447
+  type: 'test'
+  ...
+# Subtest: repeated reads change no game or character state, events, receipts, outbox or dice
+ok 138 - repeated reads change no game or character state, events, receipts, outbox or dice
+  ---
+  duration_ms: 7.2746
+  type: 'test'
+  ...
+# Subtest: character runtime resolves the same importer directory as the existing bot
+ok 139 - character runtime resolves the same importer directory as the existing bot
+  ---
+  duration_ms: 0.2188
+  type: 'test'
+  ...
+# Subtest: five equal assessments aggregate exactly and rotation applies only to genuine ties
+ok 140 - five equal assessments aggregate exactly and rotation applies only to genuine ties
+  ---
+  duration_ms: 1.9352
+  type: 'test'
+  ...
+# Subtest: public location pressure affects the matching mandate without changing vote weight
+ok 141 - public location pressure affects the matching mandate without changing vote weight
+  ---
+  duration_ms: 0.3648
+  type: 'test'
+  ...
+# (node:20592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: revision feed rejects forged cursors and identities and rechecks revoked access
+ok 142 - revision feed rejects forged cursors and identities and rechecks revoked access
+  ---
+  duration_ms: 31.6484
+  type: 'test'
+  ...
+# Subtest: journal uses the game session, bounded cursors and current membership
+ok 143 - journal uses the game session, bounded cursors and current membership
+  ---
+  duration_ms: 6.7036
+  type: 'test'
+  ...
+# Subtest: world/debrief routes enforce membership, origin and fixed player fields
+ok 144 - world/debrief routes enforce membership, origin and fixed player fields
+  ---
+  duration_ms: 5.7761
+  type: 'test'
+  ...
+# Subtest: counsel endpoints reject forged inputs and preserve game-session authority
+ok 145 - counsel endpoints reject forged inputs and preserve game-session authority
+  ---
+  duration_ms: 3.5617
+  type: 'test'
+  ...
+# Subtest: council routes require the current player session and cannot accept fabricated votes
+ok 146 - council routes require the current player session and cannot accept fabricated votes
+  ---
+  duration_ms: 3.1532
+  type: 'test'
+  ...
+# Subtest: one game cookie protects scene, image request, status and download without accepting image-only login
+ok 147 - one game cookie protects scene, image request, status and download without accepting image-only login
+  ---
+  duration_ms: 6.3655
+  type: 'test'
+  ...
+# Subtest: connect creates scoped HttpOnly cookie without returning the code; disconnect expires it
+ok 148 - connect creates scoped HttpOnly cookie without returning the code; disconnect expires it
+  ---
+  duration_ms: 3.125
+  type: 'test'
+  ...
+# Subtest: state and map remain player-filtered and private
+ok 149 - state and map remain player-filtered and private
+  ---
+  duration_ms: 57.6504
+  type: 'test'
+  ...
+# Subtest: authentication and revocation protect every read, command and image
+ok 150 - authentication and revocation protect every read, command and image
+  ---
+  duration_ms: 5.2475
+  type: 'test'
+  ...
+# Subtest: forged identity, foreign origin and unsupported modifiers never reach a commit
+ok 151 - forged identity, foreign origin and unsupported modifiers never reach a commit
+  ---
+  duration_ms: 3.539
+  type: 'test'
+  ...
+# Subtest: HTTP action receipt is durable and only its owner can read it
+ok 152 - HTTP action receipt is durable and only its owner can read it
+  ---
+  duration_ms: 5.039
+  type: 'test'
+  ...
+# Subtest: body limits and unexpected failures do not echo input or server paths
+ok 153 - body limits and unexpected failures do not echo input or server paths
+  ---
+  duration_ms: 1.8765
+  type: 'test'
+  ...
+# (node:28972) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: game: a private question returns map distance without dice, images or state changes
+ok 154 - game: a private question returns map distance without dice, images or state changes
+  ---
+  duration_ms: 46.2702
+  type: 'test'
+  ...
+# Subtest: game: questions work while paused and outside the requesting character's turn
+ok 155 - game: questions work while paused and outside the requesting character's turn
+  ---
+  duration_ms: 9.1544
+  type: 'test'
+  ...
+# Subtest: game: hidden targets, unowned characters, stale state and scope overrides fail safely
+ok 156 - game: hidden targets, unowned characters, stale state and scope overrides fail safely
+  ---
+  duration_ms: 9.9051
+  type: 'test'
+  ...
+# Subtest: game: both question endpoints enforce authentication and code revocation
+ok 157 - game: both question endpoints enforce authentication and code revocation
+  ---
+  duration_ms: 2.9636
+  type: 'test'
+  ...
+# Subtest: game: request Origin, bounds and content type cannot bypass the question boundary
+ok 158 - game: request Origin, bounds and content type cannot bypass the question boundary
+  ---
+  duration_ms: 4.3266
+  type: 'test'
+  ...
+# Subtest: images: a private question returns map distance without dice, images or state changes
+ok 159 - images: a private question returns map distance without dice, images or state changes
+  ---
+  duration_ms: 4.2756
+  type: 'test'
+  ...
+# Subtest: images: questions work while paused and outside the requesting character's turn
+ok 160 - images: questions work while paused and outside the requesting character's turn
+  ---
+  duration_ms: 5.4748
+  type: 'test'
+  ...
+# Subtest: images: hidden targets, unowned characters, stale state and scope overrides fail safely
+ok 161 - images: hidden targets, unowned characters, stale state and scope overrides fail safely
+  ---
+  duration_ms: 8.2623
+  type: 'test'
+  ...
+# Subtest: images: both question endpoints enforce authentication and code revocation
+ok 162 - images: both question endpoints enforce authentication and code revocation
+  ---
+  duration_ms: 2.0734
+  type: 'test'
+  ...
+# Subtest: images: request Origin, bounds and content type cannot bypass the question boundary
+ok 163 - images: request Origin, bounds and content type cannot bypass the question boundary
+  ---
+  duration_ms: 2.3977
+  type: 'test'
+  ...
+# Subtest: image questions explain missing tactical setup without needing an image provider
+ok 164 - image questions explain missing tactical setup without needing an image provider
+  ---
+  duration_ms: 0.5834
+  type: 'test'
+  ...
+# (node:21140) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: straight and diagonal distance use five-foot grid steps and stop beside occupied targets
+ok 165 - straight and diagonal distance use five-foot grid steps and stop beside occupied targets
+  ---
+  duration_ms: 24.3994
+  type: 'test'
+  ...
+# Subtest: large footprints measure nearest cells and coordinate movement describes its anchor
+ok 166 - large footprints measure nearest cells and coordinate movement describes its anchor
+  ---
+  duration_ms: 10.9994
+  type: 'test'
+  ...
+# Subtest: difficult terrain changes path cost without changing geometric distance
+ok 167 - difficult terrain changes path cost without changing geometric distance
+  ---
+  duration_ms: 3.8284
+  type: 'test'
+  ...
+# Subtest: difficult terrain on any occupied footprint cell doubles that step
+ok 168 - difficult terrain on any occupied footprint cell doubles that step
+  ---
+  duration_ms: 3.203
+  type: 'test'
+  ...
+# Subtest: visible living occupants block a corridor; defeated occupants permit movement
+ok 169 - visible living occupants block a corridor; defeated occupants permit movement
+  ---
+  duration_ms: 3.0553
+  type: 'test'
+  ...
+# Subtest: large tokens cannot squeeze through a one-cell corridor
+ok 170 - large tokens cannot squeeze through a one-cell corridor
+  ---
+  duration_ms: 10.6837
+  type: 'test'
+  ...
+# Subtest: blocked corners prohibit diagonal shortcuts and obstruct weapon line of sight
+ok 171 - blocked corners prohibit diagonal shortcuts and obstruct weapon line of sight
+  ---
+  duration_ms: 3.5676
+  type: 'test'
+  ...
+# Subtest: a coordinate beyond a blocked corner requires the real detour rather than one diagonal step
+ok 172 - a coordinate beyond a blocked corner requires the real detour rather than one diagonal step
+  ---
+  duration_ms: 2.0713
+  type: 'test'
+  ...
+# Subtest: weapon range is distinct from movement and an available attack is not a promised hit
+ok 173 - weapon range is distinct from movement and an available attack is not a promised hit
+  ---
+  duration_ms: 8.4804
+  type: 'test'
+  ...
+# Subtest: queries on other turns and during a pause stay available but do not grant actions
+ok 174 - queries on other turns and during a pause stay available but do not grant actions
+  ---
+  duration_ms: 4.7719
+  type: 'test'
+  ...
+# Subtest: spent movement and action remain distinct from range and future movement
+ok 175 - spent movement and action remain distinct from range and future movement
+  ---
+  duration_ms: 4.3476
+  type: 'test'
+  ...
+# Subtest: defeated characters and completed encounters return explicit availability limits
+ok 176 - defeated characters and completed encounters return explicit availability limits
+  ---
+  duration_ms: 4.0902
+  type: 'test'
+  ...
+# Subtest: hidden actors and cells, cross-owner characters, stale state and malformed inputs are rejected
+ok 177 - hidden actors and cells, cross-owner characters, stale state and malformed inputs are rejected
+  ---
+  duration_ms: 8.5343
+  type: 'test'
+  ...
+# Subtest: unseen cells never supply a route or a confirmed shot between separately visible islands
+ok 178 - unseen cells never supply a route or a confirmed shot between separately visible islands
+  ---
+  duration_ms: 2.4396
+  type: 'test'
+  ...
+# Subtest: all queries are read-only: no state, events, outbox, receipts or dice change
+ok 179 - all queries are read-only: no state, events, outbox, receipts or dice change
+  ---
+  duration_ms: 9.9355
+  type: 'test'
+  ...
+# (node:2364) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: council freezes public evidence, preserves player choice and restores without selecting twice
+ok 180 - council freezes public evidence, preserves player choice and restores without selecting twice
+  ---
+  duration_ms: 132.0089
+  type: 'test'
+  ...
+# Subtest: counsel has a durable shared budget, private evidence and repeat-safe requests without gameplay changes
+ok 181 - counsel has a durable shared budget, private evidence and repeat-safe requests without gameplay changes
+  ---
+  duration_ms: 107.7992
+  type: 'test'
+  ...
+# Subtest: encounter consequences and a repeat-safe party debrief persist across restart
+ok 182 - encounter consequences and a repeat-safe party debrief persist across restart
+  ---
+  duration_ms: 107.4743
+  type: 'test'
+  ...
+# Subtest: world event failure rolls back encounter completion and its delivery snapshots
+ok 183 - world event failure rolls back encounter completion and its delivery snapshots
+  ---
+  duration_ms: 4.3686
+  type: 'test'
+  ...
+# Subtest: source-cited journal describes observed changes and personal rolls without inventing hidden outcomes
+ok 184 - source-cited journal describes observed changes and personal rolls without inventing hidden outcomes
+  ---
+  duration_ms: 8.3683
+  type: 'test'
+  ...
+# Subtest: verified online backup restores positions, effects, roll receipts and revision delivery without rerolling
+ok 185 - verified online backup restores positions, effects, roll receipts and revision delivery without rerolling
+  ---
+  duration_ms: 103.7711
+  type: 'test'
+  ...
+# Subtest: backup verification rejects changed files, incomplete ledgers and unknown schema
+ok 186 - backup verification rejects changed files, incomplete ledgers and unknown schema
+  ---
+  duration_ms: 119.5107
+  type: 'test'
+  ...
+# Subtest: tactical image source follows committed movement, caches unchanged views and blocks revoked members
+ok 187 - tactical image source follows committed movement, caches unchanged views and blocks revoked members
+  ---
+  duration_ms: 417.9583
+  type: 'test'
+  ...
+# Subtest: image-only campaigns retain host scenes; tactical membership never falls back to party art
+ok 188 - image-only campaigns retain host scenes; tactical membership never falls back to party art
+  ---
+  duration_ms: 2.6107
+  type: 'test'
+  ...
+# Subtest: revision pages retain every movement and hazard result across restart without consuming delivery
+ok 189 - revision pages retain every movement and hazard result across restart without consuming delivery
+  ---
+  duration_ms: 70.5504
+  type: 'test'
+  ...
+# Subtest: historical projections filter secrets, enforce current membership and validate cursors
+ok 190 - historical projections filter secrets, enforce current membership and validate cursors
+  ---
+  duration_ms: 2.1269
+  type: 'test'
+  ...
+# Subtest: expiry revision already removes the expired zone
+ok 191 - expiry revision already removes the expired zone
+  ---
+  duration_ms: 2.9311
+  type: 'test'
+  ...
+# Subtest: movement, effects, dice and repeated receipts survive restart
+ok 192 - movement, effects, dice and repeated receipts survive restart
+  ---
+  duration_ms: 41.3022
+  type: 'test'
+  ...
+# Subtest: stale, wrong-owner, wrong-turn and repeated-resource attacks change nothing
+ok 193 - stale, wrong-owner, wrong-turn and repeated-resource attacks change nothing
+  ---
+  duration_ms: 4.1553
+  type: 'test'
+  ...
+# Subtest: pause allows map rendering but freezes movement and clock
+ok 194 - pause allows map rendering but freezes movement and clock
+  ---
+  duration_ms: 35.7281
+  type: 'test'
+  ...
+# Subtest: effect expiration and once-per-turn entry are persisted as separate events
+ok 195 - effect expiration and once-per-turn entry are persisted as separate events
+  ---
+  duration_ms: 3.4192
+  type: 'test'
+  ...
+# Subtest: hidden actor, terrain and effect are absent from player projection and ledger
+ok 196 - hidden actor, terrain and effect are absent from player projection and ledger
+  ---
+  duration_ms: 1.6075
+  type: 'test'
+  ...
+# Subtest: lethal hazard stops movement before remaining cells without overspending
+ok 197 - lethal hazard stops movement before remaining cells without overspending
+  ---
+  duration_ms: 1.4889
+  type: 'test'
+  ...
+# Subtest: critical and natural-one outcomes use saved die values
+ok 198 - critical and natural-one outcomes use saved die values
+  ---
+  duration_ms: 3.1572
+  type: 'test'
+  ...
+# Subtest: two store connections reuse one command receipt and reject payload reuse
+ok 199 - two store connections reuse one command receipt and reject payload reuse
+  ---
+  duration_ms: 48.5742
+  type: 'test'
+  ...
+# (node:19868) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: access code becomes a private cookie and never appears in the JSON response
+ok 200 - access code becomes a private cookie and never appears in the JSON response
+  ---
+  duration_ms: 29.1263
+  type: 'test'
+  ...
+# Subtest: disconnect expires the same scoped cookie
+ok 201 - disconnect expires the same scoped cookie
+  ---
+  duration_ms: 0.8233
+  type: 'test'
+  ...
+# Subtest: every browser mutation rejects missing or foreign Origin before action
+ok 202 - every browser mutation rejects missing or foreign Origin before action
+  ---
+  duration_ms: 6.7487
+  type: 'test'
+  ...
+# Subtest: cross-site browser metadata is rejected even if Origin is forged
+ok 203 - cross-site browser metadata is rejected even if Origin is forged
+  ---
+  duration_ms: 0.3702
+  type: 'test'
+  ...
+# Subtest: all protected endpoints reject missing, malformed, duplicate or invalid cookies
+ok 204 - all protected endpoints reject missing, malformed, duplicate or invalid cookies
+  ---
+  duration_ms: 4.7692
+  type: 'test'
+  ...
+# Subtest: scene response uses authenticated owner and strips private fields
+ok 205 - scene response uses authenticated owner and strips private fields
+  ---
+  duration_ms: 0.9333
+  type: 'test'
+  ...
+# Subtest: request carries only authenticated scope and UUID idempotency key to the service
+ok 206 - request carries only authenticated scope and UUID idempotency key to the service
+  ---
+  duration_ms: 1.0402
+  type: 'test'
+  ...
+# Subtest: request rejects forged scope, malformed IDs, unsupported fields and malformed JSON
+ok 207 - request rejects forged scope, malformed IDs, unsupported fields and malformed JSON
+  ---
+  duration_ms: 5.6144
+  type: 'test'
+  ...
+# Subtest: large bodies and non-JSON content are rejected
+ok 208 - large bodies and non-JSON content are rejected
+  ---
+  duration_ms: 0.8574
+  type: 'test'
+  ...
+# Subtest: cross-owner status and image requests receive a generic 404 and no image bytes
+ok 209 - cross-owner status and image requests receive a generic 404 and no image bytes
+  ---
+  duration_ms: 1.2113
+  type: 'test'
+  ...
+# Subtest: unfinished and failed images cannot be downloaded
+ok 210 - unfinished and failed images cannot be downloaded
+  ---
+  duration_ms: 0.8085
+  type: 'test'
+  ...
+# Subtest: ready image is delivered as authenticated PNG without server file names
+ok 211 - ready image is delivered as authenticated PNG without server file names
+  ---
+  duration_ms: 0.7978
+  type: 'test'
+  ...
+# Subtest: status retains stale snapshot metadata while excluding private service fields
+ok 212 - status retains stale snapshot metadata while excluding private service fields
+  ---
+  duration_ms: 0.4599
+  type: 'test'
+  ...
+# Subtest: unknown failures and invalid image IDs never expose server details
+ok 213 - unknown failures and invalid image IDs never expose server details
+  ---
+  duration_ms: 0.7884
+  type: 'test'
+  ...
+# Subtest: text generation uses fixed Image API and validates returned PNG
+ok 214 - text generation uses fixed Image API and validates returned PNG
+  ---
+  duration_ms: 67.6328
+  type: 'test'
+  ...
+# Subtest: references use edits multipart with no prompt-path leakage
+ok 215 - references use edits multipart with no prompt-path leakage
+  ---
+  duration_ms: 29.1122
+  type: 'test'
+  ...
+# Subtest: unconfigured/failed provider never retries or returns raw errors
+ok 216 - unconfigured/failed provider never retries or returns raw errors
+  ---
+  duration_ms: 1.1333
+  type: 'test'
+  ...
+# (node:27316) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: requests at any phase are read-only, privately delivered, and idempotent
+ok 217 - requests at any phase are read-only, privately delivered, and idempotent
+  ---
+  duration_ms: 384.3038
+  type: 'test'
+  ...
+# Subtest: only observable host projection and visible subject enter generation
+ok 218 - only observable host projection and visible subject enter generation
+  ---
+  duration_ms: 364.3672
+  type: 'test'
+  ...
+# Subtest: personal viewpoints take precedence and cannot cross campaign/player boundaries
+ok 219 - personal viewpoints take precedence and cannot cross campaign/player boundaries
+  ---
+  duration_ms: 53.4174
+  type: 'test'
+  ...
+# Subtest: changed view creates a fresh image and marks the saved snapshot as older
+ok 220 - changed view creates a fresh image and marks the saved snapshot as older
+  ---
+  duration_ms: 980.8112
+  type: 'test'
+  ...
+# Subtest: two host processes share a durable job and do not duplicate provider work
+ok 221 - two host processes share a durable job and do not duplicate provider work
+  ---
+  duration_ms: 376.6433
+  type: 'test'
+  ...
+# Subtest: views are persistent, owner-bound and expire
+ok 222 - views are persistent, owner-bound and expire
+  ---
+  duration_ms: 44.6177
+  type: 'test'
+  ...
+# Subtest: missing provider is explicit; host-approved art still works with no API call
+ok 223 - missing provider is explicit; host-approved art still works with no API call
+  ---
+  duration_ms: 673.355
+  type: 'test'
+  ...
+# Subtest: interrupted leases fail without an automatic paid retry
+ok 224 - interrupted leases fail without an automatic paid retry
+  ---
+  duration_ms: 356.416
+  type: 'test'
+  ...
+# Subtest: invalid image bytes never become a ready result
+ok 225 - invalid image bytes never become a ready result
+  ---
+  duration_ms: 357.809
+  type: 'test'
+  ...
+# Subtest: null reference IDs are rejected at publication rather than breaking later renders
+ok 226 - null reference IDs are rejected at publication rather than breaking later renders
+  ---
+  duration_ms: 36.231
+  type: 'test'
+  ...
+# Subtest: an expired worker cannot overwrite the failure recorded by another host
+ok 227 - an expired worker cannot overwrite the failure recorded by another host
+  ---
+  duration_ms: 399.2448
+  type: 'test'
+  ...
+# Subtest: coordinates include multi-letter columns
+ok 228 - coordinates include multi-letter columns
+  ---
+  duration_ms: 1.9634
+  type: 'test'
+  ...
+# Subtest: diagonal house movement and terrain share exact cost
+ok 229 - diagonal house movement and terrain share exact cost
+  ---
+  duration_ms: 1.9604
+  type: 'test'
+  ...
+# Subtest: blocked corners cannot be cut by path or LOS
+ok 230 - blocked corners cannot be cut by path or LOS
+  ---
+  duration_ms: 0.2572
+  type: 'test'
+  ...
+# Subtest: large token footprint cannot pass a one-cell corridor
+ok 231 - large token footprint cannot pass a one-cell corridor
+  ---
+  duration_ms: 2.0071
+  type: 'test'
+  ...
+# Subtest: budget and occupied spaces constrain routes
+ok 232 - budget and occupied spaces constrain routes
+  ---
+  duration_ms: 0.9665
+  type: 'test'
+  ...
+# Subtest: wall visible but cells behind it hidden; visibility radius enforced
+ok 233 - wall visible but cells behind it hidden; visibility radius enforced
+  ---
+  duration_ms: 0.438
+  type: 'test'
+  ...
+# Subtest: octagon has eight equal edges and square filler geometry
+ok 234 - octagon has eight equal edges and square filler geometry
+  ---
+  duration_ms: 0.2918
+  type: 'test'
+  ...
+# Subtest: campaigns cannot leak across splits and output strips review metadata
+ok 235 - campaigns cannot leak across splits and output strips review metadata
+  ---
+  duration_ms: 18.2719
+  type: 'test'
+  ...
+# Subtest: reject unreviewed, secret, mechanics and unlicensed records
+ok 236 - reject unreviewed, secret, mechanics and unlicensed records
+  ---
+  duration_ms: 0.6363
+  type: 'test'
+  ...
+# Subtest: obvious credentials are rejected without echoing content
+ok 237 - obvious credentials are rejected without echoing content
+  ---
+  duration_ms: 0.4963
+  type: 'test'
+  ...
+# Subtest: duplicates and one-campaign splits fail
+ok 238 - duplicates and one-campaign splits fail
+  ---
+  duration_ms: 0.5154
+  type: 'test'
+  ...
+# Subtest: DPO maintains prompt/completion shape and rejects identical preferences
+ok 239 - DPO maintains prompt/completion shape and rejects identical preferences
+  ---
+  duration_ms: 0.5902
+  type: 'test'
+  ...
+1..239
+# tests 239
+# suites 0
+# pass 238
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 11850.7928

@@ -1,0 +1,95 @@
+{
+  "inputs": {
+    "../../ai/obus.mjs": {
+      "bytes": 10156,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:os",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "../../chronicle/obus-provider.mjs": {
+      "bytes": 12137,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "index.mjs": {
+      "bytes": 132,
+      "imports": [
+        {
+          "path": "../../ai/obus.mjs",
+          "kind": "import-statement",
+          "original": "../../ai/obus.mjs"
+        },
+        {
+          "path": "../../chronicle/obus-provider.mjs",
+          "kind": "import-statement",
+          "original": "../../chronicle/obus-provider.mjs"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "dist/index.mjs": {
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:os",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [
+        "ObusTransport",
+        "createObusChronicleProvider"
+      ],
+      "entryPoint": "index.mjs",
+      "inputs": {
+        "../../ai/obus.mjs": {
+          "bytesInOutput": 10115
+        },
+        "index.mjs": {
+          "bytesInOutput": 0
+        },
+        "../../chronicle/obus-provider.mjs": {
+          "bytesInOutput": 12228
+        }
+      },
+      "bytes": 22461
+    }
+  }
+}

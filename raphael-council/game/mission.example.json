@@ -1,0 +1,13 @@
+{
+  "campaign": "replace-with-campaign-id",
+  "reviewedBy": "replace-with-host-id",
+  "reviewed": false,
+  "tracks": [{ "id": "crossing-confidence", "label": "Ember Crossing confidence", "kind": "location", "value": 50 }],
+  "mission": {
+    "id": "crossing-watch", "title": "Watch at Ember Crossing",
+    "briefing": "Resolve the encounter at the crossing and record what the community has learned.",
+    "mapId": "replace-with-current-map-id", "successTeam": "party",
+    "success": { "summary": "The reviewed encounter objective was met. The community gains confidence in the watch.", "changes": [{ "trackId": "crossing-confidence", "delta": 10 }] },
+    "failure": { "summary": "The reviewed encounter objective was not met. The watch needs to rebuild confidence.", "changes": [{ "trackId": "crossing-confidence", "delta": -5 }] }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "campaign": "replace-with-campaign-id", "reviewedBy": "replace-with-host-id", "reviewed": false, "expectedWorldRevision": 3,
+  "branches": [
+    { "id": "restore-watch", "title": "Restore the watch", "summary": "Help the crossing recover after the encounter.", "cost": "Other leads must wait while the party helps the watch.", "trackIds": [], "evidence": ["world:replace-with-campaign-id:3"], "priorities": { "aster": 3, "mnemos": 1, "seren": 3, "kael": 1, "mira": 2 } },
+    { "id": "follow-records", "title": "Follow the records", "summary": "Discuss the party's recorded observations with the archivists.", "cost": "The party leaves recovery work to its allies while following this lead.", "trackIds": [], "evidence": ["world:replace-with-campaign-id:3"], "priorities": { "aster": 1, "mnemos": 3, "seren": 1, "kael": 3, "mira": 2 } }
+  ]
+}

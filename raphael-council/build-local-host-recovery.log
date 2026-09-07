@@ -1,0 +1,82 @@
+npm notice run raphael-council@0.1.0 build
+npm notice run vinext build
+
+  vinext build  (Vite 8.0.13)
+
+[1/5] analyze client references...
+[2K
+transforming...✓ 293 modules transformed.
+rendering chunks...
+✓ built in 798ms
+[2/5] analyze server references...
+[2K
+transforming...✓ 211 modules transformed.
+rendering chunks...
+✓ built in 407ms
+[3/5] build rsc environment...
+[2K
+transforming...✓ 291 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 676ms
+[4/5] build client environment...
+[2K
+transforming...✓ 221 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 637ms
+[5/5] build ssr environment...
+[2K
+transforming...✓ 208 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 257ms
+[0m
+  Route (app)
+  ┌ ? /                               
+  ├ ? /activity                       
+  ├ λ /api/auth/activity              
+  ├ λ /api/auth/config                
+  ├ λ /api/auth/discord/callback      
+  ├ λ /api/auth/discord/start         
+  ├ λ /api/auth/logout                
+  ├ λ /api/auth/session               
+  ├ λ /api/game                       
+  ├ λ /api/game/access                
+  ├ λ /api/game/adjudication          
+  ├ λ /api/game/ai                    
+  ├ λ /api/game/characters            
+  ├ λ /api/game/characters/:actorId   
+  ├ λ /api/game/checks                
+  ├ λ /api/game/checks/request        
+  ├ λ /api/game/chronicle             
+  ├ λ /api/game/concentration         
+  ├ λ /api/game/council               
+  ├ λ /api/game/counsel               
+  ├ λ /api/game/departure             
+  ├ λ /api/game/journal               
+  ├ λ /api/game/map                   
+  ├ λ /api/game/reach                 
+  ├ λ /api/game/reactions             
+  ├ λ /api/game/scene-images          
+  ├ λ /api/game/scene-images/:id      
+  ├ λ /api/game/scene-images/:id/image
+  ├ λ /api/game/updates               
+  ├ λ /api/game/world                 
+  ├ λ /api/game/world-time            
+  ├ λ /api/scene-images               
+  ├ λ /api/scene-images/:id           
+  ├ λ /api/scene-images/:id/image     
+  ├ λ /api/scene-images/access        
+  ├ λ /api/scene-images/reach         
+  ├ ? /illustrations                  
+  └ ? /play                           
+
+  λ API  ? Unknown
+
+  ? Some routes could not be classified. vinext currently uses static analysis
+    and cannot detect dynamic API usage (headers(), cookies(), etc.) at build time.
+    Automatic classification will be improved in a future release.
+
+  Build complete. Run `vinext start` to start the production server.
+

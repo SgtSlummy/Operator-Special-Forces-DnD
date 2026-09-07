@@ -1,0 +1,86 @@
+[
+  {
+    "file": "shore.jpg",
+    "source": "on-discovery/11-saltglass-shore.png",
+    "width": 1440,
+    "height": 810,
+    "bytes": 182041
+  },
+  {
+    "file": "shore-small.jpg",
+    "source": "on-discovery/11-saltglass-shore.png",
+    "width": 600,
+    "height": 338,
+    "bytes": 26573
+  },
+  {
+    "file": "abbey.jpg",
+    "source": "on-discovery/12-drowned-abbey.png",
+    "width": 1440,
+    "height": 810,
+    "bytes": 178878
+  },
+  {
+    "file": "abbey-small.jpg",
+    "source": "on-discovery/12-drowned-abbey.png",
+    "width": 600,
+    "height": 338,
+    "bytes": 26009
+  },
+  {
+    "file": "hearth.jpg",
+    "source": "opening/02-last-hearth.png",
+    "width": 1440,
+    "height": 810,
+    "bytes": 176287
+  },
+  {
+    "file": "hearth-small.jpg",
+    "source": "opening/02-last-hearth.png",
+    "width": 600,
+    "height": 338,
+    "bytes": 26833
+  },
+  {
+    "file": "island.jpg",
+    "source": "world/established-region/27-nareth-island.png",
+    "width": 1440,
+    "height": 810,
+    "bytes": 165039
+  },
+  {
+    "file": "island-small.jpg",
+    "source": "world/established-region/27-nareth-island.png",
+    "width": 600,
+    "height": 338,
+    "bytes": 24397
+  },
+  {
+    "file": "counsel.jpg",
+    "source": "lore/on-discovery/61-raphael-counsel.png",
+    "width": 1440,
+    "height": 810,
+    "bytes": 105734
+  },
+  {
+    "file": "counsel-small.jpg",
+    "source": "lore/on-discovery/61-raphael-counsel.png",
+    "width": 600,
+    "height": 338,
+    "bytes": 15389
+  },
+  {
+    "file": "mara.jpg",
+    "source": "people/portraits/52-mara.png",
+    "width": 1086,
+    "height": 1448,
+    "bytes": 182699
+  },
+  {
+    "file": "mara-small.jpg",
+    "source": "people/portraits/52-mara.png",
+    "width": 600,
+    "height": 800,
+    "bytes": 41256
+  }
+]

@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "id": "behind-the-veil",
+  "title": "Behind the Veil",
+  "visibility": "gm_only",
+  "status": "authored_content_blueprint_not_runtime",
+  "source": {
+    "url": "https://chatgpt.com/share/6a9ce0e1-bc4c-83e8-8bb1-fc4d07bc22e4",
+    "basis": "visible_shared_conversation",
+    "original_downloaded_packet_retrieved": false
+  },
+  "documents": {
+    "gm": "../BEHIND_THE_VEIL_GM.md",
+    "player": "../BEHIND_THE_VEIL_PLAYER_BRIEFING.md"
+  },
+  "integration": {
+    "world": "Avarra",
+    "region": "Nareth",
+    "default_arc_enabled": false,
+    "modes": ["optional_greyharbor_expedition", "standalone"],
+    "preserve_existing_character_history_and_levels": true,
+    "arrival_world_date": null,
+    "rules_edition": null,
+    "requires_setup": ["campaign_id", "arrival_world_date", "rules_edition", "party", "content_preferences"],
+    "raphael_counsel": "Existing brief guidance; explicit in-boundary exception, no cross-boundary message relay or unrestricted secrets."
+  },
+  "defaults": {"party_size": 4, "party_size_range": [3, 5], "starting_level": 3, "full_route_final_level": 8, "session_range": [10, 14]},
+  "initial_state": {
+    "phase": "not_started",
+    "expedition_day": 1,
+    "elapsed_minutes": 0,
+    "invasion_base_day": 13,
+    "invasion_delay_days": 0,
+    "invasion_started": false,
+    "heat": 1,
+    "supplies_party_days": 4,
+    "lantern_support": 0,
+    "location_id": "saltglass_shore",
+    "search_clock": {"value": 0, "max": 3, "active": false},
+    "assets": {"construct_reinforcements": "full", "elite_reinforcements": "active", "coordinated_elite_pursuit": true, "veil": "regime_controlled", "extraction_route": false},
+    "operation_status": {"no_banner": "available", "cinderworks": "unresolved", "hounds_ledger": "unresolved", "hollow_choir": "unresolved", "crown_falls": "unresolved"},
+    "foundry_delay_awarded_days": 0,
+    "consumed_channel_tokens": [],
+    "available_channel_tokens": [],
+    "milestones_awarded": [],
+    "outcome_awards_applied": [],
+    "food_consumption_by_field_day": {},
+    "incident_report_severity_applied": {},
+    "enemy_reports": [],
+    "party_shared_knowledge": ["mission_brief", "veil_public_rules", "expected_invasion_date"],
+    "private_character_knowledge": {},
+    "enemy_knowledge": {},
+    "applied_event_ids": [],
+    "state_revision": 0
+  },
+  "locations": [
+    {"id": "saltglass_shore", "name": "Saltglass Shore"},
+    {"id": "drowned_abbey", "name": "Drowned Abbey"},
+    {"id": "reedmarket", "name": "Reedmarket"},
+    {"id": "cinderworks", "name": "Cinderworks"},
+    {"id": "watchspire", "name": "Watchspire"},
+    {"id": "hollow_choir", "name": "Hollow Choir"},
+    {"id": "crownfast", "name": "Crownfast"}
+  ],
+  "npcs": [
+    {"id": "mara_venn", "name": "Mara Venn", "priority": "Protect residents and the local Lantern Network."},
+    {"id": "captain_rusk", "name": "Captain Rusk", "priority": "Defend Nareth; reconsider loyalty when shown sacrificial orders."},
+    {"id": "ilyan_sere", "name": "Ilyan Sere", "priority": "Free the other oath-bound ritualists as well as self."},
+    {"id": "elian_ward", "name": "Captain Elian Ward", "priority": "Stop the invasion; can advocate for party discoveries."},
+    {"id": "maelor_voss", "name": "Regent Maelor Voss", "priority": "Use conquest to make emergency power permanent."}
+  ],
+  "gm_secrets": [{"id": "annexation_plan", "fact": "Some Aster Compact leaders intend to annex Nareth after Voss falls.", "independent_evidence": ["draft_occupation_proclamation", "governor_staff_orders", "crownfast_diplomatic_letter"], "automatically_known_by_ward": false}],
+  "operations": [
+    {"id": "no_banner", "location_id": "saltglass_shore", "objective": "Establish a durable foothold and trusted contact.", "full": {"support_award_once": 1}, "optional": {"reserve_crate_supplies_award_once": 2}, "failure_continuation": "Marsh escape or Reedmarket help."},
+    {"id": "cinderworks", "location_id": "cinderworks", "objective": "End the foundry's contribution to the invasion.", "partial": {"construct_reinforcements": "reduced", "total_prelaunch_delay_days": 1}, "full": {"construct_reinforcements": "removed", "total_prelaunch_delay_days": 2}, "optional": {"protected_workers_support_award_once": 1}, "failure_continuation": "Escaped engineer or shipment docket offers another opportunity."},
+    {"id": "hounds_ledger", "location_id": "watchspire", "objective": "Break coordinated pursuit and elite reinforcement capability.", "partial": {"main_unit_active": true, "gain": "Route or credentials; one officer and patrol stand down."}, "full": {"elite_reinforcements": "removed", "coordinated_elite_pursuit": false, "heat_delta_once": -1}, "failure_continuation": "Hounds remain active and adapt only to observed facts."},
+    {"id": "hollow_choir", "location_id": "hollow_choir", "objective": "End exclusive regime control of the Veil.", "partial": {"single_use_channel_tokens_award_once": 1, "token_spend_choices": ["one_message", "one_crossing"]}, "full": {"veil_choices": ["disabled", "negotiated_local_channels"], "extraction_route": true}, "failure_continuation": "Ritualist and portable control seal relocate to Crownfast."},
+    {"id": "crown_falls", "location_id": "crownfast", "objective": "Stop Voss's war and establish who controls the army afterward.", "early_attempt_allowed": true, "inherits_saved_assets": true, "failure_continuation": "Interception, evacuation, negotiation or resistance."}
+  ],
+  "state_contracts": {
+    "commit": "Validate campaign membership, expected revision and stable idempotency key; atomically append event, update projection and save receipt.",
+    "time": "Advance only actual fictional duration once; calendar derives from arrival plus elapsed time. No advancement from replies, browsing or pause.",
+    "heat": "Clamp 0..6; severity 0/1/2 per delivered incident; apply only positive difference from previously applied incident severity. Knowledge requires delivered evidence.",
+    "lay_low": "A full fictional day without a new report reduces Heat by one, minimum zero.",
+    "supplies": "Charge one party-day of food once per field day, offset by actual meals or food magic; record any unmet need for selected rules to resolve.",
+    "support": "Clamp 0..3; award once per distinct outcome; never treat as island-wide opinion.",
+    "foundry_delay": "Before invasion launch, award max(0, outcome_total - foundry_delay_awarded_days), at most two days total. After launch, modify reinforcements without reversing launch.",
+    "deadline": "Launch once when actual time reaches dawn on adjusted invasion day; continue play.",
+    "channel": "Consume unique token atomically for one message OR one crossing.",
+    "milestones": "One per distinct resolved operation, at most five; never award again on upgrade. Existing campaign policy takes precedence.",
+    "enemy_report_required_fields": ["incident_id", "observer_id", "claim", "recipient_id", "observed_at", "delivery_at", "delivered"],
+    "public_output": "Build an allowlisted projection from disclosed knowledge. Never serialize this entire GM-only blueprint to clients."
+  },
+  "discord_mapping": {"observe": "Look closer", "talk": "Speak", "act": "Do something else", "plan": "Do something else", "journal": "Journal", "guidance": "Ask Raphael", "public_tracks": ["expedition_day", "known_invasion_deadline", "heat", "supplies_party_days", "lantern_support"]},
+  "endings": ["locally_governed_nareth", "annexation_after_military_success", "fragile_negotiated_peace", "survivors_of_opening_war"]
+}

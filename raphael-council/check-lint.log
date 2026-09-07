@@ -1,0 +1,2 @@
+npm notice run raphael-council@0.1.0 npx
+npm notice run eslint ai auth app/activity app/play/ai.tsx game/http.mjs game/runtime.mjs

@@ -1,0 +1,39 @@
+{
+  "name": "@operator/chronicle",
+  "version": "0.1.1",
+  "esbuild": "0.27.3",
+  "node": ">=22.16.0",
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.8"
+  },
+  "entry": "dist/index.mjs",
+  "sha256": "fb5b27a14feac00b8fc014631b16d1924a9bce72bdee9c71127b225a261531d8",
+  "bytes": 71058,
+  "sources": {
+    "chronicle/commands.mjs": "4398e36096737845f7e3039372c990ffa7a511f1200b70f2daa699c5f34e1f1c",
+    "chronicle/dispatch.mjs": "f7c85a9b5875f55c21f9671c2e87353a9a90754a3a4b71ae50c874b7fc3ecc93",
+    "chronicle/report.mjs": "9d8238d636f6e330dce161237140f5174239cf67ddec30d38b0a33c9e3c62c73",
+    "chronicle/service.mjs": "f15d4045631e13eafeb1a964c88065fcf160829db916dad3ff151fb27f3c6cfe",
+    "chronicle/store.mjs": "93dd82b64f84eb734a2ac3c5cfd1f8a2d8bcb59e7e1a2ee8547732a7e1d5a875",
+    "discord/chronicle-adapter.mjs": "d48292ef5bd4d9c47ffae419d60193944a7f29ea83177c613c9613c8ca8b420c",
+    "discord/chronicle-core.mjs": "c111dba268cbe188626c943a4e042011ef6760653e933d9b9147b11451f54cd2",
+    "packages/chronicle/index.mjs": "10da1c7b971666538ee96842cdee2dae429d4379b1f65fc857c87b1b1c591b9e"
+  },
+  "externals": [
+    "@napi-rs/canvas",
+    "node:crypto",
+    "node:fs",
+    "node:fs/promises",
+    "node:path",
+    "node:sqlite"
+  ],
+  "exports": [
+    "ChronicleCommandError",
+    "ChronicleCommands",
+    "ChronicleError",
+    "ChronicleStore",
+    "SESSION_COMMAND",
+    "createChronicleRuntime",
+    "createChronicleRuntimeCore"
+  ]
+}

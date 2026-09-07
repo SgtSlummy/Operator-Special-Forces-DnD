@@ -1,0 +1,31 @@
+{
+  "name": "@operator/chronicle",
+  "version": "0.1.1",
+  "filename": "operator-chronicle-0.1.1.tgz",
+  "sha256": "78c8b0748b2ed19bf21741db7b36b805c205f5dd1a056bf3cd3adf1391552575",
+  "npmIntegrity": "sha512-Li9S1xmwIeGGgUFdXwnFO+w/fd3g7Gb/pmxZRnfTKzHZ+5VYk70LXvn6rD3dRBazTjePggw0PXw/hurM243ySA==",
+  "bytes": 23907,
+  "unpackedBytes": 82772,
+  "bundleSha256": "fb5b27a14feac00b8fc014631b16d1924a9bce72bdee9c71127b225a261531d8",
+  "node": ">=22.16.0",
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.8"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "size": 11082,
+      "mode": 420
+    },
+    {
+      "path": "dist/index.mjs",
+      "size": 71058,
+      "mode": 420
+    },
+    {
+      "path": "package.json",
+      "size": 632,
+      "mode": 420
+    }
+  ]
+}

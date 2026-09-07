@@ -1,0 +1,30 @@
+:root { font-family: system-ui, sans-serif; color: #edf3ed; background: #101913; line-height: 1.5; color-scheme: dark; }
+body { margin: 0; }
+main { max-width: 1100px; margin: auto; padding: 24px; }
+h1 { margin: 0 0 12px; font-size: 30px; }
+h2 { font-size: 21px; }
+p { max-width: 85ch; }
+.eyebrow { color: #b9d2ae; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+.controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 0; }
+button, input, select, textarea { font: inherit; border: 1px solid #70927a; border-radius: 5px; background: #1b2c21; color: #fff; padding: 7px 9px; }
+button { cursor: pointer; }
+button:hover:enabled { background: #325b3b; }
+button:disabled, fieldset:disabled { opacity: .58; cursor: default; }
+input[type=checkbox] { width: 18px; height: 18px; }
+label { display: block; margin: 10px 0; }
+label > input:not([type=checkbox]), label > select, label > textarea { display: block; max-width: 100%; width: min(450px, 95%); }
+fieldset { margin: 12px 0; padding: 12px; border: 1px solid #3b5844; border-radius: 6px; }
+legend { padding: 0 6px; font-weight: 600; }
+.component, .state { margin: 20px 0; padding: 18px; border: 1px solid #42654a; border-radius: 9px; background: #17241b; }
+details { padding: 10px 0; }
+summary { cursor: pointer; font-weight: 650; }
+dl { display: grid; grid-template-columns: minmax(170px, 1fr) 2fr; gap: 6px 16px; margin: 8px 0; }
+dt { color: #bdd0c0; }
+dd { margin: 0; overflow-wrap: anywhere; }
+.hint { font-size: 13px; color: #bfd0be; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #08100b; padding: 16px; border-radius: 6px; max-height: 400px; overflow: auto; }
+code { font-size: 12px; overflow-wrap: anywhere; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 7px; border-bottom: 1px solid #42654a; text-align: left; vertical-align: top; }
+td { overflow-wrap: anywhere; }
+@media (max-width: 650px) { main { padding: 12px; } dl { grid-template-columns: 1fr; gap: 2px; } dd { margin-bottom: 9px; } }

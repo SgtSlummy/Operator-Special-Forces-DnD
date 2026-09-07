@@ -1,0 +1,671 @@
+{
+  "checkedAtUtc": "2026-09-06T05:26:03.8508751Z",
+  "assetCount": 66,
+  "actualPngCount": 66,
+  "allGenerated": true,
+  "allPromptsPresent": true,
+  "allPngsDecoded": true,
+  "allSavedFilesMatchReviewedSources": true,
+  "records": [
+    {
+      "id": "01-greyharbor",
+      "manifest": "manifest.json",
+      "file": "opening/01-greyharbor.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2359710,
+      "sha256": "681E66E1590C96DB5EA1C66ABD693BD062B5D95D11DBB79FF26299ED3E97BE45",
+      "sourceMatches": true
+    },
+    {
+      "id": "02-last-hearth",
+      "manifest": "manifest.json",
+      "file": "opening/02-last-hearth.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2044686,
+      "sha256": "4EE77B1957FF189E6B5EC24CFE69DB0183B0FFCCD4331372C09B4633DCD838F3",
+      "sourceMatches": true
+    },
+    {
+      "id": "03-bellweather-weir",
+      "manifest": "manifest.json",
+      "file": "on-discovery/03-bellweather-weir.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2216746,
+      "sha256": "2B01BBCF79573F5721636D5A651E6A08C0109C9241CF5D90AB1AB697F14CFDFB",
+      "sourceMatches": true
+    },
+    {
+      "id": "04-sunken-archive",
+      "manifest": "manifest.json",
+      "file": "on-discovery/04-sunken-archive.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2115078,
+      "sha256": "5A9713BACF8822B2594B576BC98C1C6DDB929BA05F9AB1814C22A108B626DF6F",
+      "sourceMatches": true
+    },
+    {
+      "id": "05-ember-crossing",
+      "manifest": "manifest.json",
+      "file": "on-discovery/05-ember-crossing.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2152977,
+      "sha256": "C9C9C04B82EF930CC448F704D077DBBBA1BF00336D6339B1662DBD4708E50F4A",
+      "sourceMatches": true
+    },
+    {
+      "id": "06-festival-returning-lights",
+      "manifest": "manifest.json",
+      "file": "opening/06-festival-returning-lights.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2283440,
+      "sha256": "58F4CA186280A451576E7E9C0DA18CFC59FD7911B9A90AA718AC8084DD196AF1",
+      "sourceMatches": true
+    },
+    {
+      "id": "07-thornwake",
+      "manifest": "manifest.json",
+      "file": "on-discovery/07-thornwake.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2278975,
+      "sha256": "70B7B61615FF03042E9675059739705BA6337079F022DFAFD24528193481E780",
+      "sourceMatches": true
+    },
+    {
+      "id": "08-glassmere",
+      "manifest": "manifest.json",
+      "file": "gm-spoilers/08-glassmere.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2198382,
+      "sha256": "DC8828F0C207F88943E56FB4ADC7086DB1A33BB8EC586818BFDA67E819B15B81",
+      "sourceMatches": true
+    },
+    {
+      "id": "09-pale-between",
+      "manifest": "manifest.json",
+      "file": "gm-spoilers/09-pale-between.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1838226,
+      "sha256": "AAFBF1EFB8BD68C0BB79CFB3059E16AE9D26A06929DC688DCAE51D38D74B49C2",
+      "sourceMatches": true
+    },
+    {
+      "id": "10-witness-vault",
+      "manifest": "manifest.json",
+      "file": "gm-spoilers/10-witness-vault.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2398602,
+      "sha256": "DE16ADC896CF641BC07A27C625A90665E4FB60DEF5FC44000DF79C25678DE761",
+      "sourceMatches": true
+    },
+    {
+      "id": "11-saltglass-shore",
+      "manifest": "manifest.json",
+      "file": "on-discovery/11-saltglass-shore.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2167871,
+      "sha256": "BC6470A31A181C582E77373756E5C1D723B7B5D7CDF88F91AAE8770B48DE19A9",
+      "sourceMatches": true
+    },
+    {
+      "id": "12-drowned-abbey",
+      "manifest": "manifest.json",
+      "file": "on-discovery/12-drowned-abbey.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2258321,
+      "sha256": "9C229E2A543DB466D0E9EFA4A227719800AE3AB350BF271B7172B31C31D6914D",
+      "sourceMatches": true
+    },
+    {
+      "id": "13-reedmarket",
+      "manifest": "manifest.json",
+      "file": "on-discovery/13-reedmarket.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2534246,
+      "sha256": "E4C3B11AA354A847CAFFDFE5B6BC437E9F1AFE4E5B277597D476D50D7A41D89E",
+      "sourceMatches": true
+    },
+    {
+      "id": "14-cinderworks",
+      "manifest": "manifest.json",
+      "file": "on-discovery/14-cinderworks.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2417937,
+      "sha256": "E02A1ED3BE17A01D3414E089F6E70916479EBC91D72495FD51F43C2C451274DC",
+      "sourceMatches": true
+    },
+    {
+      "id": "15-watchspire",
+      "manifest": "manifest.json",
+      "file": "on-discovery/15-watchspire.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2049242,
+      "sha256": "583F9AC6659A14C80E6B9A9C203C6281500A1F86B2F2888A8081AA79581096DB",
+      "sourceMatches": true
+    },
+    {
+      "id": "16-hollow-choir",
+      "manifest": "manifest.json",
+      "file": "on-discovery/16-hollow-choir.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2194937,
+      "sha256": "A79001D7DFBDB4E8338C0995B6DC88C88C04EF067723F5CA9EB5428B107237E5",
+      "sourceMatches": true
+    },
+    {
+      "id": "17-crownfast",
+      "manifest": "manifest.json",
+      "file": "on-discovery/17-crownfast.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2055625,
+      "sha256": "723717FD82320E5096130CD724E8FE69162CD0C383933017B39F586DA1D87A4E",
+      "sourceMatches": true
+    },
+    {
+      "id": "18-homecoming",
+      "manifest": "manifest.json",
+      "file": "conditional/18-homecoming.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2191646,
+      "sha256": "B8418FD4FC7E5532B184F6FA74E8885224A28954766B0F611F114AD43712F7C6",
+      "sourceMatches": true
+    },
+    {
+      "id": "19-avarra-world-overview",
+      "manifest": "world/manifest.json",
+      "file": "new-visual-concept/19-avarra-world-overview.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2513827,
+      "sha256": "682FFCC54914BDD62B40644368D32186E26CAC5E00923825AFFC9492DAB0FF5D",
+      "sourceMatches": true
+    },
+    {
+      "id": "20-lantern-reach",
+      "manifest": "world/manifest.json",
+      "file": "established-region/20-lantern-reach.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2418910,
+      "sha256": "214D5EA671AA3FF4AC7E0BECC59611C1699239209C2EC1600CDF8E2E244C87BA",
+      "sourceMatches": true
+    },
+    {
+      "id": "21-vey-headwaters",
+      "manifest": "world/manifest.json",
+      "file": "established-region/21-vey-headwaters.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2664801,
+      "sha256": "A0FCC73F8884A15F39E2F4A8E31E870F3217CAE0190C5EE054756541C1C31AB3",
+      "sourceMatches": true
+    },
+    {
+      "id": "22-upper-vey-settlement",
+      "manifest": "world/manifest.json",
+      "file": "established-region/22-upper-vey-settlement.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2636051,
+      "sha256": "074DFD6E562DB85F596E87E98690A402B09705C6E6E6CE3ECD4ED095587D29AC",
+      "sourceMatches": true
+    },
+    {
+      "id": "23-ancient-river-road",
+      "manifest": "world/manifest.json",
+      "file": "established-region/23-ancient-river-road.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2518323,
+      "sha256": "0938F8D354062550FB064BCE210715B9491564EC1A321E240360EDCDE9B8FDDB",
+      "sourceMatches": true
+    },
+    {
+      "id": "24-reed-villages",
+      "manifest": "world/manifest.json",
+      "file": "established-region/24-reed-villages.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2460085,
+      "sha256": "89D0E3749952D08A0ECFFA4BFC5268B0415A91E2893521346564B41111ED457F",
+      "sourceMatches": true
+    },
+    {
+      "id": "25-vey-estuary",
+      "manifest": "world/manifest.json",
+      "file": "established-region/25-vey-estuary.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2144878,
+      "sha256": "7CCDC0EFB457DC07268536E1005F72FD4514E69E7895BDBFAB92078D6375022B",
+      "sourceMatches": true
+    },
+    {
+      "id": "26-aster-coastal-alliance",
+      "manifest": "world/manifest.json",
+      "file": "established-region/26-aster-coastal-alliance.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2477465,
+      "sha256": "C5CDC1DCD14A6C4124822038016C90C62218F31E5D5EB1C53119FA1F5B0DBE8D",
+      "sourceMatches": true
+    },
+    {
+      "id": "27-nareth-island",
+      "manifest": "world/manifest.json",
+      "file": "established-region/27-nareth-island.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2099146,
+      "sha256": "8C3D652226A537ACC5A08E120E3D8B0F2E1831C5046DEFB4984762E2F73BA178",
+      "sourceMatches": true
+    },
+    {
+      "id": "28-nareth-rural-life",
+      "manifest": "world/manifest.json",
+      "file": "established-region/28-nareth-rural-life.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2398446,
+      "sha256": "613CDE2803C82DCCE2D3388A9E0E85FF9747770B5B48C97B65E70B71CC0CEC9B",
+      "sourceMatches": true
+    },
+    {
+      "id": "29-greyharbor-daylight",
+      "manifest": "world/manifest.json",
+      "file": "established-region/29-greyharbor-daylight.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2390473,
+      "sha256": "7C5664B924B18C89D7762719884E5D8F17BCDF69B3653E11DB6163B98F49459E",
+      "sourceMatches": true
+    },
+    {
+      "id": "30-hearthbound-workshops",
+      "manifest": "world/manifest.json",
+      "file": "established-region/30-hearthbound-workshops.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2260796,
+      "sha256": "25DEB810C752D9AD82AAA619F56DEFD391054E4766E79A21A9B71DD4C93D687F",
+      "sourceMatches": true
+    },
+    {
+      "id": "31-riverfolk-meeting",
+      "manifest": "world/manifest.json",
+      "file": "established-region/31-riverfolk-meeting.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1994188,
+      "sha256": "B25DA7F576DF263FDFB3D494A6E059808EC974AB71F0C9E9C2E2F6763C4BF991",
+      "sourceMatches": true
+    },
+    {
+      "id": "32-nightglass-courtyard",
+      "manifest": "world/manifest.json",
+      "file": "established-region/32-nightglass-courtyard.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2010105,
+      "sha256": "663EE897CD38E40C58CBB7E2C06BD3739DA10175DCBDC6FD34274FC62613F16B",
+      "sourceMatches": true
+    },
+    {
+      "id": "33-crownfall-remnants",
+      "manifest": "world/manifest.json",
+      "file": "established-region/33-crownfall-remnants.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2399293,
+      "sha256": "32FC6AD9965ABA951FC628F74ADD2352506A6B32D421748120C0EE2B0C836783",
+      "sourceMatches": true
+    },
+    {
+      "id": "34-frontier-wayhouse",
+      "manifest": "world/manifest.json",
+      "file": "established-region/34-frontier-wayhouse.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2124778,
+      "sha256": "CC0DBDFC57FF593FAA9DD933B40153F8D7956742595C0F387E75E79D4131844C",
+      "sourceMatches": true
+    },
+    {
+      "id": "35-old-kingdom-city",
+      "manifest": "world/manifest.json",
+      "file": "new-visual-concept/35-old-kingdom-city.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2458582,
+      "sha256": "7A65316B166939DC2C03FC5170450AB9D7EA750BF15E5CA1E0380E886531E268",
+      "sourceMatches": true
+    },
+    {
+      "id": "36-high-pass",
+      "manifest": "world/manifest.json",
+      "file": "new-visual-concept/36-high-pass.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2597673,
+      "sha256": "40C4D36FA90255C3830B43B1E9F8CEFD07AA16455A4A10C08EFF533B47812F3F",
+      "sourceMatches": true
+    },
+    {
+      "id": "37-understone",
+      "manifest": "world/manifest.json",
+      "file": "new-visual-concept/37-understone.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2253542,
+      "sha256": "224622070F99E58AA971A572E1F6F3922449311D5B3879B3B10B3622E3E81A71",
+      "sourceMatches": true
+    },
+    {
+      "id": "38-southern-drylands",
+      "manifest": "world/manifest.json",
+      "file": "new-visual-concept/38-southern-drylands.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2360133,
+      "sha256": "18F90A88E2C4B066B90EF804D75AD9CD893A90351CB72547E052811160C7AD86",
+      "sourceMatches": true
+    },
+    {
+      "id": "39-far-north",
+      "manifest": "world/manifest.json",
+      "file": "new-visual-concept/39-far-north.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2103712,
+      "sha256": "AF999A979959CB5189DE367A51465A7F409F472313F4C4E52347BAF2A224AA7A",
+      "sourceMatches": true
+    },
+    {
+      "id": "40-eastern-grasslands",
+      "manifest": "world/manifest.json",
+      "file": "new-visual-concept/40-eastern-grasslands.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2289066,
+      "sha256": "26EA7C301FFF599A03438DB6B598B6FA98E3B51E8A9B71C30715DEAEBFE59EA4",
+      "sourceMatches": true
+    },
+    {
+      "id": "41-rainforest-river",
+      "manifest": "world/manifest.json",
+      "file": "new-visual-concept/41-rainforest-river.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2446725,
+      "sha256": "23B899802B891DD59CDEF199AC337F86D6A7966E52F4BFBE749C09ECEF9BFD0F",
+      "sourceMatches": true
+    },
+    {
+      "id": "42-ocean-islands",
+      "manifest": "world/manifest.json",
+      "file": "new-visual-concept/42-ocean-islands.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2206707,
+      "sha256": "6FCB9B36A737F1A86E4358C2F43B82EE6A90E3293F5CE1239ABB604B51C6FA87",
+      "sourceMatches": true
+    },
+    {
+      "id": "43-lysa",
+      "manifest": "people/manifest.json",
+      "file": "portraits/43-lysa.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 2154900,
+      "sha256": "6AE039798CC8494D5D5943E3069DB6BB22DA91DC6D758701A6D44CE666CC1FEB",
+      "sourceMatches": true
+    },
+    {
+      "id": "44-oren",
+      "manifest": "people/manifest.json",
+      "file": "portraits/44-oren.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 2035375,
+      "sha256": "A5C765E27EE023BADA16AEEDDDE4BA72F75B503754A9484368D31C63BB9F9B3D",
+      "sourceMatches": true
+    },
+    {
+      "id": "45-sable",
+      "manifest": "people/manifest.json",
+      "file": "portraits/45-sable.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 1677944,
+      "sha256": "9D96023F15EC201137D7EA84ACAD2089BA79507C146C7A8E6CDEA1EB441FCC14",
+      "sourceMatches": true
+    },
+    {
+      "id": "46-nera",
+      "manifest": "people/manifest.json",
+      "file": "portraits/46-nera.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 1885036,
+      "sha256": "53522EF97BBAAA432612064EABACBD00C55454F08FC0FBDB762AA60049DEB88D",
+      "sourceMatches": true
+    },
+    {
+      "id": "47-mirelle",
+      "manifest": "people/manifest.json",
+      "file": "portraits/47-mirelle.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 2027104,
+      "sha256": "83F195D9E90705D9DE389692F192074D6A59398F83743A7D3BCF11EB9BF798C9",
+      "sourceMatches": true
+    },
+    {
+      "id": "48-halden",
+      "manifest": "people/manifest.json",
+      "file": "portraits/48-halden.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 2025656,
+      "sha256": "A3478BBE3E4CC764A058BE83FB445EB8BE57C0ECB900A162DE0247D2EADB0385",
+      "sourceMatches": true
+    },
+    {
+      "id": "49-tavin",
+      "manifest": "people/manifest.json",
+      "file": "portraits/49-tavin.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 1938351,
+      "sha256": "AFC7F94908891F594D2290672BDF09529B405A02485C40EF093B34DF4D5ADC8F",
+      "sourceMatches": true
+    },
+    {
+      "id": "50-rook",
+      "manifest": "people/manifest.json",
+      "file": "portraits/50-rook.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 1961503,
+      "sha256": "D7E3FE5AD317703FD0EDA884B54976A28524E3CDD81DD81A6088D683DED7BDA6",
+      "sourceMatches": true
+    },
+    {
+      "id": "51-edran",
+      "manifest": "people/manifest.json",
+      "file": "gm-spoilers/51-edran.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 2255599,
+      "sha256": "2D1B6586A34C37C7E6DAE930855B67DA9401CC6B08731323009799C76976FFC4",
+      "sourceMatches": true
+    },
+    {
+      "id": "52-mara",
+      "manifest": "people/manifest.json",
+      "file": "portraits/52-mara.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 1946276,
+      "sha256": "0CC86C315DBC637A87CCFFE18E58A09E6C13008FAC5099D2C0254BB38FFB8A22",
+      "sourceMatches": true
+    },
+    {
+      "id": "53-rusk",
+      "manifest": "people/manifest.json",
+      "file": "portraits/53-rusk.png",
+      "width": 1086,
+      "height": 1449,
+      "bytes": 1907926,
+      "sha256": "E174D3576A6F0379A3D07362B98DF080FED96E7C395DE9E3DCAFB58696688DB8",
+      "sourceMatches": true
+    },
+    {
+      "id": "54-ilyan",
+      "manifest": "people/manifest.json",
+      "file": "portraits/54-ilyan.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 1975638,
+      "sha256": "4479402CA0644DE6F6560C94C800C3B7053BF2D5AAA4E5339633E6E9CE750B2D",
+      "sourceMatches": true
+    },
+    {
+      "id": "55-ward",
+      "manifest": "people/manifest.json",
+      "file": "portraits/55-ward.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 2288700,
+      "sha256": "FAC97BE11FEACF950FF4D50B5694C7F97AEA744F956A48BA178A757221CDEEBC",
+      "sourceMatches": true
+    },
+    {
+      "id": "56-maelor",
+      "manifest": "people/manifest.json",
+      "file": "portraits/56-maelor.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 2005238,
+      "sha256": "5E1ED656BE4D87619096308BFB1DD99A5EC9777C7AC7CB6B49A31C10F5419191",
+      "sourceMatches": true
+    },
+    {
+      "id": "57-ministry-refuge",
+      "manifest": "lore/manifest.json",
+      "file": "on-discovery/57-ministry-refuge.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2052852,
+      "sha256": "31E5294808CF7E15CFDB6B1E5BFB9C56DE5028FF8F9F0A346202D420BB8D6B88",
+      "sourceMatches": true
+    },
+    {
+      "id": "58-unwritten",
+      "manifest": "lore/manifest.json",
+      "file": "gm-spoilers/58-unwritten.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1934099,
+      "sha256": "F041C9D568BE362D4C1603F393E850DAC0988FA5D1674C0C322888C523131D2C",
+      "sourceMatches": true
+    },
+    {
+      "id": "59-hollow",
+      "manifest": "lore/manifest.json",
+      "file": "on-discovery/59-hollow.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1925667,
+      "sha256": "3FD20C876ADEED652087BAB41E5193DFF8CA25B6E4E67981B1E6F6E1A5EF8B06",
+      "sourceMatches": true
+    },
+    {
+      "id": "60-war-construct",
+      "manifest": "lore/manifest.json",
+      "file": "on-discovery/60-war-construct.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2144608,
+      "sha256": "5218C28AAA967F0CED33F8C39646FF22C535B03E4D3320F850CADD40E682CA2A",
+      "sourceMatches": true
+    },
+    {
+      "id": "61-raphael-counsel",
+      "manifest": "lore/manifest.json",
+      "file": "on-discovery/61-raphael-counsel.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1720937,
+      "sha256": "E1E494FA7D4B3AD1A98DD3EF850E636CA405F36F7D634784FB9FA787D1FD853A",
+      "sourceMatches": true
+    },
+    {
+      "id": "62-witness-bell",
+      "manifest": "lore/manifest.json",
+      "file": "on-discovery/62-witness-bell.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2069676,
+      "sha256": "ACBC4535EFEBC00D6A386287DDBEDF20ACC9587733BEA99A81C6C3E15B60A954",
+      "sourceMatches": true
+    },
+    {
+      "id": "63-civic-record",
+      "manifest": "lore/manifest.json",
+      "file": "gm-spoilers/63-civic-record.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2267822,
+      "sha256": "814DB4B16205457F32CF3D23F5EA48EBBDEE62AC11BE17428B4988824E4E78E3",
+      "sourceMatches": true
+    },
+    {
+      "id": "64-channel-seal",
+      "manifest": "lore/manifest.json",
+      "file": "on-discovery/64-channel-seal.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2162848,
+      "sha256": "CE025AD3835AF232711910B319ECE53FAEFD8C4AE4EEA9CA94C416F50A138D5A",
+      "sourceMatches": true
+    },
+    {
+      "id": "65-hearth-infirmary",
+      "manifest": "lore/manifest.json",
+      "file": "on-discovery/65-hearth-infirmary.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1986367,
+      "sha256": "F11A15BD0F621DC12A564CE68BC9D028AD79CA91295A1595B95419F265FC0D01",
+      "sourceMatches": true
+    },
+    {
+      "id": "66-opening-lantern",
+      "manifest": "lore/manifest.json",
+      "file": "on-discovery/66-opening-lantern.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1838413,
+      "sha256": "F93BC49189CE74374AED394EFCBCFB8F7AB0C34FBF1B583A1E1123677A6D43E5",
+      "sourceMatches": true
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "campaign": "greyharbor",
+  "audience": "party",
+  "id": "last-hearth-opening",
+  "title": "The Last Hearth · Day 6",
+  "sourceEventId": "opening-day-6-before-first-choice",
+  "description": "You are in the Last Hearth's common room, a former riverside signal house in Greyharbor. Warm practical candlelight meets gray river daylight. The map table holds three sealed requests and a handmade paper lantern painted with a crooked bird. That paper lantern is unlit. Empty chairs wait around the table. Depict only the visible room and objects; no player likenesses or additional hidden details are established.",
+  "references": ["02-last-hearth"],
+  "approvedImage": null,
+  "subjects": [
+    {
+      "id": "lantern",
+      "label": "The unlit paper lantern",
+      "description": "The handmade paper lantern has a slightly crooked painted bird. It is dark, lit only from outside by another ordinary candle and river daylight. Three sealed requests rest on the map table. Their text is not visible.",
+      "reference": "66-opening-lantern",
+      "approvedImage": "66-opening-lantern"
+    }
+  ]
+}

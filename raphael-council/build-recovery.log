@@ -1,0 +1,41 @@
+npm notice run raphael-council@0.1.0 build
+npm notice run vinext build
+
+  vinext build  (Vite 8.0.13)
+
+[1/5] analyze client references...
+[2K
+transforming...✓ 301 modules transformed.
+rendering chunks...
+✓ built in 780ms
+[2/5] analyze server references...
+[2K
+transforming...✓ 216 modules transformed.
+rendering chunks...
+✓ built in 383ms
+[3/5] build rsc environment...
+[2K
+transforming...✓ 311 modules transformed.
+✗ Build failed in 561ms
+Build failed with 1 error:
+
+[UNLOADABLE_DEPENDENCY] Could not load node_modules/@napi-rs/canvas-win32-x64-msvc/skia.win32-x64-msvc.node
+     ╭─[ node_modules/@napi-rs/canvas/js-binding.js:119:26 ]
+     │
+ 119 │           return require('@napi-rs/canvas-win32-x64-msvc')
+     │                          ────────────────┬───────────────  
+     │                                          ╰───────────────── stream did not contain valid UTF-8
+─────╯
+
+    at aggregateBindingErrorsIntoJsError (file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/rolldown/dist/shared/error-CkdMJ9ps.mjs:48:18)
+    at unwrapBindingResult (file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/rolldown/dist/shared/error-CkdMJ9ps.mjs:18:128)
+    at #build (file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/rolldown/dist/shared/rolldown-build-BVD3dIdE.mjs:3275:34)
+    at async buildEnvironment (file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/vite/dist/node/chunks/node.js:33133:64)
+    at async Object.build (file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/vite/dist/node/chunks/node.js:33555:19)
+    at async buildApp (file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/@vitejs/plugin-rsc/dist/plugin-BhzHKRFo.js:628:3)
+    at async BasicMinimalPluginContext.handler (file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/@vitejs/plugin-rsc/dist/plugin-BhzHKRFo.js:749:43)
+    at async Object.buildApp (file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/vite/dist/node/chunks/node.js:33549:5)
+    at async file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/vinext/dist/cli.js:326:4
+    at async buildApp (file:///C:/Users/Hermes/Projects/Operator%20Special%20Forces%20Dungeon%20and%20Dragons/raphael-council/node_modules/vinext/dist/cli.js:323:2) {
+  errors: [Getter/Setter]
+}
