@@ -8,3 +8,6 @@ export { ChronicleStore, ChronicleError } from '../../chronicle/store.mjs';
 export { ChronicleCommands, ChronicleCommandError } from '../../chronicle/commands.mjs';
 export { createAdaptiveMusic } from '../../chronicle/music.mjs';
 export { SESSION_COMMAND } from '../../discord/chronicle-adapter.mjs';
+export { createDavyChronicleHost } from './davy-host.mjs';
+export { discordCampaignBindings } from '../../auth/discord-policy.mjs';
+export { createVoiceReceiver } from '../../chronicle/voice-receiver.mjs';

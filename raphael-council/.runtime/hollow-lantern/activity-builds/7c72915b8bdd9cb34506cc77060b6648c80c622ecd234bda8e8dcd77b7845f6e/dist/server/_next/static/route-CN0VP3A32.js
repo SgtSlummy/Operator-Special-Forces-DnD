@@ -1,0 +1,1 @@
+import{a as e,t}from"./runtime-DRFbgUQC.js";var n=`nodejs`,r=e(t);async function i(e,t){let{id:n}=await t.params;return r.job(e,n)}export{i as GET,n as runtime};

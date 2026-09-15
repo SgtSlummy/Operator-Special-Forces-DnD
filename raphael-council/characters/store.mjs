@@ -31,6 +31,10 @@ export class CharacterStore {
         PRIMARY KEY(campaign, owner, revision));
       CREATE TABLE IF NOT EXISTS character_events (id INTEGER PRIMARY KEY, campaign TEXT NOT NULL, owner TEXT NOT NULL,
         kind TEXT NOT NULL, job_id TEXT, created_at INTEGER NOT NULL);
+      CREATE TABLE IF NOT EXISTS character_portraits (campaign TEXT NOT NULL, owner TEXT NOT NULL,
+        revision INTEGER NOT NULL, status TEXT NOT NULL, prompt TEXT NOT NULL, negative_prompt TEXT,
+        sha256 TEXT, path TEXT, created_at INTEGER NOT NULL, error TEXT,
+        PRIMARY KEY(campaign, owner, revision));
       CREATE TABLE IF NOT EXISTS import_views (id TEXT PRIMARY KEY, campaign TEXT NOT NULL, owner TEXT NOT NULL,
         job_id TEXT, revision INTEGER NOT NULL, kind TEXT NOT NULL, expires_at INTEGER NOT NULL);
     `);
@@ -45,6 +49,29 @@ export class CharacterStore {
     scopeCheck(scope);
     const row = this.db.prepare('SELECT * FROM characters WHERE campaign=? AND owner=?').get(scope.campaign, scope.owner);
     return row ? { revision: row.revision, snapshot: JSON.parse(row.snapshot), runtime: JSON.parse(row.runtime) } : null;
+  }
+  portrait(scope, revision = null) {
+    scopeCheck(scope);
+    const row = revision == null
+      ? this.db.prepare('SELECT * FROM character_portraits WHERE campaign=? AND owner=? ORDER BY revision DESC LIMIT 1').get(scope.campaign, scope.owner)
+      : this.db.prepare('SELECT * FROM character_portraits WHERE campaign=? AND owner=? AND revision=?').get(scope.campaign, scope.owner, revision);
+    return row ? { ...row } : null;
+  }
+  savePortrait(scope, revision, record) {
+    scopeCheck(scope);
+    if (!Number.isSafeInteger(revision) || revision < 1) throw new ImportError('Invalid character revision.');
+    if (!record || !['queued', 'ready', 'failed'].includes(record.status) || typeof record.prompt !== 'string' || record.prompt.length > 16000) {
+      throw new ImportError('Invalid portrait record.');
+    }
+    this.db.prepare(`INSERT INTO character_portraits
+      (campaign,owner,revision,status,prompt,negative_prompt,sha256,path,created_at,error)
+      VALUES(?,?,?,?,?,?,?,?,?,?)
+      ON CONFLICT(campaign,owner,revision) DO UPDATE SET status=excluded.status,
+      prompt=excluded.prompt,negative_prompt=excluded.negative_prompt,sha256=excluded.sha256,
+      path=excluded.path,created_at=excluded.created_at,error=excluded.error`)
+      .run(scope.campaign, scope.owner, revision, record.status, record.prompt, record.negativePrompt ?? null,
+        record.sha256 ?? null, record.path ?? null, this.now(), record.error ?? null);
+    return this.portrait(scope, revision);
   }
   job(jobId, scope) {
     scopeCheck(scope);

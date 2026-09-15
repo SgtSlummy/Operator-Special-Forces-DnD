@@ -1,0 +1,13 @@
+{
+  "prompt": "orthographic top down D&D battlemap, Camp Emberfall at night, three triangular canvas tents around a circular campfire, two wooden supply wagons, crates, bedrolls, muddy paths, simple wooden palisade along east edge, dark forest surrounding the camp, clear large shapes, premium tabletop RPG map art, warm amber lanterns, slate blue shadows, no people, no text, no labels, no UI, no perspective, no isometric",
+  "negative_prompt": "noise, grain, abstract, blurry, side view, scenic landscape, horizon, perspective, tilted camera, isometric, text, labels, legend, interface, watermark, border, tokens, characters",
+  "model": "v1-5-pruned-emaonly",
+  "sampler": "DPM++ 2M Karras",
+  "steps": 32,
+  "cfg_scale": 7,
+  "width": 512,
+  "height": 512,
+  "seed": 2502,
+  "generated_at": "2026-09-09T14:56:28.7258517Z",
+  "generator": "AUTOMATIC1111 local API http://127.0.0.1:7860"
+}

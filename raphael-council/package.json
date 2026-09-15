@@ -10,6 +10,10 @@
     "build": "vinext build",
     "build:local": "node -e \"const {spawnSync}=require('node:child_process'); const r=spawnSync('npm',['run','build'],{stdio:'inherit',env:{...process.env,RAPHAEL_LOCAL_HOST:'1'},shell:true}); process.exit(r.status ?? 1)\"",
     "start": "vinext start",
+    "start:protected": "node scripts/start-protected.mjs",
+    "app:check": "node hollow-lantern/app-launch.mjs --check",
+    "app:start": "node hollow-lantern/app-launch.mjs",
+    "test:app-startup": "node --test hollow-lantern/startup-status.test.mjs hollow-lantern/app-launch.test.mjs hollow-lantern/activity-launch.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "test:characters": "node --test characters/*.test.mjs discord/*.test.mjs",
     "test:images": "node --test images/*.test.mjs discord/image-adapter.test.mjs",
@@ -32,7 +36,14 @@
     "bot:publish": "node --env-file-if-exists=.env.local discord/bot.mjs --publish",
     "test:recovery": "node --test recovery/*.test.mjs",
     "recovery:checkpoint": "node recovery/npm-checkpoint.mjs",
-    "recovery:restore": "node recovery/npm-restore.mjs"
+    "recovery:restore": "node recovery/npm-restore.mjs",
+    "test:simulation": "node --test recovery/simulation-acceptance.test.mjs",
+    "acceptance:simulation": "node recovery/simulation-report.mjs",
+    "test:visual-session": "node --test recovery/visual-session.test.mjs",
+    "session:visual": "node recovery/visual-session.mjs",
+    "session:visual:report": "node recovery/visual-session-report.mjs",
+    "session:party": "node recovery/party-session-report.mjs",
+    "session:party:deck": "node recovery/party-deck-report.mjs"
   },
   "dependencies": {
     "@discord/embedded-app-sdk": "2.5.0",

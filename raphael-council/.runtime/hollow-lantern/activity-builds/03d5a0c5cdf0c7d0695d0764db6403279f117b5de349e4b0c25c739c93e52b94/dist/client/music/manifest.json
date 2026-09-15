@@ -1,0 +1,93 @@
+[
+  {
+    "id": "theme",
+    "title": "Crossing the Veil",
+    "bpm": 84,
+    "description": "A recurring flute motif, glass bells and swelling strings. Mystery opens into wonder.",
+    "seconds": 68.571,
+    "bars": 24,
+    "file": "music/theme.mp3",
+    "master": "music/theme.wav",
+    "peak": 0.7438,
+    "rms": 0.14,
+    "sha256": "5957636ee0afc1ba918efc0e05dc9901c32aa5a1353b06e8b7acb6205093fa7a"
+  },
+  {
+    "id": "exploration",
+    "title": "Saltglass & Starlight",
+    "bpm": 76,
+    "description": "Plucked strings, breathy woodwind and a slow sea of harmony for discovery.",
+    "seconds": 75.789,
+    "bars": 24,
+    "file": "music/exploration.mp3",
+    "master": "music/exploration.wav",
+    "peak": 0.7223,
+    "rms": 0.14,
+    "sha256": "0a8888d2c7c482b08f629c748bd41e3272d36dd39b2d22f260c8c3a09f31370e"
+  },
+  {
+    "id": "tension",
+    "title": "Lanterns in the Mist",
+    "bpm": 96,
+    "description": "Low pulses, ticking percussion and suspended strings as the patrol passes.",
+    "seconds": 60.0,
+    "bars": 24,
+    "file": "music/tension.mp3",
+    "master": "music/tension.wav",
+    "peak": 0.6514,
+    "rms": 0.14,
+    "sha256": "e11385b78aaec6a69094945c1e63bf7fbc2187711788e637eaa2e7e293a97549"
+  },
+  {
+    "id": "drama",
+    "title": "One Life Against the Tide",
+    "bpm": 88,
+    "description": "Rising strings, deep drums and the Veil motif for the courier rescue.",
+    "seconds": 65.455,
+    "bars": 24,
+    "file": "music/drama.mp3",
+    "master": "music/drama.wav",
+    "peak": 0.7015,
+    "rms": 0.14,
+    "sha256": "27fa5bbf3adefdaa022f4ee59efd15885d8a2eaf0f41e60879f8b3ce8f5b889e"
+  },
+  {
+    "id": "battle",
+    "title": "Break the Iron Night",
+    "bpm": 132,
+    "description": "Synthesized distorted power chords, driving bass, drums and a soaring lead.",
+    "seconds": 43.636,
+    "bars": 24,
+    "file": "music/battle.mp3",
+    "master": "music/battle.wav",
+    "peak": 0.5619,
+    "rms": 0.14,
+    "sha256": "1ec18afe7201fb7d3ead554907e40c762c029d84283dcf52f90f04adb1fec765"
+  },
+  {
+    "id": "sanctuary",
+    "title": "The Abbey Keeps a Light",
+    "bpm": 72,
+    "description": "Warm string voicings, a gentle harp and bells for shelter and conversation.",
+    "seconds": 80.0,
+    "bars": 24,
+    "file": "music/sanctuary.mp3",
+    "master": "music/sanctuary.wav",
+    "peak": 0.7156,
+    "rms": 0.14,
+    "sha256": "c6a66bdde8f772dee39f1d644b446894e2e50f2bf07dc6a4490e0aee6deaa040"
+  },
+  {
+    "id": "aftermath",
+    "title": "What We Carry Home",
+    "bpm": 78,
+    "description": "A quieter reprise on soft keys and strings for reflection and the episode recap.",
+    "seconds": 73.846,
+    "bars": 24,
+    "file": "music/aftermath.mp3",
+    "master": "music/aftermath.wav",
+    "peak": 0.7152,
+    "rms": 0.14,
+    "sha256": "5ee02a44c1d63da35956e392fa68d3cbce4829a7f5436426633d196e5eef2cc1"
+  }
+]

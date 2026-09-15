@@ -1,0 +1,1 @@
+import{t as e}from"./http-idetrSlg.js";var t=`nodejs`,n=e(`config`);export{n as GET,t as runtime};

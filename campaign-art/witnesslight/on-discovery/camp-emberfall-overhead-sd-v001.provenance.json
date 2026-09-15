@@ -1,0 +1,13 @@
+{
+  "prompt": "top-down orthographic tactical battlemap illustration of Camp Emberfall at night, viewed straight down from above, three canvas tents arranged around a central campfire, supply wagons, crates, bedrolls, a rough palisade breach on the east edge, muddy paths, dark forest edge, readable terrain shapes, symmetrical map composition, classic premium D&D campaign art, muted slate blue shadows and warm amber lantern light, no characters, no text, no labels, no user interface, no perspective, no isometric view, no horizon",
+  "negative_prompt": "side view, scenic landscape, horizon, perspective, tilted camera, isometric, 3d render, text, labels, legend, UI, border, watermark, tokens, characters, blurry, low detail, photorealistic, oversaturated",
+  "model": "v1-5-pruned-emaonly",
+  "sampler": "Euler a",
+  "steps": 24,
+  "cfg_scale": 7,
+  "width": 768,
+  "height": 768,
+  "seed": 2501,
+  "generated_at": "2026-09-09T14:55:57.7855589Z",
+  "generator": "AUTOMATIC1111 local API http://127.0.0.1:7860"
+}

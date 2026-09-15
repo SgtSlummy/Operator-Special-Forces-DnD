@@ -49,6 +49,7 @@ function harness({ status = 'ready', tacticalGame } = {}) {
     getJob(requestedScope, id) { return owned(jobs, id, requestedScope); },
     async waitForJob(requestedScope, id, options) { calls.push(['wait', options]); return owned(jobs, id, requestedScope); },
     async image(requestedScope, id) { owned(jobs, id, requestedScope); return { bytes: Buffer.from('test png bytes'), mimeType: 'image/png', fileName: `${id}.png` }; },
+    history(requestedScope) { return [...jobs.entries()].filter(([, row]) => same(row.scope, requestedScope)).map(([id, row]) => ({ id, ...row.data, createdAt: new Date(0).toISOString() })); },
     issueBrowserAccess(requestedScope) { calls.push(['access', structuredClone(requestedScope)]); return 'private-code-for-this-player'; },
   };
   const transport = { respond: async (_id, _token, body) => responses.push(body), edit: async (_id, _token, body) => edits.push(body) };
@@ -80,6 +81,16 @@ test('anytime image request is private, costs no action or time, and returns an 
   assert.equal(result.components.find(component => component.type === 12).items[0].media.url, 'attachment://job-1.png');
   assert.deepEqual(h.calls.find(call => call[0] === 'request')[1], { requestId: String(sequence), focusId: 'scene' });
   assert.deepEqual(h.game, before, 'paused game, another player’s turn, HP, slots, clock and revision are untouched');
+});
+
+test('Discord image cards expose private session history and return a selected earlier image', async () => {
+  const h = harness(); await h.handler(interaction('rps:home'));
+  const card = h.edits.at(-1); await h.handler(interaction(button(card, 'Image history')));
+  const history = h.responses.at(-1).data;
+  assert.match(history.components[0].content, /Revision 1/);
+  await h.handler(interaction(button(history, 'Revision 1')));
+  assert.equal(h.edits.at(-1).files.length, 1);
+  assert.equal(h.edits.at(-1).components.find(component => component.type === 12).items[0].media.url, 'attachment://job-1.png');
 });
 
 test('focus uses only visible subject IDs; blank requests the whole scene and prompt injection is refused', async () => {

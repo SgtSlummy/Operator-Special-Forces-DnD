@@ -1,0 +1,1 @@
+import{t as e}from"./http-DJbeg2Rz.js";import{t}from"./runtime-TLqsVJZa.js";var n=`nodejs`,r=e(t);async function i(e,t){return r.imageJob(e,(await t.params).id)}export{i as GET,n as runtime};

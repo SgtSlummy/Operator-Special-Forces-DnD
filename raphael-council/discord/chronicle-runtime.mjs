@@ -8,9 +8,10 @@ import { createChronicleRuntimeCore } from './chronicle-core.mjs';
 // Operator defaults stay outside the portable library. Existing bot callers keep
 // this wrapper; Davy supplies its own provider, voice ownership adapter and store.
 export function createChronicleRuntime({ client, config, images, transport, log = () => {}, authorizeCommand = () => false,
-  provider = createStoryProvider(), makeVoice = createVoiceCapture,
+  provider, makeVoice = createVoiceCapture,
   store = new ChronicleStore(join(config.chronicleDir, 'chronicle.sqlite')), music = null }) {
-  return createChronicleRuntimeCore({ client, config, images, transport, log, authorizeCommand, provider, makeVoice, store, music });
+  const story = provider ?? createStoryProvider({ store, campaigns: [config.campaignId] });
+  return createChronicleRuntimeCore({ client, config, images, transport, log, authorizeCommand, provider: story, makeVoice, store, music });
 }
 
 export async function registerSessionCommand(client, config) {

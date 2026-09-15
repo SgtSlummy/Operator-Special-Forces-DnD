@@ -1,31 +1,45 @@
 {
   "name": "@operator/chronicle",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "esbuild": "0.27.3",
   "node": ">=22.16.0",
   "dependencies": {
-    "@napi-rs/canvas": "1.0.8"
+    "@napi-rs/canvas": "1.0.8",
+    "@discordjs/voice": "0.19.2",
+    "prism-media": "1.3.5"
   },
   "entry": "dist/index.mjs",
-  "sha256": "fb5b27a14feac00b8fc014631b16d1924a9bce72bdee9c71127b225a261531d8",
-  "bytes": 71058,
+  "sha256": "083ec0d0ddcbbbb6949bf25c74846e29712cda0c82b4c932d78cb126bef530a2",
+  "bytes": 160038,
   "sources": {
+    "ai/evidence-selection.mjs": "d16b702169ba0818103b32c1be710ea9f854f7e71203f0e1454737766c973b65",
+    "ai/evidence-upload.mjs": "79393a71b1b3d0977cf159c7f977814cebb12030a6f23dd2bdf5828cdaa11167",
+    "ai/host-control.mjs": "ad5f36b3f8adf5b735d1790c9dcbb62f9c69e8b684285335e858a15eb17451fc",
+    "auth/discord-policy.mjs": "a3490230d1b45a4e85608b252006a47874cf86c18473b6ff47059ac845261668",
     "chronicle/commands.mjs": "4398e36096737845f7e3039372c990ffa7a511f1200b70f2daa699c5f34e1f1c",
     "chronicle/dispatch.mjs": "f7c85a9b5875f55c21f9671c2e87353a9a90754a3a4b71ae50c874b7fc3ecc93",
+    "chronicle/music.mjs": "4b6774485d266017c6f6e8633724622110f8f04b41b6ffff3ecf87a6484cf1ea",
+    "chronicle/obus-evidence.mjs": "2d2275c3eb4b907fdbc21e72f5997cb63ab7d20ce107da53cec9c176ae3337b7",
+    "chronicle/obus-provider.mjs": "37d109db197ec96e10526c8df8671b69d73a59105d33819eec381a4c70c04a1e",
     "chronicle/report.mjs": "9d8238d636f6e330dce161237140f5174239cf67ddec30d38b0a33c9e3c62c73",
-    "chronicle/service.mjs": "f15d4045631e13eafeb1a964c88065fcf160829db916dad3ff151fb27f3c6cfe",
-    "chronicle/store.mjs": "93dd82b64f84eb734a2ac3c5cfd1f8a2d8bcb59e7e1a2ee8547732a7e1d5a875",
+    "chronicle/service.mjs": "f2d3b2d988dfbeaa31ef13f137a4ef13ce57e0991cb46e79aa0706d2fd33a5d3",
+    "chronicle/store.mjs": "74feeb4d6fcbfb8f22248ab07003968648f89d0f375f8831bb2349fac0d9967e",
+    "chronicle/voice-receiver.mjs": "bd6934d436db720265f68d37d5b8c2c3b79d184c94891efdd84d0c3c6ab0fc43",
     "discord/chronicle-adapter.mjs": "d48292ef5bd4d9c47ffae419d60193944a7f29ea83177c613c9613c8ca8b420c",
-    "discord/chronicle-core.mjs": "c111dba268cbe188626c943a4e042011ef6760653e933d9b9147b11451f54cd2",
-    "packages/chronicle/index.mjs": "10da1c7b971666538ee96842cdee2dae429d4379b1f65fc857c87b1b1c591b9e"
+    "discord/chronicle-core.mjs": "7c8402eae63b97a0d7544739af1930d09f9181ec716b7be2a82e8d06a0b0faea",
+    "packages/chronicle/davy-host.mjs": "d8b74d36a6658a962cf0ee8e5721a52de7bd6bf9a44fd811f14b15b6b9dc9c0f",
+    "packages/chronicle/index.mjs": "e41e174c6803fc6cac52228e0e8e6ca12d242e3aa7112bc875d77a80e9d63bfb"
   },
   "externals": [
+    "@discordjs/voice",
     "@napi-rs/canvas",
+    "node:async_hooks",
     "node:crypto",
     "node:fs",
     "node:fs/promises",
     "node:path",
-    "node:sqlite"
+    "node:sqlite",
+    "prism-media"
   ],
   "exports": [
     "ChronicleCommandError",
@@ -33,7 +47,11 @@
     "ChronicleError",
     "ChronicleStore",
     "SESSION_COMMAND",
+    "createAdaptiveMusic",
     "createChronicleRuntime",
-    "createChronicleRuntimeCore"
+    "createChronicleRuntimeCore",
+    "createDavyChronicleHost",
+    "createVoiceReceiver",
+    "discordCampaignBindings"
   ]
 }

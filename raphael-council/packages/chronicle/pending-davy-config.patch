@@ -1,0 +1,99 @@
+# SUPERSEDED: actual configuration hardening is integrated and all 12 fixtures pass.
+# Historical review evidence only. DO NOT APPLY this patch to the current source.
+# Expected src/discord/chronicle-config.js git SHA-1: 0551d8360f920cca983fe882723493e5395462be
+# Expected test/chronicle-config.test.js git SHA-1: ef128b3eca02e66837a7185db826387c237210d5
+# Zero-context unified patch; validation uses git apply --check --unidiff-zero.
+diff --git a/src/discord/chronicle-config.js b/src/discord/chronicle-config.js
+--- a/src/discord/chronicle-config.js
++++ b/src/discord/chronicle-config.js
+@@ -1,1 +1,1 @@
+-import { existsSync, realpathSync, statSync } from 'node:fs';
++import { realpathSync, statSync } from 'node:fs';
+@@ -45,1 +45,11 @@
+-/** No files, databases, credentials or network are accessed by this parser. */
++function commandShape(command) {
++  if (!command || typeof command !== 'object' || Array.isArray(command)) throw setupError('CHRONICLE_COMMAND_COLLISION');
++  const result = { type: command.type ?? 1, name: command.name, description: command.description,
++    required: command.required ?? false, autocomplete: command.autocomplete ?? false,
++    options: (command.options ?? []).map(commandShape),
++    choices: (command.choices ?? []).map(choice => ({ name: choice.name, value: choice.value })) };
++  for (const key of ['channel_types', 'min_value', 'max_value', 'min_length', 'max_length']) if (command[key] !== undefined) result[key] = command[key];
++  return result;
++}
++
++/** No files, databases, credentials or network are accessed by this parser. */
+@@ -57,1 +67,4 @@
+-  const obusUrl = env.RAPHAEL_OBUS_URL || 'http://127.0.0.1:38175';
++  if (env.RAPHAEL_GUILD_ID !== guildId || env.RAPHAEL_CAMPAIGN_ID !== campaignId) throw setupError('CHRONICLE_SHARED_BINDINGS_MISMATCH');
++  const discordBindingsEnv = Object.freeze(Object.fromEntries(['RAPHAEL_GUILD_ID', 'RAPHAEL_CAMPAIGN_ID', 'RAPHAEL_PLAYER_IDS',
++    'RAPHAEL_PLAYER_ROLE_ID', 'RAPHAEL_DM_IDS', 'RAPHAEL_DM_ROLE_ID'].map(key => [key, env[key]])));
++  const obusUrl = env.RAPHAEL_OBUS_URL || 'http://127.0.0.1:38175';
+@@ -60,1 +73,1 @@
+-  return Object.freeze({ applicationId: appId, campaignId, guildId, channelId, journalChannelId, obusUrl,
++  return Object.freeze({ applicationId: appId, campaignId, guildId, channelId, journalChannelId, obusUrl, discordBindingsEnv,
+@@ -101,2 +114,15 @@
+-  finally { check?.close(); }
+-  let gameStore, store;
++  finally { check?.close(); }
++  check = undefined;
++  try {
++    // Reject unrelated SQLite files before either writable constructor runs.
++    // A legitimate Chronicle database may contain zero sessions.
++    check = new DatabaseSync(chronicleFile, { readOnly: true });
++    const columns = check.prepare('PRAGMA table_info(sessions)').all();
++    const expected = new Map([['id', 'TEXT'], ['campaign', 'TEXT'], ['body', 'TEXT']]);
++    if (columns.length !== expected.size || columns.some(column => expected.get(column.name) !== column.type?.toUpperCase()) ||
++        !columns.some(column => column.name === 'id' && column.pk === 1) ||
++        columns.some(column => column.name !== 'id' && column.notnull !== 1)) throw setupError();
++    check.prepare('SELECT id,campaign,body FROM sessions LIMIT 0').all();
++  } catch { throw setupError(); }
++  finally { check?.close(); }
++  let gameStore, store;
+@@ -110,3 +136,8 @@
+-        typeof portable.ChronicleStore !== 'function' || !portable.SESSION_COMMAND || typeof game.GameStore !== 'function' ||
+-        typeof obus.ObusTransport !== 'function' || typeof host.createObusHostControl !== 'function' || typeof voice.createChronicleVoice !== 'function') throw setupError();
+-    let transport, control;
++        typeof portable.discordCampaignBindings !== 'function' || typeof portable.ChronicleStore !== 'function' || !portable.SESSION_COMMAND ||
++        typeof game.GameStore !== 'function' || typeof obus.ObusTransport !== 'function' || typeof host.createObusHostControl !== 'function' ||
++        typeof voice.createChronicleVoice !== 'function') throw setupError();
++    const discordBindings = portable.discordCampaignBindings(selected.discordBindingsEnv);
++    if (discordBindings.guild !== selected.guildId || discordBindings.campaign !== selected.campaignId ||
++        ![...discordBindings.dmIds, ...discordBindings.playerIds].every(snowflake) ||
++        ![discordBindings.dmRole, discordBindings.playerRole].every(value => !value || snowflake(value))) throw setupError();
++    let transport, control;
+@@ -135,1 +166,1 @@
+-    const core = portable.createDavyChronicleHost({ client, config: { ...selected, chronicleDir, dmIds: [], playerIds: [] },
++    const core = portable.createDavyChronicleHost({ client, config: { ...selected, discordBindings, chronicleDir, dmIds: [], playerIds: [] },
+@@ -149,4 +180,13 @@
+-      try {
+-        // Single-name upsert preserves Davy's unrelated commands. Never bulk PUT.
+-        await client.rest.post(Routes.applicationGuildCommands(selected.applicationId, selected.guildId), { body: portable.SESSION_COMMAND });
+-      } catch { throw setupError('CHRONICLE_COMMAND_REGISTRATION_FAILED'); }
++      try {
++        const route = Routes.applicationGuildCommands(selected.applicationId, selected.guildId);
++        const existing = await client.rest.get(route);
++        if (!Array.isArray(existing) || existing.length > 100) throw setupError('CHRONICLE_COMMAND_COLLISION');
++        const collisions = existing.filter(command => command.name === portable.SESSION_COMMAND.name);
++        if (collisions.length > 1 || collisions.some(command => JSON.stringify(commandShape(command)) !== JSON.stringify(commandShape(portable.SESSION_COMMAND)))) {
++          throw setupError('CHRONICLE_COMMAND_COLLISION');
++        }
++        // Single-name upsert preserves unrelated commands, including name collisions.
++        await client.rest.post(route, { body: portable.SESSION_COMMAND });
++      } catch (error) {
++        throw error?.code === 'CHRONICLE_COMMAND_COLLISION' ? error : setupError('CHRONICLE_COMMAND_REGISTRATION_FAILED');
++      }
+diff --git a/test/chronicle-config.test.js b/test/chronicle-config.test.js
+--- a/test/chronicle-config.test.js
++++ b/test/chronicle-config.test.js
+@@ -25,1 +25,1 @@
+-  const env = { RAPHAEL_CHRONICLE_ENABLED: 'true', RAPHAEL_CHRONICLE_CAMPAIGN_ID: 'campaign', RAPHAEL_CHRONICLE_APPLICATION_ID: app,
++  const env = { RAPHAEL_GUILD_ID: guild, RAPHAEL_CAMPAIGN_ID: 'campaign', RAPHAEL_CHRONICLE_ENABLED: 'true', RAPHAEL_CHRONICLE_CAMPAIGN_ID: 'campaign', RAPHAEL_CHRONICLE_APPLICATION_ID: app,
+@@ -38,1 +38,4 @@
+-      createVoiceReceiver() {}, SESSION_COMMAND: command,
++      createVoiceReceiver() {}, SESSION_COMMAND: command,
++      discordCampaignBindings(input) { return { guild: input.RAPHAEL_GUILD_ID, campaign: input.RAPHAEL_CAMPAIGN_ID,
++        dmIds: (input.RAPHAEL_DM_IDS || '').split(',').filter(Boolean), playerIds: (input.RAPHAEL_PLAYER_IDS || '').split(',').filter(Boolean),
++        dmRole: input.RAPHAEL_DM_ROLE_ID, playerRole: input.RAPHAEL_PLAYER_ROLE_ID }; },
+@@ -93,1 +96,1 @@
+-  const f = fixture(t); f.env.RAPHAEL_CHRONICLE_CAMPAIGN_ID = 'unknown';
++  const f = fixture(t); f.env.RAPHAEL_CHRONICLE_CAMPAIGN_ID = 'unknown'; f.env.RAPHAEL_CAMPAIGN_ID = 'unknown';

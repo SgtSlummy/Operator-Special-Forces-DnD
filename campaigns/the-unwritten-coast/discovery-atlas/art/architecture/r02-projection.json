@@ -1,0 +1,94 @@
+{
+  "roomId": "R02",
+  "name": "Valve Throat",
+  "dimensionsFeet": {
+    "width": 4,
+    "depth": 6,
+    "height": 5
+  },
+  "horizontalSectionFeet": 2.5,
+  "views": {
+    "r02-cutaway": {
+      "width": 1600,
+      "height": 1200,
+      "origin": [
+        397.5435,
+        949.2674
+      ],
+      "xAxis": [
+        865.5158,
+        1078.439
+      ],
+      "yAxis": [
+        781.2807,
+        594.8334
+      ],
+      "zAxis": [
+        397.5435,
+        373.8239
+      ]
+    },
+    "r02-floor-slice": {
+      "width": 1600,
+      "height": 1200,
+      "origin": [
+        480.0,
+        1080.0
+      ],
+      "xAxis": [
+        1120.0,
+        1080.0
+      ],
+      "yAxis": [
+        480.0,
+        120.0
+      ],
+      "zAxis": [
+        480.0,
+        1080.0
+      ]
+    },
+    "r02-low-cutaway": {
+      "width": 1600,
+      "height": 1200,
+      "origin": [
+        317.0527,
+        836.8985
+      ],
+      "xAxis": [
+        878.6194,
+        1007.2201
+      ],
+      "yAxis": [
+        777.5375,
+        369.5528
+      ],
+      "zAxis": [
+        317.0527,
+        171.3178
+      ]
+    }
+  },
+  "features": [
+    {
+      "id": "R02-a",
+      "name": "Maintenance inscription",
+      "x": 0.3,
+      "y": 0.4,
+      "z": 0.63
+    },
+    {
+      "id": "R02-b",
+      "name": "Reachable hatch lever",
+      "x": 0.73,
+      "y": 0.65,
+      "z": 0.44000000000000006
+    }
+  ],
+  "generator": "Blender 4.5.9 Cycles with existing local Stable Diffusion surface images",
+  "limits": [
+    "One occupied level; horizontal sections are views of the same room.",
+    "Schematic connection beyond the hatch is intentionally not illustrated.",
+    "No discoveries, secret content or resolved checks are painted into the room."
+  ]
+}

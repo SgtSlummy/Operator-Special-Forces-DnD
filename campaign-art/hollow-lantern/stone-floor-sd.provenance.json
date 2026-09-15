@@ -1,0 +1,67 @@
+{
+  "info": {
+    "prompt": "orthographic top down view, ancient blue grey flagstone floor texture, worn coastal fortress stone, fine stone grain, damp uneven stone tiles, subtle moss in cracks, muted slate blue and grey palette, evenly lit, seamless texture, realistic hand painted fantasy game environment, high detail",
+    "all_prompts": [
+      "orthographic top down view, ancient blue grey flagstone floor texture, worn coastal fortress stone, fine stone grain, damp uneven stone tiles, subtle moss in cracks, muted slate blue and grey palette, evenly lit, seamless texture, realistic hand painted fantasy game environment, high detail"
+    ],
+    "negative_prompt": "perspective, horizon, walls, doors, room, stairs, person, creature, writing, letters, text, logo, watermark, bright colors",
+    "all_negative_prompts": [
+      "perspective, horizon, walls, doors, room, stairs, person, creature, writing, letters, text, logo, watermark, bright colors"
+    ],
+    "seed": 7302409,
+    "all_seeds": [
+      7302409
+    ],
+    "subseed": 937818171,
+    "all_subseeds": [
+      937818171
+    ],
+    "subseed_strength": 0,
+    "width": 512,
+    "height": 512,
+    "sampler_name": "DPM++ 2M",
+    "cfg_scale": 7.0,
+    "steps": 24,
+    "batch_size": 1,
+    "restore_faces": false,
+    "face_restoration_model": null,
+    "sd_model_name": "v1-5-pruned-emaonly",
+    "sd_model_hash": "6ce0161689",
+    "sd_vae_name": null,
+    "sd_vae_hash": null,
+    "seed_resize_from_w": -1,
+    "seed_resize_from_h": -1,
+    "denoising_strength": null,
+    "extra_generation_params": {
+      "Schedule type": "Karras"
+    },
+    "index_of_first_image": 0,
+    "infotexts": [
+      "orthographic top down view, ancient blue grey flagstone floor texture, worn coastal fortress stone, fine stone grain, damp uneven stone tiles, subtle moss in cracks, muted slate blue and grey palette, evenly lit, seamless texture, realistic hand painted fantasy game environment, high detail\nNegative prompt: perspective, horizon, walls, doors, room, stairs, person, creature, writing, letters, text, logo, watermark, bright colors\nSteps: 24, Sampler: DPM++ 2M, Schedule type: Karras, CFG scale: 7.0, Seed: 7302409, Size: 512x512, Model hash: 6ce0161689, Model: v1-5-pruned-emaonly, Tiling: True, Version: v1.10.1"
+    ],
+    "styles": [],
+    "job_timestamp": "20260909123433",
+    "clip_skip": 1,
+    "is_using_inpainting_conditioning": false,
+    "version": "v1.10.1"
+  },
+  "provider": "local-automatic1111",
+  "file": "C:\\Users\\Hermes\\Projects\\Operator Special Forces Dungeon and Dragons\\campaign-art\\hollow-lantern\\stone-floor-sd.png",
+  "request": {
+    "prompt": "orthographic top down view, ancient blue grey flagstone floor texture, worn coastal fortress stone, fine stone grain, damp uneven stone tiles, subtle moss in cracks, muted slate blue and grey palette, evenly lit, seamless texture, realistic hand painted fantasy game environment, high detail",
+    "n_iter": 1,
+    "batch_size": 1,
+    "height": 512,
+    "scheduler": "Karras",
+    "send_images": true,
+    "cfg_scale": 7,
+    "tiling": true,
+    "sampler_name": "DPM++ 2M",
+    "save_images": false,
+    "seed": 7302409,
+    "steps": 24,
+    "width": 512,
+    "negative_prompt": "perspective, horizon, walls, doors, room, stairs, person, creature, writing, letters, text, logo, watermark, bright colors"
+  },
+  "endpoint": "http://127.0.0.1:7860"
+}

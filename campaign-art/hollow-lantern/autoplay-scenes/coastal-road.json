@@ -1,0 +1,25 @@
+{
+  "provider": "local-stable-diffusion",
+  "modelHash": "6ce0161689",
+  "payload": {
+    "prompt": "fantasy landscape painting, ancient dirt road winding along a high coastal cliff, wild grass, pale weathered rocks, teal ocean far below, distant medieval stone lighthouse, soft dawn, atmospheric painterly illustration, wide scenic composition, empty landscape",
+    "negative_prompt": "people, person, creature, car, vehicles, modern buildings, skyscraper, text, letters, watermark, map, grid, photorealistic",
+    "width": 512,
+    "height": 512,
+    "steps": 24,
+    "batch_size": 1,
+    "n_iter": 1,
+    "seed": 7302511,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "send_images": true,
+    "save_images": false,
+    "do_not_save_samples": true,
+    "do_not_save_grid": true
+  },
+  "sha256": "18eb90595dea9ab921735247d86ff001e74b60735a345a3877af98b2613eb625",
+  "status": "development-pixel-reviewed",
+  "cloud": false,
+  "review": "Empty cliffside dirt road, grass, sea and distant tower; suitable public scene illustration. Photographic rather than painterly style. Not tactical geometry.",
+  "requiresHostSelection": true
+}

@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { ChronicleService } from '../chronicle/service.mjs';
+import { ChronicleError } from '../chronicle/store.mjs';
 import { createChronicleAdapter } from './chronicle-adapter.mjs';
 import { createChronicleDispatcher } from '../chronicle/dispatch.mjs';
 
@@ -12,14 +13,42 @@ export function createChronicleRuntimeCore({ client, config, images, transport, 
     throw new TypeError('Supply the Obus story provider, shared voice factory and chronicle store explicitly.');
   }
   const service = new ChronicleService({ store, provider, images, dataDir: config.chronicleDir });
-  const voice = makeVoice({ client, config, store, service });
-  if (!voice || typeof voice.start !== 'function' || typeof voice.stop !== 'function') throw new TypeError('Supply a voice adapter with start and stop operations.');
+  const sourceVoice = makeVoice({ client, config, store, service });
+  if (!sourceVoice || typeof sourceVoice.start !== 'function' || typeof sourceVoice.stop !== 'function') throw new TypeError('Supply a voice adapter with start and stop operations.');
+  let captureSealed = false, captureStop = null;
+  const boundMethods = new Map();
+  const startVoice = (...args) => {
+    if (captureSealed) return Promise.reject(new ChronicleError('Voice capture is stopping. Reconnect after the host restarts.'));
+    return Reflect.apply(sourceVoice.start, sourceVoice, args);
+  };
+  // Delegate against a separate target so frozen adapters and class methods keep
+  // their original receiver without exposing an unguarded start operation.
+  const voice = new Proxy(Object.create(null), { get(_target, key) {
+    if (key === 'start') return startVoice;
+    const value = Reflect.get(sourceVoice, key, sourceVoice);
+    if (typeof value !== 'function') return value;
+    const prior = boundMethods.get(key);
+    if (prior?.source === value) return prior.bound;
+    const bound = value.bind(sourceVoice); boundMethods.set(key, { source: value, bound }); return bound;
+  } });
+  const stopCapture = () => {
+    captureSealed = true;
+    if (captureStop) return captureStop;
+    let resolveStop, rejectStop;
+    const stopping = new Promise((resolve, reject) => { resolveStop = resolve; rejectStop = reject; });
+    captureStop = stopping;
+    const failed = error => { if (captureStop === stopping) captureStop = null; rejectStop(error); };
+    // Detach synchronously before awaiting any previously admitted story work.
+    try { Promise.resolve(voice.stop({ flush: true })).then(resolveStop, failed); }
+    catch (error) { failed(error); }
+    return stopping;
+  };
   const adapter = createChronicleAdapter({ store, service, config, transport, voice, log });
   service.recover();
   const dispatcher = createChronicleDispatcher({ store, service, voice, config, transport, authorize: authorizeCommand, log });
   let closing = false, running = null, closingWork = null, storeClosed = false;
   return {
-    store, service, voice, music,
+    store, service, voice, music, stopCapture,
     handle: (interaction, options) => closing ? false : adapter.handle(interaction, options),
     async packet(packet) {
       if (closing) return;
@@ -50,9 +79,10 @@ export function createChronicleRuntimeCore({ client, config, images, transport, 
       if (closing) return Promise.resolve();
       // Poll controls independently while background Obus work is in flight.
       const commands = dispatcher.tick();
+      const evidence = service.evidenceTick();
       if (!running) running = (async () => { await service.tick(); await adapter.flush(); })()
         .catch(() => log({ outcome: 'chronicle_work_deferred' })).finally(() => { running = null; });
-      return Promise.allSettled([commands, running]);
+      return Promise.allSettled([commands, evidence, running]);
     },
     close() {
       if (closingWork) return closingWork;
@@ -67,7 +97,7 @@ export function createChronicleRuntimeCore({ client, config, images, transport, 
             return false;
           }
         };
-        const stopped = await attempt('capture', () => voice.stop({ flush: true }));
+        const stopped = await attempt('capture', stopCapture);
         // A failed injected stop must not leave the session admitting new audio.
         if (!stopped) await attempt('pause', () => service.recover());
         await attempt('commands', () => dispatcher.close());

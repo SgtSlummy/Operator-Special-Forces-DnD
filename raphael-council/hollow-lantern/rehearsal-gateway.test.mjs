@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {composeRehearsalGateway} from './rehearsal-gateway.mjs';
+const base='C:/Users/Hermes/LocalFiles/rehearsal';
+const fixture=()=>({activityEnv:{PATH:'infrastructure-path',DISCORD_TOKEN:'private-token',DISCORD_CLIENT_SECRET:'private-oauth',LAVALINK_PASSWORD:'private-music',DISCORD_APPLICATION_ID:'333333333333333333',DISCORD_CLIENT_ID:'333333333333333333',HOLLOW_LANTERN_CAMPAIGN_ID:'hollow-lantern-rehearsal',RAPHAEL_CAMPAIGN_ID:'hollow-lantern-rehearsal',HOLLOW_LANTERN_ENGINE_URL:'http://127.0.0.1:18810',HOLLOW_LANTERN_SECRET_FILE:base+'/engine.secret',HOLLOW_LANTERN_STORE_FILE:base+'/engine.json',HOLLOW_LANTERN_ACTIVITY_DATA_DIR:base+'/activity',HOLLOW_LANTERN_RUNTIME_ROOT:'C:/Users/Hermes/Projects/Operator/raphael-council',HOLLOW_LANTERN_ART_ROOT:'C:/Users/Hermes/Projects/Operator/art',HOLLOW_LANTERN_GUILD_ID:'111111111111111111',HOLLOW_LANTERN_CHANNEL_ID:'222222222222222222',HOLLOW_LANTERN_GM_ID:'444444444444444444',HOLLOW_LANTERN_SPACES_FILE:'C:/Users/Hermes/Projects/Operator/live/discord-spaces.json',HOLLOW_LANTERN_DRAFT_FILE:'C:/Users/Hermes/Projects/Operator/live/investigation-drafts.json',HOLLOW_LANTERN_CHARACTER_STORE_FILE:'C:/Users/Hermes/Projects/Operator/live/characters.json',HOLLOW_LANTERN_AI_ENABLED:'true',HOLLOW_LANTERN_VOICE_CHANNEL_ID:'555555555555555555',HOLLOW_LANTERN_AUTOPLAY_ENABLED:'true',HOLLOW_LANTERN_ENROLLMENT_ENABLED:'true',HOLLOW_LANTERN_COMMIT_EVENTS_ENABLED:'true',HOLLOW_LANTERN_PUBLISH_ON_START:'true',HOLLOW_LANTERN_CAMPAIGNS_FILE:'C:/Users/Hermes/Projects/Operator/live/catalog.json',RAPHAEL_CHRONICLE_ENABLED:'true',RAPHAEL_CHRONICLE_DB_FILE:'C:/Users/Hermes/Projects/Operator/live/chronicle.sqlite',RAPHAEL_GAME_DATA_DIR:'C:/Users/Hermes/Projects/Operator/live',RAPHAEL_OBUS_GAME_TOKEN:'private-main-ai',UNWRITTEN_COAST_ENABLED:'true',UNWRITTEN_COAST_STORE_FILE:'C:/Users/Hermes/Projects/Coast/save.json',DAVY_LAUNCHERS_ON_START:'true',DAVY_MUSIC_PROJECTION_ON_START:'true'},draftFile:base+'/native/drafts.json',rpcSecretFile:base+'/native/draft-rpc.secret',webPort:18812});
+test('mixed main configuration becomes dedicated inert rehearsal configuration without mutation',()=>{
+ const input=fixture(),before=structuredClone(input),{env,summary}=composeRehearsalGateway(input);
+ assert.deepEqual(input,before);for(const key of ['DISCORD_TOKEN','DISCORD_CLIENT_SECRET','LAVALINK_PASSWORD','PATH','HOLLOW_LANTERN_ENGINE_URL','HOLLOW_LANTERN_SECRET_FILE','HOLLOW_LANTERN_STORE_FILE','HOLLOW_LANTERN_ACTIVITY_DATA_DIR'])assert.equal(env[key],input.activityEnv[key]);
+ assert.equal(env.HOLLOW_LANTERN_DRAFT_FILE,input.draftFile);assert.equal(env.HOLLOW_LANTERN_DRAFT_RPC_SECRET_FILE,input.rpcSecretFile);assert.equal(env.HOLLOW_LANTERN_DRAFT_RPC_URL,'http://127.0.0.1:18812');assert.equal(env.HOLLOW_LANTERN_WEB_PORT,'18812');
+ for(const key of ['HOLLOW_LANTERN_SPACES_FILE','HOLLOW_LANTERN_CHARACTER_STORE_FILE','HOLLOW_LANTERN_VOICE_CHANNEL_ID','HOLLOW_LANTERN_CAMPAIGNS_FILE','RAPHAEL_CHRONICLE_DB_FILE','RAPHAEL_GAME_DATA_DIR','RAPHAEL_OBUS_GAME_TOKEN','UNWRITTEN_COAST_STORE_FILE'])assert.equal(Object.hasOwn(env,key),false,key);
+ for(const key of ['DAVY_LAUNCHERS_ON_START','DAVY_MUSIC_PROJECTION_ON_START','HOLLOW_LANTERN_PUBLISH_ON_START','HOLLOW_LANTERN_AI_ENABLED','HOLLOW_LANTERN_AUTOPLAY_ENABLED','HOLLOW_LANTERN_ENROLLMENT_ENABLED','HOLLOW_LANTERN_COMMIT_EVENTS_ENABLED','RAPHAEL_CHRONICLE_ENABLED','UNWRITTEN_COAST_ENABLED'])assert.equal(env[key],'false',key);
+ for(const secret of ['private-token','private-oauth','private-music','private-main-ai'])assert.equal(JSON.stringify(summary).includes(secret),false);
+ assert.equal(summary.spaces,'not-configured');assert.equal(summary.campaignId,input.activityEnv.HOLLOW_LANTERN_CAMPAIGN_ID);
+});
+test('Activity handoff uses the same isolated owner and excludes foreign optional stores',()=>{
+ const input=fixture(),result=composeRehearsalGateway(input);assert.equal(result.activityEnv.HOLLOW_LANTERN_DRAFT_RPC_URL,result.env.HOLLOW_LANTERN_DRAFT_RPC_URL);assert.equal(result.activityEnv.HOLLOW_LANTERN_DRAFT_RPC_SECRET_FILE,input.rpcSecretFile);
+ for(const key of ['HOLLOW_LANTERN_SPACES_FILE','RAPHAEL_CHRONICLE_DB_FILE','RAPHAEL_GAME_DATA_DIR','UNWRITTEN_COAST_STORE_FILE'])assert.equal(Object.hasOwn(result.activityEnv,key),false);
+ assert.equal(result.activityEnv.HOLLOW_LANTERN_ACTIVITY_DATA_DIR,input.activityEnv.HOLLOW_LANTERN_ACTIVITY_DATA_DIR);
+ const fallback=fixture();delete fallback.activityEnv.HOLLOW_LANTERN_DRAFT_FILE;fallback.draftFile='C:/Users/Hermes/Projects/Operator/live/investigation-drafts.json';assert.throws(()=>composeRehearsalGateway(fallback));
+});
+test('explicit file paths cannot alias current engine or main draft files including case and slashes',()=>{
+ for(const key of ['HOLLOW_LANTERN_SECRET_FILE','HOLLOW_LANTERN_STORE_FILE','HOLLOW_LANTERN_SPACES_FILE','HOLLOW_LANTERN_DRAFT_FILE'])for(const parameter of ['draftFile','rpcSecretFile']){const input=fixture();input[parameter]=input.activityEnv[key].toUpperCase().replaceAll('/','\\');assert.throws(()=>composeRehearsalGateway(input));}
+ const input=fixture();input.rpcSecretFile=input.draftFile;assert.throws(()=>composeRehearsalGateway(input));
+});
+test('unsafe paths endpoints ports and inconsistent selected identities reject without fallback',()=>{
+ for(const path of ['relative.json','//server/share/key','C:/Users/Hermes/OneDrive/key','C:/Users/Hermes/LocalFiles/../key','C:/Users/Hermes/LocalFiles/file:key']){const input=fixture();input.draftFile=path;assert.throws(()=>composeRehearsalGateway(input));}
+ for(const webPort of [0,80,18810,65536,'18812'])assert.throws(()=>composeRehearsalGateway({...fixture(),webPort}));
+ for(const url of ['http://localhost:18810','https://example.com','http://127.0.0.1:18810/path']){const input=fixture();input.activityEnv.HOLLOW_LANTERN_ENGINE_URL=url;assert.throws(()=>composeRehearsalGateway(input));}
+ const input=fixture();input.activityEnv.RAPHAEL_CAMPAIGN_ID='main';assert.throws(()=>composeRehearsalGateway(input));
+});

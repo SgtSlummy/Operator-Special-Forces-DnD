@@ -1,0 +1,1 @@
+import{t as e}from"./activity-runtime-BjPTJ3Rb.js";var t=`nodejs`,n=e(`map`);export{n as GET,t as runtime};

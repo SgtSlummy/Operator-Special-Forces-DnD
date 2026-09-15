@@ -1,0 +1,1 @@
+import{t as e}from"./http-BSzGlPN_.js";import{t}from"./runtime-LHWI5HCE.js";var n=`nodejs`,r=e(t),i=r.connect,a=r.disconnect;export{a as DELETE,i as POST,n as runtime};

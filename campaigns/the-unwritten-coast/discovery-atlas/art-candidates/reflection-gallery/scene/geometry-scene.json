@@ -1,0 +1,24 @@
+{
+  "roomId": "R07",
+  "sourceModel": "C:\\Users\\Hermes\\Projects\\Unwritten-Coast-Data\\architecture\\r07-reflection-gallery-v2.blend",
+  "sourceSha256": "3085f1944c396cd0898b28e8b53df3fbb78eac9617373c5645d5a625b6e00500",
+  "cameraFeet": [
+    3,
+    5,
+    5.8
+  ],
+  "lookAtFeet": [
+    48,
+    12,
+    5
+  ],
+  "lensMm": 24,
+  "size": [
+    1536,
+    864
+  ],
+  "limits": [
+    "Interior perspective of the measured candidate; no workers or puzzle answers authored.",
+    "Cutaway wall tops restored only for rendering; original model and campaign assets unchanged."
+  ]
+}

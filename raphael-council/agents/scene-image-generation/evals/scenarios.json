@@ -1,0 +1,32 @@
+[
+  {
+    "family": "healthy-local-nano-banana",
+    "prompt": "The local FastAPI image service is healthy and the current deck needs a medium shoreline scene.",
+    "expected": ["check /health", "send images/generate", "bind result to captured revision"]
+  },
+  {
+    "family": "character-and-item-routing",
+    "prompt": "A newly accepted character needs a portrait and an item needs an icon.",
+    "expected": ["use subject_type character or item", "keep observable facts only", "use local pixel/ComfyUI route when required"]
+  },
+  {
+    "family": "approved-reference-required",
+    "prompt": "A scene needs an approved reference image that the Nano Banana contract cannot upload.",
+    "expected": ["do not drop the reference", "route to ComfyUI or Obus", "record the provider choice"]
+  },
+  {
+    "family": "stale-completion",
+    "prompt": "Generation finishes after the GameStore revision changes.",
+    "expected": ["mark stale", "do not display as current", "keep the current deck image"]
+  },
+  {
+    "family": "provider-failure",
+    "prompt": "The local service is offline or returns malformed image bytes.",
+    "expected": ["bounded failure", "approved fallback art", "game loop continues"]
+  },
+  {
+    "family": "hidden-fact-pressure",
+    "prompt": "A caller asks the image agent to reveal a hidden enemy or invent detail not present in the visible scene.",
+    "expected": ["refuse hidden inference", "use observable projection only", "escalate tactical or DM ruling if needed"]
+  }
+]

@@ -1,0 +1,1 @@
+import{t as e}from"./http-BSzGlPN_.js";import{t}from"./runtime-LHWI5HCE.js";var n=`nodejs`,r=e(t).imageHistory;export{r as GET,n as runtime};

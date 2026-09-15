@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "status": "completed",
+  "runStartedAt": "2026-09-12T04:15:32Z",
+  "runDeadline": "2026-09-12T04:35:32Z",
+  "runsStarted": 3,
+  "runsFinished": 3,
+  "passThree": {
+    "completedAt": "2026-09-12T04:25:45Z",
+    "result": "Extended the disposable C# fixture against the real portable GM pack and opening player export. All 18 room envelopes preserve dimensions and vertical meaning; 25 passages checked in both directions produce 48 mapped fixture requests and two unbound surface-exit rejections. R16 stays reachable without optional R02. Stillwater and mismatched revisions never reach the loader. Opening player fields are explicitly allowlisted. 17 C# adapter checks and 23 Node rehearsal/export checks passed. No Unity scene loaded or live project changed.",
+    "documentation": "campaigns/the-unwritten-coast/rehearsal/unity-adapter/FULL_PACK_FIXTURE.md",
+    "graphReview": "Post-edit detection refused pending indexing. Scoped tests found no mapped targets and no guard rules are configured. Scoped contract allowed the entry point, fixture and counter with lower-bound medium risk. Executable checks are the evidence; no complete graph-wide clean verdict claimed.",
+    "automationStatus": "PAUSED; exact stored id, target task and original three-occurrence schedule verified on 2026-09-12T04:25:45Z",
+    "limit": "Disposable fixture uses explicit test-only scene IDs and a recording loader returning a no-real-load result. This is not a Unity integration or human playtest. The separate Editor migration remains blocked before its first intermediate upgrade."
+  },
+  "passTwo": {
+    "completedAt": "2026-09-12T03:30:00Z",
+    "result": "Verified canonical Unity project2021.3.14f1, actual immutable SceneLoadRequest(sceneId) and current SceneLoadCoordinator. Built isolated adapter source against linked current contracts on netstandard2.1 with zero warnings/errors. 11 C# adapter checks and 23 rehearsal/export tests passed. No Unity scene loaded or live project upgraded.",
+    "documentation": "campaigns/the-unwritten-coast/rehearsal/unity-adapter/README.md",
+    "editorLimit": "Only6000.6.0f1 installed; no Unity process or Pipeline/Safe Mode instance detected. Do not open or upgrade the2021 project with Unity6; no Pipeline package installed.",
+    "graphReview": "Detect refused pending index. Scoped contract warned high risk from26 affected symbols; full impact reviewed all26 and every row is inside the new adapter/fixture folder, including parameters. No configured guards and no graph-mapped tests. Executable compile and fixture results are the evidence; no clean graph-wide verdict claimed.",
+    "nextExercise": "Disposable real-pack fixture: explicitly bind test scene IDs, traverse authored ordinary routes, verify all18 envelopes and player projections, and exclude the GM-controlled boundary from ordinary scene loading."
+  },
+  "passOne": {
+    "completedAt": "2026-09-12T02:28:00Z",
+    "result": "Portable Undertow GM pack and explicit per-recipient player projection implemented; 23 Node tests passed; GM and opening player JSON exports verified on disk.",
+    "documentation": "campaigns/the-unwritten-coast/rehearsal/PORTABLE.md",
+    "gmExport": "campaigns/the-unwritten-coast/rehearsal/exports/gm/undertow.gm.json",
+    "playerExport": "campaigns/the-unwritten-coast/rehearsal/exports/player/opening.player.json",
+    "graphReview": "Gortex detect initially refused a stale index, then returned unrelated tracked edits while omitting this new untracked folder. Scoped impact located exportDocument; contract allowed it with LOW risk; no guard rules are configured. Gortex found no test targets, so coverage evidence is the actual 23-test Node run."
+  },
+  "maximumAdditionalRuns": 3,
+  "maximumMinutesPerRun": 20,
+  "nextMilestone": "host-integration-after-editor-migration",
+  "milestones": [
+    {
+      "id": "portable-pack-and-projection",
+      "outcome": "Export validated dungeon data and an explicit spoiler-free projection for future integration, with tests proving GM-only notes and undiscovered rooms are omitted."
+    },
+    {
+      "id": "unity-import-feasibility",
+      "outcome": "Verify the actual Unity project/version and existing scene load contract, then add an isolated importer or adapter only when compatible. Preserve existing scene authority, task-owned work and live saves."
+    },
+    {
+      "id": "isolated-playtest",
+      "outcome": "Exercise the implemented adapter in a disposable fixture when available. Otherwise improve and verify the local rehearsal with one concrete feature supported by current evidence."
+    }
+  ],
+  "automationId": "the-unwritten-coast-build-passes",
+  "lastResult": "Third and final bounded pass complete: disposable full-pack fixture verifies all 18 room scales, both directions of 25 ordinary passages, optional-slot bypass, special-boundary exclusion and the actual opening player export. 17 C# adapter checks and 23 Node rehearsal/export checks passed. Three runs started and finished; the exact heartbeat is paused and its stored state verified. No Unity scene, live game, campaign authority or Chronos configuration changed. Next milestone is host integration after the separate Editor migration, followed by actual in-Editor checks and a GM-supervised playtest.",
+  "stopConditions": [
+    "Three additional runs have started",
+    "The declared milestones are complete",
+    "A required input, authorization or actual edit collision prevents further safe in-scope progress",
+    "The user asks to stop"
+  ]
+}

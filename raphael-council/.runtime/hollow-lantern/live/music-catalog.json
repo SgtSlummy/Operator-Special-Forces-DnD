@@ -1,0 +1,75 @@
+{
+  "tracks": {
+    "drama": {
+      "id": "USUAN1400020",
+      "approval": "royalty-cleared"
+    },
+    "exploration": {
+      "id": "USUAN1400022",
+      "approval": "royalty-cleared"
+    },
+    "tension": {
+      "id": "USUAN1100783",
+      "approval": "royalty-cleared"
+    },
+    "battle": {
+      "id": "USUAN1100875",
+      "approval": "royalty-cleared"
+    },
+    "sanctuary": {
+      "id": "USUAN1400023",
+      "approval": "royalty-cleared"
+    },
+    "aftermath": {
+      "id": "USUAN1400020",
+      "approval": "royalty-cleared"
+    }
+  },
+  "approvedTracks": {
+    "USUAN1400022": {
+      "approval": "royalty-cleared",
+      "track": {
+        "title": "Lord of the Land",
+        "artist": "Kevin MacLeod",
+        "licensedTrackId": "USUAN1400022",
+        "sourceUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Lord%20of%20the%20Land.mp3"
+      }
+    },
+    "USUAN1100783": {
+      "approval": "royalty-cleared",
+      "track": {
+        "title": "Darkest Child",
+        "artist": "Kevin MacLeod",
+        "licensedTrackId": "USUAN1100783",
+        "sourceUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Darkest%20Child.mp3"
+      }
+    },
+    "USUAN1100875": {
+      "approval": "royalty-cleared",
+      "track": {
+        "title": "Five Armies",
+        "artist": "Kevin MacLeod",
+        "licensedTrackId": "USUAN1100875",
+        "sourceUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Five%20Armies.mp3"
+      }
+    },
+    "USUAN1400023": {
+      "approval": "royalty-cleared",
+      "track": {
+        "title": "Suonatore di Liuto",
+        "artist": "Kevin MacLeod",
+        "licensedTrackId": "USUAN1400023",
+        "sourceUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Suonatore%20di%20Liuto.mp3"
+      }
+    },
+    "USUAN1400020": {
+      "approval": "royalty-cleared",
+      "track": {
+        "title": "Teller of the Tales",
+        "artist": "Kevin MacLeod",
+        "licensedTrackId": "USUAN1400020",
+        "sourceUrl": "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Teller%20of%20the%20Tales.mp3"
+      }
+    }
+  }
+}

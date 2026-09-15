@@ -100,3 +100,14 @@ test('a newer saved character revision prevents lost updates', () => {
     assert.equal(store.db.prepare('SELECT count(*) AS n FROM character_versions').get().n, 1);
   } finally { store.close(); }
 });
+
+test('portrait records are revisioned and scoped to the owning campaign player', () => {
+  const store = new CharacterStore(':memory:');
+  try {
+    const job = ready(store); store.approve(job.id, scope, job.revision);
+    store.savePortrait(scope, 1, { status: 'ready', prompt: 'simple portrait', sha256: 'abc', path: 'portraits/1.png' });
+    assert.equal(store.portrait(scope).sha256, 'abc');
+    assert.equal(store.portrait({ ...scope, owner: '2' }), null);
+    assert.throws(() => store.savePortrait(scope, 0, { status: 'ready', prompt: 'x' }), /revision/);
+  } finally { store.close(); }
+});

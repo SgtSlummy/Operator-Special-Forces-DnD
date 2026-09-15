@@ -8,11 +8,11 @@ This matrix is evidence-based. A green local test is not a claim of live Discord
 
 | Requirement | Current state | Evidence or remaining gate |
 |---|---|---|
-| Shared Discord/Web game state | Partial | Local game suite 620/620; live mixed-interface Discord/Web session remains open. |
-| Obus sole AI/speech boundary | Partial | Obus contract and provider suites pass; live host authority, STT route, and inference remain open. |
+| Shared Discord/Web game state | Partial | Local game suite 620/620; bot identity, guild, install, and deck audits pass; live mixed-interface session remains open. |
+| Obus sole AI/speech boundary | Partial | Local host lease, inference route, and real STT route pass; live mixed-player session remains open. |
 | Campaign-scoped RAG/provenance | Partial | AI/provider suites pass; diagnostics report metadata unavailable and inference not-run. |
 | Human DM companion and automated mode | Partial | Chronicle/core/runtime tests pass; live Davy composition remains open. |
-| Scribe, consent, corrections, recap | Partial | Character/Discord suite 186/186 and Chronicle suites pass; real Discord voice remains open. |
+| Scribe, consent, corrections, recap | Partial | Character/Discord suite and Chronicle suites pass; local STT receipt-only transcription passes; real Discord voice session remains open. |
 | Tactical mechanics and map behavior | Verified locally | Game/map suite 620/620; live player acceptance remains open. |
 | Greyharbor world/council persistence | Verified locally | Game/world/adjudication and council-related tests pass; configured live campaign not proven. |
 | Campaign imagery and deterministic snapshots | Verified locally | Image suite 48/48; live generation/provider availability remains open. |
@@ -33,6 +33,7 @@ This matrix is evidence-based. A green local test is not a claim of live Discord
 ## Evidence index
 
 - `PROJECT_RECOVERY_PLAN.md`
+- `MECHANICS_SUPPORT_MATRIX.md`
 - `PROJECT_EXECUTION_LOG.md`
 - `C:\Users\Hermes\LocalFiles\MigrationReports\20260907T002707Z\recovery-20260907-host-diagnostics-latest.log`
 - `C:\Users\Hermes\LocalFiles\MigrationReports\20260907T002707Z\recovery-20260907-game-suite.log`

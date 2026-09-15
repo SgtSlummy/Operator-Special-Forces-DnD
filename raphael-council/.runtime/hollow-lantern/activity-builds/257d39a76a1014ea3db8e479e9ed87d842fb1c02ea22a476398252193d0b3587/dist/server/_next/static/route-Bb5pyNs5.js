@@ -1,0 +1,1 @@
+import{t as e}from"./http-LKvrWijA.js";import{t}from"./runtime-CW9bUONS.js";var n=`nodejs`,r=e(t),i=r.reachOptions,a=r.reach;export{i as GET,a as POST,n as runtime};

@@ -1,0 +1,704 @@
+{
+  "schemaVersion": 1,
+  "kind": "undertow-gm-pack",
+  "audience": "gm",
+  "packId": "unwritten-coast-undertow",
+  "sourceRevision": "cc3c2b4401479f40ccdfd7be0daaed77b2207950bb95643f025960f50ca23e1b",
+  "title": "The Undertow Works",
+  "units": "feet",
+  "entryRoomId": "R01",
+  "rooms": [
+    {
+      "id": "R01",
+      "name": "Brass Vestibule",
+      "arrival": "a wooden sign asks visitors to wipe their boots before entering the storm machinery. The brass door has a dent where someone repeatedly opened it into a chair.",
+      "purpose": "Entry, credentials and plain records",
+      "scale": {
+        "widthFeet": 18,
+        "depthFeet": 12,
+        "verticalFeet": 10,
+        "verticalKind": "height",
+        "footprintLabel": "18 × 12 ft",
+        "verticalLabel": "10 ft high",
+        "shape": "Rectangle, offset door",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "inspect the public service roster, use the speaking tube or present credentials. It lists Wren's authorized work and normal maintenance hours. A valid permit, Wren's service credential or an agreed escorted visit works. A person with a forgery faces scrutiny only when someone actually inspects it."
+        },
+        {
+          "label": "Paths",
+          "text": "the main corridor to R04 is the clear accessible choice. R02's little hatch is visible beside it. The short route's evidence never depends on entering the hatch."
+        }
+      ]
+    },
+    {
+      "id": "R02",
+      "name": "Valve Throat",
+      "arrival": "a warm, narrow bend lined with handprints, squeezed between two immense pipes. A maintenance inscription reads, “Open the large door first. Yes, really.”",
+      "purpose": "Optional cramped shortcut",
+      "scale": {
+        "widthFeet": 4,
+        "depthFeet": 6,
+        "verticalFeet": 5,
+        "verticalKind": "height",
+        "footprintLabel": "4 × 6 ft",
+        "verticalLabel": "5 ft high",
+        "shape": "Crooked service slot",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "a reachable lever releases the service hatch at R03. A small familiar, appropriate tool or willing character may use the shortcut; ordinary-size characters can take the main route. Apply actual size and squeezing rules rather than assuming every PC fits."
+        },
+        {
+          "label": "Payoff",
+          "text": "the slot overlooks the counterweight mechanism, showing which cable powers the lift. It saves local travel or provides an observation angle. No unique treasure, essential key or required clue is hidden here."
+        }
+      ]
+    },
+    {
+      "id": "R03",
+      "name": "Counterweight Well",
+      "arrival": "a square black opening only twelve feet across, with a brass platform descending farther than the first light reaches. The counterweight rises silently beside it.",
+      "purpose": "Lift, stairs and mechanical observation",
+      "scale": {
+        "widthFeet": 12,
+        "depthFeet": 12,
+        "verticalFeet": 160,
+        "verticalKind": "depth",
+        "footprintLabel": "12 × 12 ft",
+        "verticalLabel": "160 ft deep",
+        "shape": "Vertical square shaft",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "the intact lift has local controls, railings and a visible load plate. It takes two minutes to travel the full shaft. A stair provides an alternative. Inspecting the mechanism identifies the same isolation feed used at R08."
+        },
+        {
+          "label": "Risk",
+          "text": "exposing the maintenance channel or climbing outside the rails introduces a stated fall risk. Normal use of the lift does not demand an arbitrary balance check. A disabled lift can be repaired or bypassed through R01–R04."
+        }
+      ]
+    },
+    {
+      "id": "R04",
+      "name": "Choir of Pipes",
+      "arrival": "footsteps return as a chord from pipes larger than cottages. Between the columns, a low whistle sounds almost like someone answering.",
+      "purpose": "Sound, route choice and isolation valves",
+      "scale": {
+        "widthFeet": 240,
+        "depthFeet": 90,
+        "verticalFeet": 60,
+        "verticalKind": "height",
+        "footprintLabel": "240 × 90 ft",
+        "verticalLabel": "60 ft high",
+        "shape": "Long nave with staggered columns",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "three labeled valves isolate the observation loop, catwalk feed and dock pumps. Their labels are legible. A printed diagram explains each effect; this is a system to understand, not an unhinted combination puzzle. The voice-like sound is air resonance, not an NPC delivering secret knowledge."
+        },
+        {
+          "label": "Payoff",
+          "text": "isolating the catwalk feed removes its electrical hazard. Listening from two positions reveals the true scale of the room and a maintenance bell from R05. Crossing the room takes real movement time; do not place every exit within thirty feet."
+        }
+      ]
+    },
+    {
+      "id": "R05",
+      "name": "Caretaker's Flat",
+      "arrival": "eleven feet of narrow domestic life: a bunk, a mended rug, two mugs and a kettle. Beyond its back window is an indoor harbor.",
+      "purpose": "Human contact and a quiet refuge",
+      "scale": {
+        "widthFeet": 11,
+        "depthFeet": 17,
+        "verticalFeet": 8,
+        "verticalKind": "height",
+        "footprintLabel": "11 × 17 ft",
+        "verticalLabel": "8 ft high",
+        "shape": "Irregular L within bounding box",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Person",
+          "text": "Jori Hale, an off-duty caretaker, has remained to maintain the refuge and feed the dock cat. Jori wants a safe way home at the end of the shift and does not know Rook's entire plan. They can explain valves, the lift and the dock's condition. They have no secret authority over the party."
+        },
+        {
+          "label": "Payoff",
+          "text": "an unforced conversation offers directions, a dry seat and a duplicate maintenance schedule. If Jori leaves or is absent, a clearly labeled visitor note supplies those ordinary directions. The back ramp opens onto R06."
+        }
+      ]
+    },
+    {
+      "id": "R06",
+      "name": "Sleeping Drydock",
+      "arrival": "the window ledge becomes a balcony; beyond it, lights outline a vessel a hundred feet long. Then the characters notice that the ship occupies only a small part of the basin.",
+      "purpose": "Ship-scale exploration and salvage",
+      "scale": {
+        "widthFeet": 1200,
+        "depthFeet": 420,
+        "verticalFeet": 160,
+        "verticalKind": "height",
+        "footprintLabel": "1,200 × 420 ft",
+        "verticalLabel": "160 ft high",
+        "shape": "Stepped rectangular basin",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Explore",
+          "text": "divide the basin into the balcony, scaffold pier, vessel deck and gate controls. Travel between them matters. The vessel, *Mercy of the Tide*, was built for rescue and mothballed when funding shifted to the engine. It is real, not an illusion or a boss in disguise."
+        },
+        {
+          "label": "Reward",
+          "text": "a full day of repairs, a willing qualified crew, pump activation and gate inspection make it a forty-passenger rescue vessel. Two boarding lanes allow its manifest/loading work within the same forty-minute allowance used by ordinary ferries. It still needs an appropriate chart, pilot, landing and shelter. Award the extra capacity if earned; do not cancel it to preserve adventure 10's expected difficulty."
+        },
+        {
+          "label": "Exit",
+          "text": "a separate 80-ft-wide, 60-ft-high water gate connects to R15's basin and a surveyed sea culvert. Jori's plan shows the safe tide conditions. Opening it under those conditions with working pumps takes six hours including inspection, which can overlap the vessel repairs. The personnel causeway is a distinct passage. Unchecked opening has disclosed flood risk, not a surprise automatic catastrophe."
+        }
+      ]
+    },
+    {
+      "id": "R07",
+      "name": "Reflection Gallery",
+      "arrival": "moving machinery appears in a mirrored ceiling while the floor remains still. A worker in the reflection is just a distant technician seen through an angled optical path, if such a technician is actually present.",
+      "purpose": "Interpret visible machinery without combat",
+      "scale": {
+        "widthFeet": 80,
+        "depthFeet": 20,
+        "verticalFeet": 12,
+        "verticalKind": "height",
+        "footprintLabel": "80 × 20 ft",
+        "verticalLabel": "12 ft high",
+        "shape": "Bent gallery",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "adjustable mirrors permit observation of R12's presses without entering their moving lanes. Fixed diagrams identify the viewpoint. Characters can test the reflection with a waved lantern and see the corresponding beam."
+        },
+        {
+          "label": "Evidence",
+          "text": "a linked survey plate changes with the engine's display while an unlinked paper copy does not. Give that clear comparison when observed. Smashing the mirror removes the convenient view, not all other sources of the fact."
+        }
+      ]
+    },
+    {
+      "id": "R08",
+      "name": "Insulated Catwalk",
+      "arrival": "a fifteen-foot-wide railed bridge spans a humming channel seventy feet below. Halfway across, a maintenance hatch displays a bright power indicator.",
+      "purpose": "Safe access or an exposed shortcut",
+      "scale": {
+        "widthFeet": 180,
+        "depthFeet": 15,
+        "verticalFeet": 70,
+        "verticalKind": "elevation",
+        "footprintLabel": "180 × 15 ft",
+        "verticalLabel": "70 ft above channel",
+        "shape": "Narrow suspended bridge",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "the bridge deck is intact. Turn off the feed at R04 or use its local labeled disconnect before opening the maintenance hatch. Normal crossing with the hatch shut is safe. If a hostile encounter occurs here, mark railings and total cover accurately."
+        },
+        {
+          "label": "Risk",
+          "text": "touching the exposed live feed after the warning calls for DC 13 Dexterity save, 2d6 lightning on failure or half on success. The current stops once isolated. A Sentinel may guard the far landing only if adventure 7's authorization conflict remains unresolved; it is the same encounter, not an additional monster."
+        }
+      ]
+    },
+    {
+      "id": "R09",
+      "name": "Room of Almost-Rain",
+      "arrival": "droplets fall from forty feet above and halt six inches over the floor, making a trembling second surface. Boots disturb it into brief rings of light.",
+      "purpose": "Experiment and a minor local mystery",
+      "scale": {
+        "widthFeet": 60,
+        "depthFeet": 60,
+        "verticalFeet": 40,
+        "verticalKind": "height",
+        "footprintLabel": "60 ft diameter",
+        "verticalLabel": "40 ft high",
+        "shape": "Circular",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Truth",
+          "text": "a local condenser field suspends droplets; it has no effect on people, time or gravity. An ordinary drain handle switches the field off and leaves the stone damp. Characters can experiment safely and take a sample."
+        },
+        {
+          "label": "Payoff",
+          "text": "the field's accessible gauge demonstrates a stable calibration reference for R14. Recording it can replace one reading in the adventure-7 test. Wonder leads to useful information; no mandatory attack interrupts it."
+        }
+      ]
+    },
+    {
+      "id": "R10",
+      "name": "Giant's Teacup",
+      "arrival": "a vast empty bowl opens under the ramp, ringed by terraces. Someone has painted a tiny flower on its rim. At the bottom, real porcelain cups sit on a technician's lunch table.",
+      "purpose": "Repair materials and elevation choices",
+      "scale": {
+        "widthFeet": 140,
+        "depthFeet": 140,
+        "verticalFeet": 70,
+        "verticalKind": "depth",
+        "footprintLabel": "140 ft diameter",
+        "verticalLabel": "70 ft deep",
+        "shape": "Bowl, terraces and ramp",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "descend the broad ramp or use the working platform lift. The bowl stores spare conductor sleeves, mount braces and spillway seals in marked racks. Taking useful material is possible; record it and its ownership."
+        },
+        {
+          "label": "Payoff",
+          "text": "supplies here can support Mossmere's repair or a temporary outer mast. Transporting large material still needs people and a suitable route. The room contains enough for one major repair package initially, not unlimited resources. If earlier workers used it, record that change instead of refilling the shelves."
+        }
+      ]
+    },
+    {
+      "id": "R11",
+      "name": "Pocket Refuge",
+      "arrival": "after the enormous bowl, the company opens a nine-foot-square dry room with a bench, blanket chest and a stubbornly ordinary biscuit tin.",
+      "purpose": "Dry records, tea and a pause",
+      "scale": {
+        "widthFeet": 9,
+        "depthFeet": 9,
+        "verticalFeet": 7,
+        "verticalKind": "height",
+        "footprintLabel": "9 × 9 ft",
+        "verticalLabel": "7 ft high",
+        "shape": "Square",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "the refuge holds drinking water, a first-aid box and paper maintenance copies. These are mundane supplies, not automatic HP recovery. Use normal rest and healing rules. The bench and floor accommodate a small group; a larger party can also use the dry landing outside."
+        },
+        {
+          "label": "Payoff",
+          "text": "a believable place to stop, make a decision and hear a character's voice. No secret encounter timer activates because the players take a breath. Real campaign time and the storm forecast still proceed normally."
+        }
+      ]
+    },
+    {
+      "id": "R12",
+      "name": "Map-Press Hall",
+      "arrival": "a forest of presses stamps blue coastlines onto long sheets. Some sheets have wet blank places where names should be.",
+      "purpose": "Evidence, public maps and industrial movement",
+      "scale": {
+        "widthFeet": 300,
+        "depthFeet": 180,
+        "verticalFeet": 45,
+        "verticalKind": "height",
+        "footprintLabel": "300 × 180 ft",
+        "verticalLabel": "45 ft high",
+        "shape": "Sawtooth factory floor",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "three broad safe staff lanes cross the floor. Clearly marked moving lanes can be stopped from R04's observation loop control or the local emergency stop. An urgent crossing through active rollers risks a stated DC 13 Dexterity check; failure blocks progress and damages unsecured paper or gear before any further voluntary hazard exposure."
+        },
+        {
+          "label": "Evidence",
+          "text": "the paired survey copies, dated queue and diversion register independently connect map changes to engine commands. Plain inspection of safe records yields that information. Players may copy, publish or preserve it. Turning off the presses stops new official map printing, not the displacement engine."
+        }
+      ]
+    },
+    {
+      "id": "R13",
+      "name": "Dead-Letter Room",
+      "arrival": "returned mail fills five sloping shelves. A parcel marked “birthday, do not bend” sits beneath a stamp reading “destination unrecognized.”",
+      "purpose": "Personal stories and optional deliveries",
+      "scale": {
+        "widthFeet": 20,
+        "depthFeet": 25,
+        "verticalFeet": 9,
+        "verticalKind": "height",
+        "footprintLabel": "20 × 25 ft",
+        "verticalLabel": "9 ft high",
+        "shape": "Five-sided sorting room",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "sort, deliver, copy routing information or arrange public postal recovery. Use only NPC names already established or new ordinary residents. Do not put a PC's unapproved secret or supposedly dead relative in a letter for a forced reveal."
+        },
+        {
+          "label": "Payoff",
+          "text": "addresses support Bellwether's existence and a handful of voluntary delivery promises create human-scale missions after large industrial rooms. The plainly visible blue door is down the adjoining corridor."
+        }
+      ]
+    },
+    {
+      "id": "R14",
+      "name": "Crown Control Gallery",
+      "arrival": "a crescent of gauges faces the storm machinery through tall glass. Five beacon positions sit on the control table. Their actual lights match the campaign record.",
+      "purpose": "Calibration, bypass and shutdown",
+      "scale": {
+        "widthFeet": 90,
+        "depthFeet": 40,
+        "verticalFeet": 25,
+        "verticalKind": "height",
+        "footprintLabel": "90 × 40 ft",
+        "verticalLabel": "25 ft high",
+        "shape": "Crescent-front rectangle",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "this is adventure 7's control gallery and adventure 11's access objective. Its documents give the isolation, calibration, bypass and evacuation-before-shutdown sequence. It requires no key found only in an optional room. Credentials, a negotiated handover, Wren's access or the established unauthorized route can work."
+        },
+        {
+          "label": "Payoff",
+          "text": "routine informed operation succeeds with trained people and time. Use the adventure's uncertain checks only when conditions warrant. R09's recorded gauge and R07's observations can help. Doors lead to the evidence route and Beacon Heart."
+        }
+      ]
+    },
+    {
+      "id": "R15",
+      "name": "Storm-Lens Cavern",
+      "arrival": "the final railing overlooks a dark expanse where a whole district could fit. Lights across the water turn out to be maintenance stations. Rain strikes a lens hundreds of feet overhead and runs into immense channels.",
+      "purpose": "Regional-scale defense and final operation",
+      "scale": {
+        "widthFeet": 1600,
+        "depthFeet": 900,
+        "verticalFeet": 220,
+        "verticalKind": "height",
+        "footprintLabel": "1,600 × 900 ft maximum",
+        "verticalLabel": "220 ft high",
+        "shape": "Irregular kidney-shaped cavern",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Explore",
+          "text": "this is a regional-scale chamber, not one combat arena. Use local maps for the west causeway, central island, spillway controls and eastern exit landing. The principal marked walking route across the cavern is 1,800 ft; at a careful unhurried pace, budget about fifteen minutes including stairs and pauses, then use actual movement for urgent scenes. Boat routes differ and must be established."
+        },
+        {
+          "label": "Function",
+          "text": "uninhabited basins and spillway machinery accept the distributed storm load. The cavern is inside the engineered coastal defenses, not another populated place secretly sacrificed by the supposedly good ending."
+        },
+        {
+          "label": "Payoff",
+          "text": "previously secured crews can operate separate controls. The PCs choose where to act and how to communicate. Use the actual preparation, including working lifts, repaired feeds and available boats. A huge room does not justify constant attacks from outside every character's effective range."
+        }
+      ]
+    },
+    {
+      "id": "R16",
+      "name": "Exit Tower",
+      "arrival": "a hexagonal tower carries the harbor's daylight down its hollow center. A bell rope rises past landing after landing.",
+      "purpose": "Accessible exit and signal relay",
+      "scale": {
+        "widthFeet": 24,
+        "depthFeet": 27.71281292110204,
+        "verticalFeet": 180,
+        "verticalKind": "height",
+        "footprintLabel": "24 ft across flats",
+        "verticalLabel": "180 ft high",
+        "shape": "Hexagonal shaft",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "a staffed or operable lift takes three minutes to the surface. A protected stair is the alternate route. Its surface hatch opens at the waterfront signal tower, providing a second ordinary exit from the dungeon."
+        },
+        {
+          "label": "Payoff",
+          "text": "a reliable way to send people, notes and small equipment out. Loss of one engine route does not trap the whole party. This is where a prepared crew can relay the final operation's signals."
+        }
+      ]
+    },
+    {
+      "id": "R17",
+      "name": "Unmarked Blue Door",
+      "arrival": "a small chamber ends in a balcony overlooking an ordinary Bellwether street from an impossible direction. The familiar survey beam narrows across its threshold.",
+      "purpose": "A limited Stillwater crossing discovery",
+      "scale": {
+        "widthFeet": 8,
+        "depthFeet": 13,
+        "verticalFeet": 10,
+        "verticalKind": "height",
+        "footprintLabel": "8 × 13 ft",
+        "verticalLabel": "10 ft high",
+        "shape": "Small chamber with balcony",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Truth",
+          "text": "this is an old maintenance crossing into Stillwater. It follows the same dawn/dusk one-hour window, route-chart and instrument requirements as other crossings. It never grants unlimited instant travel. Its chart is filed locally in the Dead-Letter Room's service drawer and has a duplicate at the Observatory."
+        },
+        {
+          "label": "Payoff",
+          "text": "a second established return route for small groups or a replacement rescue plan. The six-foot approach and small balcony make bulk evacuation slower; inspect and agree capacity before committing people. The main ferry remains useful. A sign on both sides states the next window and the Bellwether schoolhouse refuge."
+        }
+      ]
+    },
+    {
+      "id": "R18",
+      "name": "Beacon Heart",
+      "arrival": "a cylinder of machinery rises three hundred feet. Suspended rings turn slowly around a column of light. At its base, the controls are deliberately built at human height.",
+      "purpose": "Final distribution machinery",
+      "scale": {
+        "widthFeet": 180,
+        "depthFeet": 180,
+        "verticalFeet": 300,
+        "verticalKind": "height",
+        "footprintLabel": "180 ft diameter",
+        "verticalLabel": "300 ft high",
+        "shape": "Vertical cylinder with platforms",
+        "interpretation": "footprint-envelope-not-collision-geometry"
+      },
+      "gmNotes": [
+        {
+          "label": "Interact",
+          "text": "three accessible platform stations handle isolation, distribution and return monitoring. Lifts and protected stairs connect them. Prepared crews can staff stations; the PCs are not forced to split into solo lethal encounters."
+        },
+        {
+          "label": "Finale",
+          "text": "execute the selected plan using the series bible's requirements. The spectacle reflects actual system state: functioning outer beacons join the light; a shutdown darkens the column; controlled continuation leaves its agreed refuge feed active. The machinery does not suddenly demand a blood sacrifice or overwrite a character because the finale needs drama."
+        },
+        {
+          "label": "Exit",
+          "text": "R14 and R15 give two routes. Return to the people above and complete the campaign's political and personal ending."
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "id": "R01--R02",
+      "from": "R01",
+      "to": "R02",
+      "bidirectional": true,
+      "passage": "Two short service openings",
+      "gmDetail": "Optional; use actual creature-size/squeezing rules"
+    },
+    {
+      "id": "R01--R04",
+      "from": "R01",
+      "to": "R04",
+      "bidirectional": true,
+      "passage": "60 ft of corridor, 8 ft wide, plus 160 ft of vertical descent",
+      "gmDetail": "Main passenger lift and protected stair; separate from R03's service lift"
+    },
+    {
+      "id": "R01--surface",
+      "from": "surface",
+      "to": "R01",
+      "bidirectional": true,
+      "passage": "30 ft, 8 ft wide",
+      "gmDetail": "Public maintenance entry"
+    },
+    {
+      "id": "R02--R03",
+      "from": "R02",
+      "to": "R03",
+      "bidirectional": true,
+      "passage": "Two short service openings",
+      "gmDetail": "Optional; use actual creature-size/squeezing rules"
+    },
+    {
+      "id": "R03--R04",
+      "from": "R03",
+      "to": "R04",
+      "bidirectional": true,
+      "passage": "Lift or stair, 160 ft vertical",
+      "gmDetail": "Intact lift, controls at both landings"
+    },
+    {
+      "id": "R04--R05",
+      "from": "R04",
+      "to": "R05",
+      "bidirectional": true,
+      "passage": "20 ft, 6 ft wide",
+      "gmDetail": "Unlocked domestic door"
+    },
+    {
+      "id": "R04--R07",
+      "from": "R04",
+      "to": "R07",
+      "bidirectional": true,
+      "passage": "50 ft, 8 ft wide",
+      "gmDetail": "Observation route"
+    },
+    {
+      "id": "R04--R08",
+      "from": "R04",
+      "to": "R08",
+      "bidirectional": true,
+      "passage": "40 ft, 10 ft wide",
+      "gmDetail": "Direct technical route"
+    },
+    {
+      "id": "R05--R06",
+      "from": "R05",
+      "to": "R06",
+      "bidirectional": true,
+      "passage": "90 ft, 6 ft wide",
+      "gmDetail": "Caretaker's service ramp"
+    },
+    {
+      "id": "R06--R10",
+      "from": "R06",
+      "to": "R10",
+      "bidirectional": true,
+      "passage": "150 ft, 15 ft wide",
+      "gmDetail": "Broad descending ramp"
+    },
+    {
+      "id": "R06--R15",
+      "from": "R06",
+      "to": "R15",
+      "bidirectional": true,
+      "passage": "240 ft, 30 ft wide",
+      "gmDetail": "Dry personnel causeway; separate water gate described at R06"
+    },
+    {
+      "id": "R07--R09",
+      "from": "R07",
+      "to": "R09",
+      "bidirectional": true,
+      "passage": "30 ft, 6 ft wide",
+      "gmDetail": "Gently curving passage"
+    },
+    {
+      "id": "R07--R12",
+      "from": "R07",
+      "to": "R12",
+      "bidirectional": true,
+      "passage": "60 ft, 10 ft wide",
+      "gmDetail": "Archive access"
+    },
+    {
+      "id": "R08--R14",
+      "from": "R08",
+      "to": "R14",
+      "bidirectional": true,
+      "passage": "40 ft, 10 ft wide",
+      "gmDetail": "Direct control-gallery access"
+    },
+    {
+      "id": "R09--R11",
+      "from": "R09",
+      "to": "R11",
+      "bidirectional": true,
+      "passage": "20 ft, 6 ft wide",
+      "gmDetail": "Dry doorway"
+    },
+    {
+      "id": "R10--R11",
+      "from": "R10",
+      "to": "R11",
+      "bidirectional": true,
+      "passage": "80 ft, 8 ft wide",
+      "gmDetail": "Stair and working chair/platform lift"
+    },
+    {
+      "id": "R10--R15",
+      "from": "R10",
+      "to": "R15",
+      "bidirectional": true,
+      "passage": "120 ft, 12 ft wide",
+      "gmDetail": "Lower maintenance ramp"
+    },
+    {
+      "id": "R11--R13",
+      "from": "R11",
+      "to": "R13",
+      "bidirectional": true,
+      "passage": "50 ft, 6 ft wide",
+      "gmDetail": "Sorting-office corridor"
+    },
+    {
+      "id": "R12--R13",
+      "from": "R12",
+      "to": "R13",
+      "bidirectional": true,
+      "passage": "20 ft, 8 ft wide",
+      "gmDetail": "Staff passage"
+    },
+    {
+      "id": "R12--R14",
+      "from": "R12",
+      "to": "R14",
+      "bidirectional": true,
+      "passage": "70 ft, 10 ft wide",
+      "gmDetail": "Official operational route"
+    },
+    {
+      "id": "R13--R17",
+      "from": "R13",
+      "to": "R17",
+      "bidirectional": true,
+      "passage": "30 ft, 6 ft wide",
+      "gmDetail": "Door is unmarked, not magically hidden"
+    },
+    {
+      "id": "R14--R18",
+      "from": "R14",
+      "to": "R18",
+      "bidirectional": true,
+      "passage": "80 ft, 12 ft wide",
+      "gmDetail": "Main distribution access"
+    },
+    {
+      "id": "R15--R16",
+      "from": "R15",
+      "to": "R16",
+      "bidirectional": true,
+      "passage": "180 ft, 12 ft wide",
+      "gmDetail": "Exit approach"
+    },
+    {
+      "id": "R15--R18",
+      "from": "R15",
+      "to": "R18",
+      "bidirectional": true,
+      "passage": "200 ft, 20 ft wide",
+      "gmDetail": "Engine-base route"
+    },
+    {
+      "id": "R16--surface",
+      "from": "R16",
+      "to": "surface",
+      "bidirectional": true,
+      "passage": "Lift or stair, 180 ft vertical",
+      "gmDetail": "Opens at the waterfront signal tower"
+    }
+  ],
+  "boundaries": [
+    {
+      "id": "R17--Stillwater",
+      "from": "R17",
+      "name": "Stillwater",
+      "passage": "Special boundary",
+      "gmDetail": "Uses established dawn/dusk window, instrument and chart rules",
+      "requiresGmRuling": true
+    }
+  ]
+}

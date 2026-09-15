@@ -16,6 +16,14 @@ const registration = { ...scope, generation: GENERATION, expectedBootEpoch: BOOT
 const renewal = { ...scope, generation: GENERATION, expectedBootEpoch: BOOT, expectedSessionPolicyRevision: 0, opId: OP, leaseSeconds: 30 };
 const configuration = { ...scope, expectedBootEpoch: BOOT, expectedGeneration: GENERATION, expectedSessionPolicyRevision: 0, opId: OP, policy: { enabled: true, mode: 'local-free', exportable: false, codex: false } };
 const effectivePolicy = { enabled: true, mode: 'local', exportable: false, codex: false, tools: false, personalMemory: false, autoMemory: false };
+
+test('master release uses its signed CAS route and rejects child scope or an unreleased response', async () => {
+ const input={...renewal,session:'campaign'};delete input.leaseSeconds;let call;
+ const client=make(async(url,options)=>{call={url,options};return json({status:'host_released',runtime:snapshot({generation:null,leaseExpiresAtMs:null,sessionPolicyRevision:1,effectivePolicy:{...effectivePolicy,enabled:false}})});});
+ const result=await client.release(input);assert.equal(result.generation,null);assert.equal(result.leaseExpiresAtMs,null);assert.match(call.url,/host-generation\/release$/);assert.equal(call.options.method,'POST');assert.match(call.options.headers['X-Obus-Game-Host-Signature'],/^[a-f0-9]{64}$/);
+ await assert.rejects(client.release({...input,session:'child'}),checkCode('INVALID_HOST_CONTROL_INPUT',400));
+ await assert.rejects(make(async()=>json({status:'host_released',runtime:snapshot()})).release(input),checkCode('INVALID_OBUS_RUNTIME_RESPONSE',502));
+});
 function snapshot(overrides = {}) {
   return { contract: CONTRACT, requiredForRoute: true, bootEpoch: BOOT, generation: GENERATION, sessionPolicyRevision: 0, leaseExpiresAtMs: NOW + 30000, effectivePolicy, queuedCount: 0, dispatchedCount: 0, ...overrides };
 }
@@ -61,7 +69,7 @@ test('factory is inert and GET sends only service authentication and exact scope
     return json(snapshot({ generation: null, leaseExpiresAtMs: null, effectivePolicy: { ...effectivePolicy, enabled: false } }));
   }, { nonce: () => { assert.fail('GET must not sign'); } });
   assert.equal(calls, 0);
-  assert.deepEqual(Object.keys(client), ['getRuntime', 'register', 'renew', 'revoke', 'configure']);
+  assert.deepEqual(Object.keys(client), ['syncEvidence', 'getRuntime', 'register', 'renew', 'revoke', 'release', 'configure']);
   assert.equal(Object.isFrozen(client), true);
   const result = await client.getRuntime(scope);
   assert.equal(result.generation, null);

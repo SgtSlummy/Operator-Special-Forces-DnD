@@ -1,0 +1,1 @@
+import{t as e}from"./http-BOXfcPXM.js";import{t}from"./runtime-BUiTaVOB.js";var n=`nodejs`,r=e(t),i=r.council,a=r.chooseCouncil;export{i as GET,a as POST,n as runtime};

@@ -1,0 +1,1 @@
+import{t as e}from"./http-CvZ40NV7.js";import{t}from"./runtime-CXohDgGO.js";var n=`nodejs`,r=e(t).aiStatus,i=e(t).aiConfigure,a=e(t).aiAsk;export{r as GET,i as PATCH,a as POST,n as runtime};

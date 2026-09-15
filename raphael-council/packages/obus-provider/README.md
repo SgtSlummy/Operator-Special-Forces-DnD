@@ -1,10 +1,10 @@
-# @operator/obus-chronicle-provider 0.1.0
+# @operator/obus-chronicle-provider 0.1.1
 
 Portable server-side consumer for Davy Jones. Obus is the sole AI routing, policy and execution authority. This package exports `ObusTransport` and `createObusChronicleProvider`; it does not construct GameAi, start a bot, choose models or load the Operator platform. Node >=22.16.0 is required. The installed package has no runtime package dependencies.
 
 ## Composition
 
-Use this provider with `@operator/chronicle@0.1.1` and `@operator/membership-client@0.1.1`. Install the three reviewed local tarballs into Davy, then inject the existing gateway-owned adapters. They are intentionally separate packages; no sibling checkout is needed.
+Use this provider with `@operator/chronicle@0.1.2` and `@operator/membership-client@0.1.1`. Install the three reviewed local tarballs into Davy, then inject the existing gateway-owned adapters. They are intentionally separate packages; no sibling checkout is needed.
 
 ```js
 import { ObusTransport, createObusChronicleProvider } from '@operator/obus-chronicle-provider';
@@ -25,6 +25,12 @@ const provider = createObusChronicleProvider({
 ## Provider methods
 
 `write(kind, evidence, context)` supports `summary`, `final` and `cue`; context contains `campaign`, `session`, `owner` and `sourceRevision`. Supply corrected, authorized chronicle evidence. The provider snapshots and bounds input, rechecks current host membership, supplies a stable request fingerprint and validates text and actual local-only provenance. Full chronicles always narrow policy to local mode, Codex off, external export off, no tools and no personal/automatic memory. This does not bypass shared all-AI-off or a missing/expired/replaced game-host generation.
+
+`writeReferences('summary', references, context)` uses the private store-backed evidence bridge supplied by the host composition. In version 0.1.1 that bridge captures `raph-obus-game-evidence-refs-v2`: a baseline revision, bounded source references and a hash of their complete dependency set and contributor consent. No raw transcript is accepted through this method. Obus resolves the signed stored evidence, checks current access and external consent, renders its fixed `session-summary-v1` template and makes every routing decision. Only that bounded template may request host-approved free fallback; full chronicles and final recaps remain local-only.
+
+The backend must advertise refs-v2 explicitly. The transport validates its returned baseline revision and the provider checks the exact source set, current host authority and selection after generation and receipt storage. Unrelated new chat may advance the stored projection; a correction, deletion, hidden source or relevant consent change rejects the affected result. A backend without refs-v2 support fails closed without silently resending as refs-v1. Legacy explicitly injected bridges without a selection capability retain refs-v1's stricter whole-snapshot behavior.
+
+`captureReferences` is an optional synchronous private guard for Chronicle's final summary transaction. Only a trusted composition may supply its backing store capability. It grants no model access or independent routing authority. Keep the previous 0.1.0 archive for rollback when installing 0.1.1.
 
 `onReceipt(record)` is optional and awaited. It receives bounded routing provenance, source references and revisions, not transcript/generated prose. Failure to persist the receipt fails the operation. Obus owns dispatch deduplication and scheduling; this consumer creates no independent policy authority or dispatch database.
 
@@ -55,6 +61,6 @@ A completed transcript returns a string. A `completed_receipt_only` response thr
 
 ## Build and review
 
-Run `npm ci --ignore-scripts`, `npm run build`, `npm test`, and `npm run pack:artifact` from this source directory. Build input is exactly the package entry, `ai/obus.mjs` and `chronicle/obus-provider.mjs`; only Node built-ins may remain external. The source audit excludes GameAi, default provider, GameStore, auth/runtime, host-control signer and gateway startup. Isolated installation tests exercise the actual exported transport with controlled fetch responses; they never connect a gateway or live Obus.
+Run `npm install --ignore-scripts`, `npm run build`, `npm test`, and `npm run pack:artifact` from this source directory. The seven build inputs are the package entry, `ai/obus.mjs`, `ai/host-control.mjs`, `ai/evidence-upload.mjs`, `ai/evidence-selection.mjs`, `chronicle/obus-evidence.mjs` and `chronicle/obus-provider.mjs`. Only Node built-ins may remain external. Shared validation helpers are bundled; no host signing key, default provider, GameStore or gateway startup is included. Isolated installation tests exercise the actual exported transport, refs-v2 capability/baseline/consent checks and co-installed Chronicle 0.1.2 with controlled responses. They never connect a gateway or live Obus.
 
 The tarball contains only `package.json`, this README and `dist/index.mjs`. Versioned artifact manifests and the build audit record source, bundle and package hashes. Packaging refuses to overwrite an existing tarball. Installing this package does not start services, enable recording, establish a host lease or prove live Discord/STT readiness.

@@ -1,0 +1,53 @@
+import http from 'node:http';
+import {readFile} from 'node:fs/promises';
+import {openTableStore} from './table-store.mjs';
+import {dirname,resolve,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {randomBytes} from 'node:crypto';
+import {homedir} from 'node:os';
+import {CATALOG} from './catalog.mjs';
+import {createTable,tableAction,raphaelRecall,discordScene} from './table-model.mjs';
+const HERE=dirname(fileURLToPath(import.meta.url));
+export function previewState(){
+ let s=createTable(CATALOG);const gm={role:'gm'};
+ for(const roomId of ['t-tavern','t-workshop','t-archive','t-chapel','t-market','t-home','t-beacon','t-signal','R01','R04','R05','R07'])s=tableAction(CATALOG,s,gm,{type:'revealRoom',roomId,reason:'Isolated presentation fixture; no live discovery',revision:s.revision});
+ s=tableAction(CATALOG,s,gm,{type:'visitRoom',roomId:'t-tavern',override:true,reason:'Preview opening scene',revision:s.revision});
+ s.history=[];s.table.journal=[];
+ for(const p of s.party){p.roomId='t-tavern';s.table.personal[p.id]={hp:24,maxHp:28,coins:20,items:[{id:'starting-'+p.id,name:'Travel journal',source:'Preview starting equipment'}]};}
+ s.table.shops['t-tavern']={name:'The Salt Lantern provisions',stock:[{id:'rations',name:'Three days of trail rations',price:2,quantity:6},{id:'rope',name:'50 feet of hemp rope',price:1,quantity:3},{id:'lantern',name:'Hooded lantern',price:5,quantity:2}]};
+ return s;
+}
+export async function startTable({gmPort=51950,playerPort=51951,stateFile=join(homedir(),'Projects','Unwritten-Coast-Data','presentation-preview','state.json'),seed=previewState,catalog=CATALOG}={}){
+ const store=await openTableStore({catalog,stateFile,seed});
+ const gmKey=randomBytes(32).toString('hex'),keys=new Map(catalog.party.map(p=>[randomBytes(32).toString('hex'),p.id]));
+ const pages=new Map([['/','table.html'],['/table-app.mjs','table-app.mjs'],['/table.css','table.css'],['/render.mjs','render.mjs']]);
+ const send=(res,status,value,type='application/json')=>{res.writeHead(status,{'Content-Type':type,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'"});res.end(Buffer.isBuffer(value)||typeof value==='string'?value:JSON.stringify(value));};
+ const server=gm=>http.createServer(async(req,res)=>{
+  const origin=`http://127.0.0.1:${req.socket.localPort}`;
+  if(req.headers.host!==`127.0.0.1:${req.socket.localPort}`||req.headers.origin&&req.headers.origin!==origin)return send(res,403,{error:'This table only accepts its own local address.'});
+  try{
+   const url=new URL(req.url,origin);if(url.origin!==origin)throw Error('Invalid address.');
+   const token=req.headers['x-table-key'];const identity=gm?{role:'gm'}:keys.has(token)?{role:'player',actorId:keys.get(token)}:{role:'shared'};
+   if(url.pathname==='/api/view'&&req.method==='GET')return send(res,200,{...store.view(identity),preview:true,...(gm?{key:gmKey,playerLinks:[...keys].map(([key,actorId])=>({actorId,url:`http://127.0.0.1:${player.address().port}/#${key}`}))}:{})});
+   if(url.pathname==='/api/recall'&&req.method==='GET')return send(res,200,raphaelRecall(store.view(identity),url.searchParams.get('q')??'recent'));
+   if(url.pathname==='/api/card'&&req.method==='GET'){const {renderSceneCard,renderTactical,renderEncounter}=await import('./table-cards.mjs');const v=store.view(),kind=url.searchParams.get('kind'),id=url.searchParams.get('room');if(!v.catalog.rooms.some(r=>r.id===id))return send(res,404,{error:'Not discovered.'});const bytes=kind==='scene'?await renderSceneCard(v,id):kind==='tactical'?await renderTactical(v,id):kind==='combat'&&v.encounter?.roomId===id?await renderEncounter(v):null;if(!bytes)return send(res,404,{error:'That illustration is unavailable.'});return send(res,200,bytes,'image/png');}
+   if(url.pathname==='/api/discord'&&req.method==='GET')return send(res,200,discordScene(store.view(),url.searchParams.get('room'),{assetUrl:'attachment://scene.png'}));
+   if(url.pathname==='/api/action'&&req.method==='POST'){
+    if(req.headers.origin!==origin||identity.role==='shared'||gm&&token!==gmKey)return send(res,403,{error:'Open the authorized table link before acting.'});
+    if(!/^application\/json(?:;|$)/i.test(req.headers['content-type']??''))return send(res,415,{error:'JSON required.'});
+    let body='';for await(const chunk of req){body+=chunk;if(Buffer.byteLength(body)>16384)return send(res,413,{error:'That action is too long.'});}const action=JSON.parse(body);
+    return send(res,200,await store.execute(identity,action));
+   }
+   if(req.method==='GET'&&/^\/art\/room\/[A-Za-z0-9_-]+\.png$/.test(url.pathname)){
+    const id=url.pathname.split('/').at(-1).slice(0,-4);const room=(gm?catalog:store.view(identity).catalog).rooms.find(r=>r.id===id);if(!room)return send(res,404,{error:'Not discovered.'});return send(res,200,await readFile(join(HERE,'art',room.publicArtKey+'.png')),'image/png');
+   }
+   if(req.method==='GET'&&url.pathname==='/art/table/coast-serif.ttf')return send(res,200,await readFile(join(HERE,'art/table/coast-serif.ttf')),'font/ttf');
+   if(req.method==='GET'&&/^\/art\/table\/(mara|ivo|sable|tern|raphael|sentinel)\.png$/.test(url.pathname))return send(res,200,await readFile(join(HERE,url.pathname.slice(1))),'image/png');
+   if(req.method==='GET'&&pages.has(url.pathname)){const name=pages.get(url.pathname);return send(res,200,await readFile(join(HERE,name)),name.endsWith('.mjs')?'text/javascript':name.endsWith('.css')?'text/css':'text/html');}
+   return send(res,404,{error:'That page is unavailable.'});
+  }catch(error){return send(res,400,{error:error.code==='ENOENT'?'The illustration is not ready yet.':error.message});}
+ });
+ const dm=server(true),player=server(false);const listen=(s,p)=>new Promise((ok,no)=>{s.once('error',no);s.listen(p,'127.0.0.1',ok);});try{await listen(dm,gmPort);await listen(player,playerPort);}catch(e){dm.close();player.close();await store.close();throw e;}
+ return {dm,player,store,close:async()=>{await Promise.all([dm,player].map(s=>new Promise(ok=>{s.close(ok);s.closeAllConnections();})));await store.close();}};
+}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const t=await startTable();console.log(`Isolated DM preview: http://127.0.0.1:${t.dm.address().port}/`);console.log(`Shared player preview: http://127.0.0.1:${t.player.address().port}/`);}

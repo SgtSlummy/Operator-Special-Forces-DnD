@@ -1,7 +1,7 @@
 {
   "name": "@operator/obus-chronicle-provider",
-  "version": "0.1.0",
-  "description": "Explicit local-only chronicle processing through the private Obus game agent",
+  "version": "0.1.1",
+  "description": "Consent-scoped chronicle processing routed by the private Obus game agent",
   "private": true,
   "type": "module",
   "engines": { "node": ">=22.16.0" },

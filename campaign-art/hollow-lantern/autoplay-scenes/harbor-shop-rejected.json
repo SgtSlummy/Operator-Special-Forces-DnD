@@ -1,0 +1,24 @@
+{
+  "provider": "local-stable-diffusion",
+  "modelHash": "6ce0161689",
+  "payload": {
+    "prompt": "medieval fantasy painting, interior of an empty small harbor outfitter shop, rustic timber shelves holding coils of rope and folded canvas blankets, wooden counter, brass oil lantern, warm golden light, old stone walls, hand painted RPG environment illustration, tidy practical supplies, no people",
+    "negative_prompt": "people, person, creature, modern, supermarket, plastic, electrical, television, computer, text, letters, watermark, weapon, map, grid",
+    "width": 512,
+    "height": 512,
+    "steps": 24,
+    "batch_size": 1,
+    "n_iter": 1,
+    "seed": 7302513,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "send_images": true,
+    "save_images": false,
+    "do_not_save_samples": true,
+    "do_not_save_grid": true
+  },
+  "sha256": "5c057b2bfdf08329b7c5f75a809940b47d02e6aac2cb1b6692a777a0987027c5",
+  "status": "rejected",
+  "cloud": false,
+  "reason": "Visible watermark-like text at bottom-left"
+}

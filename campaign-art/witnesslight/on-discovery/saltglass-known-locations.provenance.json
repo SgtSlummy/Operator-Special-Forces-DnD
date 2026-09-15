@@ -1,0 +1,15 @@
+{
+  "createdOn": "2026-09-08",
+  "generator": "OpenAI image generation tool",
+  "execution": "hosted, not local ComfyUI inference",
+  "sourceOutput": "C:/Users/Hermes/.codex/generated_images/01a07d60-49a2-7943-86db-a10158b92761/exec-560da1cb-6237-4ffb-82dc-6a187fc6b2f7.png",
+  "asset": "saltglass-known-locations.png",
+  "prompt": "Use case: game-asset. Create an original fantasy campaign atlas illustration, a KNOWN-LOCATIONS OVERVIEW, not a measured battle map. Landscape aspect ratio 16:10. Strict orthographic top-down view, camera exactly vertical looking down, no horizon, no sky, no perspective. Restrained painted cartographic realism and highly readable simple shapes. Muted slate-blue sea occupies the right third. A grey-beige shingle coast with a gentle inlet occupies the lower left and center; this is Saltglass Shore, the known coastal location. At x32%,y27% is a SMALL roofless weathered abbey ruin seen directly from above, grey stone walls and recognizable chapel floor footprint; this is the known later lead Drowned Abbey Archive, no interior room detail or secrets. At x38%,y70% is an open sheltered shore, no structures, a small piece of washed-up spar wood along the sand. The rest of the land is low-contrast neutral earth fading toward the outside edges beneath substantial soft opaque sea mist, suggesting uncharted surrounding area. No additional settlements, houses, roads, mountain ranges, rivers, named sites, or paths. No grid, NO TEXT OR LABELS, no compass, no characters, no portraits, no UI emblems or tokens, no invented distances. Clear negative space near the two locations for later software labels. Elegant controlled texture, teal-grey water, warm grey shingle, pale silver mist; calm readable composition instead of busy fantasy decoration. This is a schematic campaign overview; only these two locations are depicted, their illustrative placement is not surveyed geography.",
+  "usage": "Known-locations schematic. Placement is illustrative; no geographic distances or travel routes are asserted.",
+  "discovery": "Area-map renderer masks Abbey until courier rescue receipt. GameStore map ID determines party location.",
+  "limitations": [
+    "No authored dungeon floor plan is available.",
+    "Not a surveyed or traversable map.",
+    "Source replay still lacks a committed shore-to-Abbey board transition."
+  ]
+}

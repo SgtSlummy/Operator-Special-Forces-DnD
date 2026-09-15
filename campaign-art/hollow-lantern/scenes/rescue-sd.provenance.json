@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-09-10T16:37:02.411Z",
+  "kind": "offline-public-scene-art-preparation",
+  "provider": "AUTOMATIC1111 loopback",
+  "model": "v1-5-pruned-emaonly.safetensors [6ce0161689]",
+  "sceneId": "rescue-shelter",
+  "request": {
+    "seed": 29091015,
+    "prompt": "(interior of a medieval canvas tent:1.4), hand painted fantasy adventure background, a spacious canvas shelter with fabric roof overhead, a simple wooden cot with a folded wool blanket, a brass oil lantern on a low table, warm amber lantern light, muted teal and ochre palette, quiet place for recovery, painterly fantasy environment concept art, empty room, no people",
+    "negative_prompt": "photograph, photorealistic, modern furniture, computer, screen, electricity, neon, science fiction, futuristic, guns, people, face, text, letters, labels, watermark, signature, logo, grid, blurry, low quality, distorted architecture, oversaturated",
+    "steps": 28,
+    "width": 768,
+    "height": 448,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "batch_size": 1,
+    "n_iter": 1,
+    "send_images": true,
+    "save_images": false
+  },
+  "elapsedMs": 6083,
+  "sha256": "fdd66d1f9edf7366d12c27e3ee7b49d808a3fa520edfd80b845b9de5f130da69",
+  "path": "C:\\Users\\Hermes\\LocalFiles\\hollow-lantern\\scene-design-20260910\\rescue-shelter-candidate.png",
+  "gameplayCommands": 0,
+  "approved": true,
+  "campaignSceneId": "rescue",
+  "visualReview": "Reviewed as public atmospheric scene art. Does not specify geometry, stock, resources, discoveries or mission outcome."
+}

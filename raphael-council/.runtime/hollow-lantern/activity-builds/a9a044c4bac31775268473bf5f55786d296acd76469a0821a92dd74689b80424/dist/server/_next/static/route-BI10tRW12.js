@@ -1,0 +1,1 @@
+import{t as e}from"./activity-runtime-qq53Mc8q.js";var t=`nodejs`,n=e(`receipt`);export{n as POST,t as runtime};

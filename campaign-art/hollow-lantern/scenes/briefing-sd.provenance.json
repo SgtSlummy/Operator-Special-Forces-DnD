@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-09-10T15:24:50.445Z",
+  "kind": "offline-public-scene-art-preparation",
+  "provider": "AUTOMATIC1111 loopback",
+  "model": "v1-5-pruned-emaonly.safetensors [6ce0161689]",
+  "sceneId": "briefing",
+  "request": {
+    "seed": 29091001,
+    "prompt": "Hand painted fantasy adventure background, wide composition, medieval coastal watchpost briefing room, heavy oak table with a blank parchment chart and a single brass oil lantern, rough timber walls, an open arched window overlooking a quiet blue grey harbor and distant sailing ships, warm amber lamplight contrasting cool sea daylight, restrained teal and antique gold palette, elegant painterly brushwork, atmospheric adventure game concept art, believable medieval materials, detailed environment, empty room, no people",
+    "negative_prompt": "photograph, photorealistic, modern furniture, computer, screen, electricity, neon, science fiction, futuristic, guns, people, face, text, letters, labels, watermark, signature, logo, grid, blurry, low quality, distorted architecture, oversaturated",
+    "steps": 28,
+    "width": 768,
+    "height": 448,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "batch_size": 1,
+    "n_iter": 1,
+    "send_images": true,
+    "save_images": false
+  },
+  "elapsedMs": 7443,
+  "sha256": "43eacea9199fc97d4f86f04c471f8f210b428e68c3e25f7d1d87007d3551e6a9",
+  "path": "C:\\Users\\Hermes\\LocalFiles\\hollow-lantern\\scene-design-20260910\\briefing-candidate.png",
+  "approved": true,
+  "gameplayCommands": 0,
+  "visualReview": "Reviewed for public scene atmosphere only; illustration does not define geometry, obstacles, object positions, or discoveries.",
+  "approvedPath": "C:\\Users\\Hermes\\Projects\\Operator Special Forces Dungeon and Dragons\\campaign-art\\hollow-lantern\\scenes\\briefing-sd.png"
+}

@@ -1,0 +1,1 @@
+import{t as e}from"./http-CxxeerHV.js";import{t}from"./runtime-BttFy_2-.js";var n=`nodejs`,r=e(t).updates;export{r as GET,n as runtime};

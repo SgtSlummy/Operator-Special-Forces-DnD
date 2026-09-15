@@ -11,7 +11,7 @@ const button = (view, action, label) => ({ type: 2, custom_id: `rps:${view}:${ac
 class ImageInteractionError extends Error {}
 const fail = message => { throw new ImageInteractionError(message); };
 function route(customId) {
-  const match = /^rps:([a-zA-Z0-9_-]{1,64}):(focus|submit|refresh|browser|reachform|reachsubmit)$/.exec(customId);
+  const match = /^rps:([a-zA-Z0-9_-]{1,64}):(focus|submit|refresh|browser|history|historyprev|historynext|historyitem_[a-zA-Z0-9_-]{1,96}|reachform|reachsubmit)$/.exec(customId);
   if (!match || customId.length > 100) fail('This image control is unavailable. Open Show what I see again.');
   return { viewId: match[1], action: match[2] };
 }
@@ -113,7 +113,17 @@ function jobCard(service, scope, job) {
     'This is a free visual reference of your view at request time. It spends no action and advances no time.\n' +
     `${['queued', 'running'].includes(job.status) ? 'You may keep playing. The image will appear here when ready. Refresh remains available if it takes longer.\n' : ''}` +
     `${labels ? `For a closer view, choose Focus on something and enter one of these visible subjects: ${labels}` : 'No individual subjects are available for a closer view yet.'}`;
-  return { ...screen('Your view · Only you', body.slice(0, 2700), [HOME, REACH, button(view, 'focus', 'Focus on something'), button(view, 'refresh', 'Refresh'), button(view, 'browser', 'Browser access')]), attachments: [] };
+  return { ...screen('Your view · Only you', body.slice(0, 2700), [HOME, REACH, button(view, 'focus', 'Focus on something'), button(view, 'history', 'Image history'), button(view, 'refresh', 'Refresh'), button(view, 'browser', 'Browser access')]), attachments: [] };
+}
+
+function historyCard(service, scope, viewId, rows, offset = 0) {
+  const page = rows.slice(offset, offset + 5);
+  const lines = rows.length ? rows.map((item, index) => `${index + 1}. Revision ${item.sceneRevision} · ${clipped(item.focusLabel, 80)} · ${item.status}${item.stale ? ' · earlier view' : ''}`).join('\n') : 'No saved scene images yet.';
+  const controls = [HOME];
+  for (const item of page) controls.push(button(viewId, `historyitem_${item.id}`, `Revision ${item.sceneRevision}`));
+  if (offset > 0) controls.push(button(viewId, 'historyprev', 'Previous')); 
+  if (offset + 5 < rows.length) controls.push(button(viewId, 'historynext', 'Next'));
+  return { ...screen('Session image history · Only you', `${lines}\n\nChoose a revision to view that exact scene image. Image history is read-only and does not change play.`, controls), attachments: [] };
 }
 async function imageCard(service, scope, job) {
   const data = jobCard(service, scope, job);
@@ -198,8 +208,8 @@ export function createImageHandler({ service, game, config, transport, log = () 
         }
         fail('Open Distance & reach again to ask about the current tactical map.');
       }
-      if (interaction.type === 3) {
-        if (view.kind !== 'image-job' || typeof view.jobId !== 'string') fail('This image control does not belong to an image card. Open Show what I see again.');
+      if (interaction.type === 3 && view.kind === 'image-job') {
+        if (typeof view.jobId !== 'string') fail('This image control does not belong to an image card. Open Show what I see again.');
         // Resolve the job as well as the view before any follow-up or access code.
         service.getJob(scope, view.jobId);
         if (parsed.action === 'refresh') {
@@ -213,9 +223,30 @@ export function createImageHandler({ service, game, config, transport, log = () 
           modal.data.custom_id = `rps:${formView}:submit`;
           await respond(modal); return true;
         }
+        if (parsed.action === 'history') {
+          const rows = service.history(scope);
+          const historyView = service.createView(scope, { kind: 'image-history', jobs: rows, offset: 0 });
+          await reply(historyCard(service, scope, historyView, rows)); return true;
+        }
         if (parsed.action === 'browser') {
           const code = service.issueBrowserAccess(scope);
           await reply(screen('Browser access · Only you', `In the browser game, open Show what I see and enter this private access code:\n\n${clipped(code, 200)}\n\nKeep this code private. It connects the browser to your campaign view.`, [HOME, REACH])); return true;
+        }
+      } else if (interaction.type === 3 && view.kind === 'image-history') {
+        // Kept below the image-job branch for compatibility with old opaque
+        // image cards; history views never accept player-supplied job IDs.
+        const rows = Array.isArray(view.jobs) ? view.jobs : [];
+        if (parsed.action === 'historyprev' || parsed.action === 'historynext') {
+          const offset = Math.max(0, Number(view.offset ?? 0) + (parsed.action === 'historynext' ? 5 : -5));
+          const next = service.createView(scope, { kind: 'image-history', jobs: rows, offset });
+          await reply(historyCard(service, scope, next, rows, offset)); return true;
+        }
+        if (parsed.action.startsWith('historyitem_')) {
+          const jobId = parsed.action.slice('historyitem_'.length);
+          const entry = rows.find(item => item.id === jobId);
+          if (!entry) fail('That image history entry is no longer available. Open Image history again.');
+          const job = service.getJob(scope, entry.id);
+          await defer(); await edit(await imageCard(service, scope, job)); return true;
         }
       } else if (parsed.action === 'submit') {
         if (view.kind !== 'image-focus' || !Array.isArray(view.subjects)) fail('This form was not opened from your image card. Open Show what I see again.');

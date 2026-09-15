@@ -1,0 +1,746 @@
+{
+  "title": "Operation Hollow Lantern — approved fresh prepared party",
+  "source": "Actual initial Unity authority projection, revision0; no exhausted final state reused.",
+  "campaignId": "fixture-hollow-mission",
+  "revision": 0,
+  "engineAssemblySha256": "2DD5B16011DCC91C4DE245CEAF71A176A1C0FC32ABDAF48C751E85628231A510",
+  "characters": [
+    {
+      "characterId": "lantern-fighter",
+      "displayName": "Mara Flint",
+      "characterType": "player",
+      "classId": "fighter",
+      "sceneId": "briefing",
+      "level": 3,
+      "raceId": "human",
+      "factionId": "party",
+      "position": {
+        "x": 3,
+        "y": 3
+      },
+      "defeated": false,
+      "ownerId": "ai-fighter",
+      "primaryHealth": 31,
+      "primaryHealthMaximum": 31,
+      "armorClass": 19,
+      "currency": 25,
+      "conditions": [],
+      "abilities": [
+        "second-wind",
+        "action-surge",
+        "champion-critical",
+        "tactical-mind",
+        "savage-attacker",
+        "remarkable-athlete",
+        "defense",
+        "human-resourceful",
+        "human-skillful",
+        "skilled",
+        "weapon-mastery"
+      ],
+      "scores": {
+        "strength": 16,
+        "dexterity": 12,
+        "constitution": 16,
+        "intelligence": 10,
+        "wisdom": 13,
+        "charisma": 8
+      },
+      "sheet": {
+        "edition": "2024",
+        "background": "soldier",
+        "subclass": "champion",
+        "ancestry": "human",
+        "size": "medium",
+        "proficiencyBonus": 2,
+        "speedFeet": 30,
+        "hitDie": 10,
+        "passivePerception": 13,
+        "armor": "chain-mail-and-shield",
+        "armorCalculation": "16 chain mail + 2 shield + 1 Defense",
+        "equipmentGrant": "Approved level-three mission requisition; fixed armor is not a loose tradable pack item.",
+        "languages": [
+          "Common",
+          "Elvish",
+          "Dwarvish"
+        ],
+        "weaponProficiencies": "Simple and martial",
+        "armorTraining": "Light, medium, heavy and shields",
+        "tools": [
+          "dice gaming set"
+        ],
+        "sources": [
+          "https://www.dndbeyond.com/sources/dnd/br-2024/character-classes",
+          "https://www.dndbeyond.com/sources/dnd/br-2024/character-origins"
+        ],
+        "features": [
+          {
+            "id": "second-wind",
+            "resolution": "automated"
+          },
+          {
+            "id": "action-surge",
+            "resolution": "automated"
+          },
+          {
+            "id": "champion-critical",
+            "resolution": "automated"
+          },
+          {
+            "id": "tactical-mind",
+            "resolution": "automated"
+          },
+          {
+            "id": "savage-attacker",
+            "resolution": "automated"
+          },
+          {
+            "id": "remarkable-athlete",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "defense",
+            "resolution": "automated"
+          },
+          {
+            "id": "human-resourceful",
+            "resolution": "automated"
+          },
+          {
+            "id": "human-skillful",
+            "resolution": "automated"
+          },
+          {
+            "id": "skilled",
+            "resolution": "automated"
+          },
+          {
+            "id": "weapon-mastery",
+            "resolution": "dm-mediated"
+          }
+        ],
+        "spellcasting": null
+      },
+      "skills": {
+        "acrobatics": 3,
+        "animal handling": 1,
+        "arcana": 0,
+        "athletics": 5,
+        "deception": -1,
+        "history": 0,
+        "insight": 3,
+        "intimidation": 1,
+        "investigation": 2,
+        "medicine": 3,
+        "nature": 0,
+        "perception": 3,
+        "performance": -1,
+        "persuasion": -1,
+        "religion": 0,
+        "sleight of hand": 1,
+        "stealth": 1,
+        "survival": 3
+      },
+      "saveProficiencies": [
+        "strength",
+        "constitution"
+      ],
+      "resources": {
+        "action": true,
+        "bonusAction": true,
+        "reaction": true,
+        "movementFeet": 30,
+        "spellSlots1": 0,
+        "spellSlots2": 0,
+        "hitDice": 3,
+        "secondWind": 2,
+        "actionSurge": 1,
+        "concentration": "",
+        "channelDivinity": 0,
+        "heroicInspiration": true,
+        "innateSpellUses": 0,
+        "initiateSpellUses": 0
+      },
+      "inventory": {
+        "items": [
+          {
+            "itemId": "healing-potion",
+            "displayName": "healing potion",
+            "quantity": 1,
+            "value": 50,
+            "equipped": false,
+            "usable": true,
+            "equippable": false,
+            "description": "Restore 2d4+2 hit points. Bonus action in combat."
+          },
+          {
+            "itemId": "longsword",
+            "displayName": "longsword",
+            "quantity": 1,
+            "value": 15,
+            "equipped": true,
+            "usable": false,
+            "equippable": true,
+            "description": "Weapon: 1d8 plus ability modifier; range 5 feet."
+          },
+          {
+            "itemId": "rations",
+            "displayName": "rations",
+            "quantity": 3,
+            "value": 1,
+            "equipped": false,
+            "usable": false,
+            "equippable": false,
+            "description": "Supplies for the journey."
+          }
+        ],
+        "currency": 25
+      }
+    },
+    {
+      "characterId": "lantern-rogue",
+      "displayName": "Kestrel Vane",
+      "characterType": "player",
+      "classId": "rogue",
+      "sceneId": "briefing",
+      "level": 3,
+      "raceId": "elf",
+      "factionId": "party",
+      "position": {
+        "x": 4,
+        "y": 3
+      },
+      "defeated": false,
+      "ownerId": "ai-rogue",
+      "primaryHealth": 24,
+      "primaryHealthMaximum": 24,
+      "armorClass": 15,
+      "currency": 25,
+      "conditions": [],
+      "abilities": [
+        "sneak-attack",
+        "cunning-dash",
+        "cunning-disengage",
+        "steady-aim",
+        "cunning-hide",
+        "fast-hands",
+        "second-story-work",
+        "expertise",
+        "keen-senses",
+        "thieves-cant",
+        "alert",
+        "fey-ancestry",
+        "trance",
+        "prestidigitation",
+        "innate-detect-magic",
+        "weapon-mastery"
+      ],
+      "scores": {
+        "strength": 8,
+        "dexterity": 16,
+        "constitution": 14,
+        "intelligence": 13,
+        "wisdom": 14,
+        "charisma": 10
+      },
+      "sheet": {
+        "edition": "2024",
+        "background": "criminal",
+        "subclass": "thief",
+        "ancestry": "high-elf",
+        "size": "medium",
+        "proficiencyBonus": 2,
+        "speedFeet": 30,
+        "hitDie": 8,
+        "passivePerception": 14,
+        "armor": "studded-leather",
+        "armorCalculation": "12 studded leather + 3 Dexterity",
+        "equipmentGrant": "Approved level-three mission requisition; fixed armor is not a loose tradable pack item.",
+        "languages": [
+          "Common",
+          "Elvish",
+          "Dwarvish",
+          "Goblin",
+          "Thieves' Cant"
+        ],
+        "weaponProficiencies": "Simple; martial finesse or light",
+        "armorTraining": "Light",
+        "tools": [
+          "thieves' tools"
+        ],
+        "sources": [
+          "https://www.dndbeyond.com/sources/dnd/br-2024/character-classes",
+          "https://www.dndbeyond.com/sources/dnd/br-2024/character-origins"
+        ],
+        "features": [
+          {
+            "id": "sneak-attack",
+            "resolution": "automated"
+          },
+          {
+            "id": "cunning-dash",
+            "resolution": "automated"
+          },
+          {
+            "id": "cunning-disengage",
+            "resolution": "automated"
+          },
+          {
+            "id": "steady-aim",
+            "resolution": "automated"
+          },
+          {
+            "id": "cunning-hide",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "fast-hands",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "second-story-work",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "expertise",
+            "resolution": "automated"
+          },
+          {
+            "id": "keen-senses",
+            "resolution": "automated"
+          },
+          {
+            "id": "thieves-cant",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "alert",
+            "resolution": "automated"
+          },
+          {
+            "id": "fey-ancestry",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "trance",
+            "resolution": "automated"
+          },
+          {
+            "id": "prestidigitation",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "innate-detect-magic",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "weapon-mastery",
+            "resolution": "dm-mediated"
+          }
+        ],
+        "spellcasting": {
+          "ability": "intelligence",
+          "cantrips": [
+            "prestidigitation"
+          ],
+          "innateSpell": "detect-magic"
+        }
+      },
+      "skills": {
+        "acrobatics": 5,
+        "animal handling": 2,
+        "arcana": 1,
+        "athletics": -1,
+        "deception": 0,
+        "history": 1,
+        "insight": 4,
+        "intimidation": 0,
+        "investigation": 5,
+        "medicine": 2,
+        "nature": 1,
+        "perception": 4,
+        "performance": 0,
+        "persuasion": 2,
+        "religion": 1,
+        "sleight of hand": 5,
+        "stealth": 7,
+        "survival": 2
+      },
+      "saveProficiencies": [
+        "dexterity",
+        "intelligence"
+      ],
+      "resources": {
+        "action": true,
+        "bonusAction": true,
+        "reaction": true,
+        "movementFeet": 30,
+        "spellSlots1": 0,
+        "spellSlots2": 0,
+        "hitDice": 3,
+        "secondWind": 0,
+        "actionSurge": 0,
+        "concentration": "",
+        "channelDivinity": 0,
+        "heroicInspiration": false,
+        "innateSpellUses": 1,
+        "initiateSpellUses": 0
+      },
+      "inventory": {
+        "items": [
+          {
+            "itemId": "arrows",
+            "displayName": "arrows",
+            "quantity": 20,
+            "value": 1,
+            "equipped": false,
+            "usable": false,
+            "equippable": false,
+            "description": "Supplies for the journey."
+          },
+          {
+            "itemId": "dagger",
+            "displayName": "dagger",
+            "quantity": 1,
+            "value": 2,
+            "equipped": false,
+            "usable": false,
+            "equippable": true,
+            "description": "Weapon: 1d4 plus ability modifier; range 5 feet."
+          },
+          {
+            "itemId": "healing-potion",
+            "displayName": "healing potion",
+            "quantity": 1,
+            "value": 50,
+            "equipped": false,
+            "usable": true,
+            "equippable": false,
+            "description": "Restore 2d4+2 hit points. Bonus action in combat."
+          },
+          {
+            "itemId": "rations",
+            "displayName": "rations",
+            "quantity": 3,
+            "value": 1,
+            "equipped": false,
+            "usable": false,
+            "equippable": false,
+            "description": "Supplies for the journey."
+          },
+          {
+            "itemId": "shortbow",
+            "displayName": "shortbow",
+            "quantity": 1,
+            "value": 25,
+            "equipped": true,
+            "usable": false,
+            "equippable": true,
+            "description": "Weapon: 1d6 plus ability modifier; range 80 feet."
+          }
+        ],
+        "currency": 25
+      }
+    },
+    {
+      "characterId": "lantern-cleric",
+      "displayName": "Brother Ash",
+      "characterType": "player",
+      "classId": "cleric",
+      "sceneId": "briefing",
+      "level": 3,
+      "raceId": "human",
+      "factionId": "party",
+      "position": {
+        "x": 5,
+        "y": 3
+      },
+      "defeated": false,
+      "ownerId": "ai-cleric",
+      "primaryHealth": 24,
+      "primaryHealthMaximum": 24,
+      "armorClass": 18,
+      "currency": 25,
+      "conditions": [],
+      "abilities": [
+        "sacred-flame",
+        "cure-wounds",
+        "healing-word",
+        "bless",
+        "divine-spark-heal",
+        "divine-spark-radiant",
+        "preserve-life",
+        "turn-undead",
+        "disciple-of-life",
+        "divine-order-protector",
+        "ritual-casting",
+        "guiding-bolt",
+        "aid",
+        "lesser-restoration",
+        "detect-magic",
+        "purify-food-and-drink",
+        "detect-poison-and-disease",
+        "create-or-destroy-water",
+        "command",
+        "light",
+        "thaumaturgy",
+        "guidance",
+        "spare-the-dying",
+        "initiate-healing-word",
+        "human-resourceful",
+        "human-skillful",
+        "skilled"
+      ],
+      "scores": {
+        "strength": 13,
+        "dexterity": 10,
+        "constitution": 14,
+        "intelligence": 10,
+        "wisdom": 16,
+        "charisma": 12
+      },
+      "sheet": {
+        "edition": "2024",
+        "background": "acolyte",
+        "subclass": "life-domain",
+        "ancestry": "human",
+        "size": "medium",
+        "proficiencyBonus": 2,
+        "speedFeet": 30,
+        "hitDie": 8,
+        "passivePerception": 15,
+        "armor": "chain-mail-and-shield",
+        "armorCalculation": "16 chain mail + 2 shield; Strength 13 requirement met",
+        "equipmentGrant": "Approved level-three mission requisition; fixed armor is not a loose tradable pack item.",
+        "languages": [
+          "Common",
+          "Elvish",
+          "Dwarvish"
+        ],
+        "weaponProficiencies": "Simple and martial",
+        "armorTraining": "Light, medium, heavy and shields",
+        "tools": [
+          "calligrapher's supplies"
+        ],
+        "sources": [
+          "https://www.dndbeyond.com/sources/dnd/br-2024/character-classes",
+          "https://www.dndbeyond.com/sources/dnd/br-2024/character-origins"
+        ],
+        "features": [
+          {
+            "id": "sacred-flame",
+            "resolution": "automated"
+          },
+          {
+            "id": "cure-wounds",
+            "resolution": "automated"
+          },
+          {
+            "id": "healing-word",
+            "resolution": "automated"
+          },
+          {
+            "id": "bless",
+            "resolution": "automated"
+          },
+          {
+            "id": "divine-spark-heal",
+            "resolution": "automated"
+          },
+          {
+            "id": "divine-spark-radiant",
+            "resolution": "automated"
+          },
+          {
+            "id": "preserve-life",
+            "resolution": "automated"
+          },
+          {
+            "id": "turn-undead",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "disciple-of-life",
+            "resolution": "automated"
+          },
+          {
+            "id": "divine-order-protector",
+            "resolution": "automated"
+          },
+          {
+            "id": "ritual-casting",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "guiding-bolt",
+            "resolution": "automated"
+          },
+          {
+            "id": "aid",
+            "resolution": "automated"
+          },
+          {
+            "id": "lesser-restoration",
+            "resolution": "automated"
+          },
+          {
+            "id": "detect-magic",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "purify-food-and-drink",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "detect-poison-and-disease",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "create-or-destroy-water",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "command",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "light",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "thaumaturgy",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "guidance",
+            "resolution": "dm-mediated"
+          },
+          {
+            "id": "spare-the-dying",
+            "resolution": "automated"
+          },
+          {
+            "id": "initiate-healing-word",
+            "resolution": "automated"
+          },
+          {
+            "id": "human-resourceful",
+            "resolution": "automated"
+          },
+          {
+            "id": "human-skillful",
+            "resolution": "automated"
+          },
+          {
+            "id": "skilled",
+            "resolution": "automated"
+          }
+        ],
+        "spellcasting": {
+          "ability": "wisdom",
+          "attackBonus": 5,
+          "saveDc": 13,
+          "cantrips": [
+            "sacred-flame",
+            "light",
+            "thaumaturgy"
+          ],
+          "originCantrips": [
+            "guidance",
+            "spare-the-dying"
+          ],
+          "prepared": [
+            "detect-magic",
+            "guiding-bolt",
+            "purify-food-and-drink",
+            "detect-poison-and-disease",
+            "create-or-destroy-water",
+            "command"
+          ],
+          "domainPrepared": [
+            "aid",
+            "bless",
+            "cure-wounds",
+            "lesser-restoration"
+          ],
+          "originSpell": "healing-word"
+        }
+      },
+      "skills": {
+        "acrobatics": 0,
+        "animal handling": 3,
+        "arcana": 0,
+        "athletics": 3,
+        "deception": 1,
+        "history": 2,
+        "insight": 5,
+        "intimidation": 1,
+        "investigation": 0,
+        "medicine": 5,
+        "nature": 0,
+        "perception": 5,
+        "performance": 1,
+        "persuasion": 3,
+        "religion": 2,
+        "sleight of hand": 0,
+        "stealth": 0,
+        "survival": 5
+      },
+      "saveProficiencies": [
+        "wisdom",
+        "charisma"
+      ],
+      "resources": {
+        "action": true,
+        "bonusAction": true,
+        "reaction": true,
+        "movementFeet": 30,
+        "spellSlots1": 4,
+        "spellSlots2": 2,
+        "hitDice": 3,
+        "secondWind": 0,
+        "actionSurge": 0,
+        "concentration": "",
+        "channelDivinity": 2,
+        "heroicInspiration": true,
+        "innateSpellUses": 0,
+        "initiateSpellUses": 1
+      },
+      "inventory": {
+        "items": [
+          {
+            "itemId": "healing-potion",
+            "displayName": "healing potion",
+            "quantity": 1,
+            "value": 50,
+            "equipped": false,
+            "usable": true,
+            "equippable": false,
+            "description": "Restore 2d4+2 hit points. Bonus action in combat."
+          },
+          {
+            "itemId": "mace",
+            "displayName": "mace",
+            "quantity": 1,
+            "value": 5,
+            "equipped": true,
+            "usable": false,
+            "equippable": true,
+            "description": "Weapon: 1d6 plus ability modifier; range 5 feet."
+          },
+          {
+            "itemId": "rations",
+            "displayName": "rations",
+            "quantity": 3,
+            "value": 1,
+            "equipped": false,
+            "usable": false,
+            "equippable": false,
+            "description": "Supplies for the journey."
+          }
+        ],
+        "currency": 25
+      }
+    }
+  ]
+}

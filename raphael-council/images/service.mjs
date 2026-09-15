@@ -14,6 +14,7 @@ const hash = value => createHash('sha256').update(value).digest('hex');
 const opaque = () => randomBytes(18).toString('hex');
 const identifier = value => typeof value === 'string' && /^[A-Za-z0-9_-]{1,96}$/.test(value);
 const text = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
+const SUBJECT_TYPES = new Set(['scene', 'character', 'item', 'location']);
 function scopeOf(scope) {
   if (!identifier(scope?.campaign) || !identifier(scope?.owner) || scope.owner === 'party') fail('UNAUTHORIZED', 'Connect with your player access code.', 401);
   return scope;
@@ -21,9 +22,9 @@ function scopeOf(scope) {
 export const WITNESSLIGHT = 'Original Witnesslight campaign art: ultra-realistic anatomy, faces and worn natural materials, dramatic believable light, restrained oil-painted premium D&D illustration. Muted mineral colors, amber practical lights, selective detail at the subject, broad quiet backgrounds. No hyper-detail, etched ornament everywhere, particles, plastic skin, oversharpening, text, labels, watermark or interface. Use only the supplied observable facts. Never invent a hidden person, clue, trap, room, identity, item property or resolved outcome. Respect darkness, concealment, distance and the viewer\'s senses. Decorative details are noncanonical. The image request changes no action, resource or game time.';
 
 export class SceneImageService {
-  constructor({ dataDir, artRoot, provider, resolveScene = null }) {
+  constructor({ dataDir, artRoot, portraitRoot = null, provider, resolveScene = null }) {
     this.resolveScene = resolveScene;
-    this.dataDir = resolve(dataDir); this.artRoot = realpathSync(artRoot); this.provider = provider;
+    this.dataDir = resolve(dataDir); this.artRoot = realpathSync(artRoot); this.portraitRoot = portraitRoot ? resolve(portraitRoot) : null; this.provider = provider;
     mkdirSync(this.dataDir, { recursive: true }); mkdirSync(join(this.dataDir, 'renders'), { recursive: true });
     this.db = new DatabaseSync(join(this.dataDir, 'images.sqlite'));
     this.db.exec(`PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;
@@ -57,6 +58,15 @@ export class SceneImageService {
     if (!path) fail('INVALID_REQUEST', 'Choose an existing campaign image in the host scene record.', 400);
     return path;
   }
+  portraitAsset(path) {
+    if (!this.portraitRoot || typeof path !== 'string' || !path) fail('INVALID_REQUEST', 'The character portrait is not available.', 400);
+    const absolute = realpathSync(path);
+    if (!absolute.startsWith(this.portraitRoot + sep) || !statSync(absolute).isFile()) fail('INVALID_REQUEST', 'The character portrait is not available.', 400);
+    return absolute;
+  }
+  reference(id) {
+    return this.assets.has(id) ? this.asset(id) : this.portraitAsset(id);
+  }
   // Trusted host/game-engine operation. Never expose it as a player HTTP endpoint.
   publishScene(input) {
     if (input?.gameRevision !== undefined && (!Number.isSafeInteger(input.gameRevision) || input.gameRevision < 1)) fail('INVALID_REQUEST', 'Use a committed game revision.', 400);
@@ -68,7 +78,10 @@ export class SceneImageService {
     const checkImage = id => { if (id != null) this.asset(id); return id ?? null; };
     const subjects = (input.subjects ?? []).map(subject => {
       if (!identifier(subject?.id) || subject.id === 'scene' || !text(subject.label, 100) || !text(subject.description, 3000)) fail('INVALID_REQUEST', 'Every visible subject needs its own ID, label and description.', 400);
-      return { id: subject.id, label: subject.label.trim(), description: subject.description.trim(), reference: checkImage(subject.reference), approvedImage: checkImage(subject.approvedImage) };
+      const subjectType = subject.subjectType ?? 'character';
+      if (!SUBJECT_TYPES.has(subjectType) || subjectType === 'scene') fail('INVALID_REQUEST', 'Every visible subject needs a supported image subject type.', 400);
+      const portraitPath = subject.portraitPath ? this.portraitAsset(subject.portraitPath) : null;
+      return { id: subject.id, label: subject.label.trim(), description: subject.description.trim(), subjectType, reference: checkImage(subject.reference), approvedImage: checkImage(subject.approvedImage), ...(portraitPath ? { portraitPath } : {}) };
     });
     if (new Set(subjects.map(s => s.id)).size !== subjects.length) fail('INVALID_REQUEST', 'Visible subject IDs must be distinct.', 400);
     const base = { id: input.id, title: input.title.trim(), description: input.description.trim(), sourceEventId: input.sourceEventId.trim(),
@@ -76,7 +89,7 @@ export class SceneImageService {
       subjects, references: references.map(id => {
         if (!identifier(id)) fail('INVALID_REQUEST', 'Every reference must name an existing approved image.', 400);
         return checkImage(id);
-      }), approvedImage: checkImage(input.approvedImage) };
+    }), approvedImage: checkImage(input.approvedImage) };
     return this.transaction(() => {
       const prior = this.db.prepare('SELECT revision,body FROM scenes WHERE campaign=? AND audience=?').get(input.campaign, input.audience);
       if (prior && input.gameRevision !== undefined) {
@@ -94,7 +107,18 @@ export class SceneImageService {
   refreshScene(scope) {
     scopeOf(scope);
     const scene = this.resolveScene?.(scope);
-    if (scene) this.publishScene(scene);
+    if (scene) {
+      // Tactical refreshes are authoritative for positions and visibility, but
+      // they must not erase a host-approved illustration chosen for the same
+      // location. Keep that approved asset attached until the host publishes a
+      // different one explicitly.
+      let prior = null;
+      try { prior = this.projection(scope); } catch { /* first scene */ }
+      const preserved = prior && prior.id === scene.id && !scene.approvedImage
+        ? { approvedImage: prior.approvedImage, references: scene.references?.length ? scene.references : prior.references }
+        : {};
+      this.publishScene({ ...scene, ...preserved });
+    }
   }
   projection(scope) {
     scopeOf(scope);
@@ -105,7 +129,7 @@ export class SceneImageService {
   scene(scope) {
     this.refreshScene(scope);
     const scene = this.projection(scope);
-    return { id: scene.id, revision: scene.revision, title: scene.title, description: scene.description, sourceEventId: scene.sourceEventId,
+    return { id: scene.id, revision: scene.revision, gameRevision: scene.gameRevision ?? null, title: scene.title, description: scene.description, sourceEventId: scene.sourceEventId,
       subjects: scene.subjects.map(({ id, label }) => ({ id, label })) };
   }
   issueBrowserAccess(scope) {
@@ -147,6 +171,21 @@ export class SceneImageService {
     return { id: row.id, status: row.status, title: snapshot.title, focusLabel: snapshot.subjects.find(s => s.id === row.focus_id)?.label ?? 'The whole scene',
       sceneRevision: snapshot.revision, sourceEventId: snapshot.sourceEventId, requestedAt: new Date(row.created).toISOString(), message: row.message, stale };
   }
+  history(scope, limit = 24) {
+    scopeOf(scope);
+    const count = Math.min(Math.max(Number(limit) || 24, 1), 100);
+    const rows = this.db.prepare("SELECT id,status,snapshot,focus_id,created,message FROM jobs WHERE campaign=? AND owner=? AND status IN ('ready','failed') ORDER BY created DESC LIMIT ?").all(scope.campaign, scope.owner, count);
+    let currentRevision = null;
+    try { currentRevision = this.projection(scope).revision; } catch { /* no current view */ }
+    return rows.map(row => {
+      const snapshot = JSON.parse(row.snapshot);
+      return { id: row.id, status: row.status, title: snapshot.title,
+        focusLabel: row.focus_id === 'scene' ? 'The whole scene' : snapshot.subjects.find(subject => subject.id === row.focus_id)?.label ?? 'Visible subject',
+        sceneRevision: snapshot.revision, sourceEventId: snapshot.sourceEventId,
+        stale: currentRevision !== null && currentRevision !== snapshot.revision, message: row.message,
+        createdAt: new Date(row.created).toISOString() };
+    });
+  }
   async requestImage(scope, { requestId, focusId = 'scene' } = {}) {
     scopeOf(scope);
     this.refreshScene(scope);
@@ -161,7 +200,7 @@ export class SceneImageService {
       const focus = focusId === 'scene' ? null : snapshot.subjects.find(s => s.id === focusId);
       if (focusId !== 'scene' && !focus) fail('INVALID_REQUEST', 'That subject is not in your current view. Choose a visible subject.', 400);
       // Neither user prose nor GM-only records are passed to the image provider.
-      const refs = focus ? (focus.reference ? [focus.reference] : []) : snapshot.references;
+      const refs = focus ? [focus.reference, focus.portraitPath].filter(Boolean) : [...snapshot.references, ...snapshot.subjects.map(subject => subject.portraitPath).filter(Boolean)].slice(0, 4);
       const approved = focus ? focus.approvedImage : snapshot.approvedImage;
       const fingerprint = hash(JSON.stringify({ snapshot, focusId, refs, approved }));
       const cached = this.db.prepare("SELECT id FROM jobs WHERE campaign=? AND owner=? AND cache_key=? AND status IN ('queued','running','ready') ORDER BY created DESC LIMIT 1").get(scope.campaign, scope.owner, fingerprint);
@@ -194,13 +233,18 @@ export class SceneImageService {
       });
       if (!job) return;
       try {
-        const references = JSON.parse(job.refs).map(id => this.asset(id));
-        const bytes = await validatePng(job.approved ? await readFile(this.asset(job.approved)) : await this.provider({ prompt: job.prompt, references }));
+        const snapshot = JSON.parse(job.snapshot);
+        const focus = job.focus_id === 'scene' ? null : snapshot.subjects.find(subject => subject.id === job.focus_id) ?? null;
+        const subjectType = focus?.subjectType ?? (focus ? 'character' : 'scene');
+        const subjectName = focus?.label ?? snapshot.title;
+        const aspectRatio = subjectType === 'character' ? '2:3' : subjectType === 'item' ? '1:1' : '16:9';
+        const references = JSON.parse(job.refs).map(id => this.reference(id));
+        const bytes = await validatePng(job.approved ? await readFile(this.asset(job.approved)) : await this.provider({ prompt: job.prompt, references, subjectType, subjectName, aspectRatio, cacheKey: `${job.campaign}:${job.owner}:${snapshot.revision}:${job.focus_id}` }));
         const claim = this.db.prepare('SELECT status,lease FROM jobs WHERE id=?').get(job.id);
         if (claim?.status !== 'running' || claim.lease !== job.lease) continue;
         await writeFile(join(this.dataDir, 'renders', `${job.id}.png`), bytes, { flag: 'wx' });
         await writeFile(join(this.dataDir, 'renders', `${job.id}.json`), JSON.stringify({
-          jobId: job.id, campaign: job.campaign, owner: job.owner, snapshot: JSON.parse(job.snapshot), focusId: job.focus_id,
+          jobId: job.id, campaign: job.campaign, owner: job.owner, snapshot, focusId: job.focus_id, subjectType, subjectName,
           prompt: job.prompt, references: JSON.parse(job.refs), approvedImage: job.approved, sha256: hash(bytes),
           mode: job.approved ? 'host-approved-library-image' : 'openai-image-api', generatedAt: new Date().toISOString(),
         }, null, 2), { flag: 'wx' });

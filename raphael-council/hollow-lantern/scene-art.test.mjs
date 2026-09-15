@@ -1,0 +1,43 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {fileURLToPath} from 'node:url';
+import {selectSceneArt} from './scene-art.mjs';
+import {createActivityRuntime} from './activity-runtime.mjs';
+const arrival=fileURLToPath(new URL('./art/saltglass-shore-arrival-v1.png',import.meta.url));
+const rescued=fileURLToPath(new URL('./art/saltglass-shore-rescued-v1.png',import.meta.url));
+const assets={saltglassShoreArrival:arrival,sceneArts:{'saltglass-shore':'fallback.png','coastal-road':'coast.png'}};
+test('arrival illustration requires exact Saltglass shore pre-rescue mission context',()=>{
+ const view={sceneId:'saltglass-shore',mission:{packId:'saltglass',courierFreed:false}};
+ assert.equal(selectSceneArt(view,assets),arrival);
+ assert.equal(selectSceneArt({...view,mission:{packId:'saltglass',courierFreed:true}},{...assets,saltglassShoreRescued:rescued}),rescued);
+ for(const mission of [undefined,{packId:'hollow-lantern',courierFreed:false},{packId:'saltglass'},{packId:'saltglass',courierFreed:true}])assert.equal(selectSceneArt({...view,mission},assets),'fallback.png');
+ assert.equal(selectSceneArt({...view,sceneId:'coastal-road'},assets),'coast.png');assert.equal(selectSceneArt(view,{sceneArts:assets.sceneArts}),'fallback.png');
+ assert.equal(selectSceneArt(view,{...assets,saltglassShoreArrival:arrival+'.missing'}),'fallback.png');
+ assert.equal(selectSceneArt(view,{...assets,saltglassShoreArrival:fileURLToPath(new URL('./art/',import.meta.url))}),'fallback.png');
+});
+test('rescued illustration uses distinct art and rechecks stage after image loading',async()=>{
+ let freed=false,flip=false,packId='saltglass';
+ const auth={authenticate:async()=>({campaign:'fixture',owner:'gm',role:'host'}),member:async()=>({campaign:'fixture',role:'host'})};
+ const client={campaignId:'fixture',command:async()=>{throw Error('No commands');},project:async()=>{const projection={projectionVersion:2,audience:'gm',campaignId:'fixture',revision:1,currentSceneId:'saltglass-shore',characters:[],pendingActions:[],decisionOpen:true,mission:{packId,courierFreed:freed}};if(flip){freed=true;flip=false;}return projection;}};
+ const runtime=createActivityRuntime({auth,client,gmUserId:'gm',renderAssets:{saltglassShoreArrival:arrival,saltglassShoreRescued:rescued}});
+ const request=path=>new Request('https://game.test/'+path,{headers:{cookie:'session=fixture'}});
+ const view=await (await runtime.handle('view',request('view'))).json();
+ const path='illustration?kind=scene&viewToken='+view.viewToken;
+ const first=await runtime.handle('illustration',request(path));assert.equal(first.status,200);const firstBytes=Buffer.from(await first.arrayBuffer());
+ freed=true;const second=await runtime.handle('illustration',request(path));assert.equal(second.status,200);assert.notDeepEqual(Buffer.from(await second.arrayBuffer()),firstBytes);
+ freed=false;flip=true;assert.equal((await runtime.handle('illustration',request(path))).status,409);
+ packId='hollow-lantern';const other=await (await runtime.handle('view',request('view'))).json();assert.equal(other.illustrations.scene,false);
+});
+test('actual Activity illustration route serves arrival only before rescue and rejects stale illustration tokens',async()=>{
+ let freed=false,revision=1;
+ const client={campaignId:'fixture',command:async()=>{throw Error('Illustrations must not command the engine');},project:async()=>({projectionVersion:2,audience:'gm',campaignId:'fixture',revision,currentSceneId:'saltglass-shore',characters:[],pendingActions:[],decisionOpen:true,mission:{packId:'saltglass',courierFreed:freed}})};
+ const auth={authenticate:async()=>({campaign:'fixture',owner:'gm',role:'host'}),member:async()=>({campaign:'fixture',role:'host'})};
+ const runtime=createActivityRuntime({auth,client,gmUserId:'gm',renderAssets:{saltglassShoreArrival:arrival}});
+ const request=path=>new Request('https://game.test/'+path,{headers:{cookie:'session=fixture'}});
+ const before=await runtime.handle('view',request('view'));assert.equal(before.status,200);const view=await before.json();assert.equal(view.illustrations.scene,true);
+ const illustration=await runtime.handle('illustration',request('illustration?kind=scene&viewToken='+view.viewToken));assert.equal(illustration.status,200);assert.equal(illustration.headers.get('content-type'),'image/png');assert.ok((await illustration.arrayBuffer()).byteLength>100000);
+ freed=true;revision++;
+ assert.equal((await runtime.handle('illustration',request('illustration?kind=scene&viewToken='+view.viewToken))).status,409);
+ const after=await (await runtime.handle('view',request('view'))).json();assert.equal(after.illustrations.scene,false);
+ assert.equal((await runtime.handle('illustration',request('illustration?kind=scene&viewToken='+after.viewToken))).status,404);
+});

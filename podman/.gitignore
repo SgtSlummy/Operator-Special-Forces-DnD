@@ -1,0 +1,7 @@
+storage/
+storage-models/
+storage-user/input/
+storage-user/output/
+training/dataset/*
+!training/dataset/README.md
+training/output/

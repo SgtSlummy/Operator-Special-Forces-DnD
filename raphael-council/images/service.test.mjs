@@ -11,7 +11,7 @@ const player = { campaign: 'greyharbor', owner: 'player1' };
 const other = { campaign: 'greyharbor', owner: 'player2' };
 const opening = { campaign: player.campaign, audience: 'party', id: 'hearth', title: 'Last Hearth', sourceEventId: 'event-1',
   description: 'A candle lights the visible table. The door is closed.', references: ['lamp'],
-  subjects: [{ id: 'candle', label: 'The candle', description: 'A single ordinary wax candle.', reference: 'lamp' }] };
+  subjects: [{ id: 'candle', label: 'The candle', description: 'A single ordinary wax candle.', subjectType: 'item', reference: 'lamp' }] };
 function fixture(t, provider = async () => png) {
   const root = mkdtempSync(join(tmpdir(), 'raphael-images-'));
   const artRoot = join(root, 'art'), dataDir = join(root, 'data'); mkdirSync(artRoot);
@@ -49,6 +49,7 @@ test('only observable host projection and visible subject enter generation', asy
   const job = await service.requestImage(player, { requestId: 'good', focusId: 'candle' });
   await service.waitForJob(player, job.id);
   assert.equal(prompts.length, 1); assert.match(prompts[0].prompt, /ordinary wax candle/);
+  assert.equal(prompts[0].subjectType, 'item'); assert.equal(prompts[0].aspectRatio, '1:1');
   assert.doesNotMatch(prompts[0].prompt, /spy/); assert.equal(prompts[0].references.length, 1);
   assert.deepEqual(service.scene(player).subjects, [{ id: 'candle', label: 'The candle' }]);
 });
@@ -74,6 +75,17 @@ test('changed view creates a fresh image and marks the saved snapshot as older',
   assert.notEqual(after.id, first.id); assert.equal(service.getJob(player, after.id).stale, false);
   const audit = JSON.parse(readFileSync(join(dataDir, 'renders', `${first.id}.json`), 'utf8'));
   assert.equal(audit.snapshot.sourceEventId, 'event-1'); assert.match(audit.prompt, /candle lights/);
+});
+test('private image history retains each scene revision without exposing prompts or paths', async t => {
+  const { service } = fixture(t); service.publishScene(opening);
+  const first = await service.requestImage(player, { requestId: 'history-before' }); await service.waitForJob(player, first.id);
+  service.publishScene({ ...opening, description: 'The candle has burned out.', sourceEventId: 'event-2' });
+  const second = await service.requestImage(player, { requestId: 'history-after' }); await service.waitForJob(player, second.id);
+  const history = service.history(player);
+  assert.deepEqual(history.map(item => item.sceneRevision), [2, 1]);
+  assert.equal(history[0].sourceEventId, 'event-2');
+  assert.equal(Object.hasOwn(history[0], 'prompt'), false);
+  assert.equal(Object.hasOwn(history[0], 'refs'), false);
 });
 test('two host processes share a durable job and do not duplicate provider work', async t => {
   let calls = 0; const { service, create } = fixture(t, async () => { calls++; await new Promise(r => setTimeout(r, 30)); return png; });
@@ -102,6 +114,18 @@ test('missing provider is explicit; host-approved art still works with no API ca
   service.publishScene({ ...opening, approvedImage: 'lamp' });
   const cached = await service.requestImage(player, { requestId: 'approved' });
   assert.equal((await service.waitForJob(player, cached.id)).status, 'ready'); assert.equal(calls, 1);
+});
+test('tactical refresh preserves the host-approved location image', t => {
+  const { service } = fixture(t);
+  let revision = 1;
+  service.resolveScene = () => ({ ...opening, audience: player.owner, gameRevision: revision, approvedImage: undefined });
+  service.publishScene({ ...opening, audience: player.owner, approvedImage: 'lamp', gameRevision: revision });
+  service.refreshScene(player);
+  assert.equal(service.projection(player).approvedImage, 'lamp');
+  revision = 2;
+  service.refreshScene(player);
+  assert.equal(service.projection(player).approvedImage, 'lamp');
+  assert.equal(service.projection(player).gameRevision, 2);
 });
 test('interrupted leases fail without an automatic paid retry', async t => {
   let calls = 0; const { service } = fixture(t, async () => { calls++; return png; });

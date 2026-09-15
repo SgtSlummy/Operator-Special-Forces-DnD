@@ -1,0 +1,1 @@
+import{t as e}from"./activity-runtime-DrvY9Y8m.js";var t=`nodejs`,n=e(`draft`);export{n as GET,t as runtime};

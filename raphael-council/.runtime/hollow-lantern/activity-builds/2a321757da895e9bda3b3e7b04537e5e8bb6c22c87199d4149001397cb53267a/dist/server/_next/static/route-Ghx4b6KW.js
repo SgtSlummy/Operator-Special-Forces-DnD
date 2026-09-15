@@ -1,0 +1,1 @@
+import{t as e}from"./http-Cl_XznAA.js";import{t}from"./runtime-CxqPqP-T.js";var n=`nodejs`,r=e(t),i=r.reactions,a=r.resolveReaction;export{i as GET,a as POST,n as runtime};

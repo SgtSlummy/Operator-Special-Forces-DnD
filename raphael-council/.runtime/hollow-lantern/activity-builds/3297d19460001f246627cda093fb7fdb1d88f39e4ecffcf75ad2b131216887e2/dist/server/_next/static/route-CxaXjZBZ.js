@@ -1,0 +1,1 @@
+import{t as e}from"./http-CvZ40NV7.js";import{n as t}from"./runtime-DRFbgUQC.js";import{t as n}from"./runtime-CXohDgGO.js";var r=`nodejs`,i=e(n,{getCharacters:t});async function a(e,t){return i.characterInfo(e,(await t.params).actorId)}export{a as GET,r as runtime};

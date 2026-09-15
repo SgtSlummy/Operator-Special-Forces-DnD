@@ -1,10 +1,16 @@
 import { createHash } from 'node:crypto';
+import { evidenceReferences } from './obus-evidence.mjs';
+import { validateEvidenceReceipt } from '../ai/host-control.mjs';
 
 const CAMPAIGN = /^[a-zA-Z0-9_-]{1,64}$/;
 const SESSION = /^[a-zA-Z0-9_-]{1,96}$/;
 const OWNER = /^\d{17,20}$/;
 const IDENTIFIER = /^[a-zA-Z0-9][a-zA-Z0-9._:/@+-]{0,255}$/;
 const KINDS = new Set(['summary', 'final', 'cue']);
+const SUMMARY_TEMPLATE = 'session-summary-v1';
+const FREE_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
+const FREE_COST_BASIS = 'free-variant+zero-price-ceiling+response-usage';
+const FREE_PROVIDERS = new Set(['Chutes', 'DeepInfra', 'NovitaAI', 'Groq', 'Cerebras']);
 const MAX_AUDIO = 6000000;
 const HTML = /<(?:\/?[a-z][^>]*|!|\?)/i;
 
@@ -86,6 +92,98 @@ function resultSnapshot(result) {
     routeId: identifier(result.routeId), trace, sources });
 }
 
+function exactData(value, names) {
+  if (!record(value)) throw invalid();
+  const keys = Reflect.ownKeys(value);
+  if (keys.length !== names.length || keys.some(key => typeof key !== 'string' || !names.includes(key) ||
+      !Object.hasOwn(Object.getOwnPropertyDescriptor(value, key), 'value'))) throw invalid();
+}
+function syncSnapshot(context, campaigns, withRevision = false) {
+  exactData(context, withRevision ? ['campaign', 'session', 'owner', 'sourceRevision'] : ['campaign', 'session', 'owner']);
+  const { campaign, session, owner, sourceRevision } = context;
+  if (typeof campaign !== 'string' || !CAMPAIGN.test(campaign) || !campaigns.has(campaign) ||
+      typeof session !== 'string' || !SESSION.test(session) || typeof owner !== 'string' || !OWNER.test(owner) ||
+      (withRevision && (!Number.isSafeInteger(sourceRevision) || sourceRevision < 0))) throw invalid();
+  return Object.freeze({ scope: Object.freeze({ campaign, owner, role: 'host' }),
+    syncInput: Object.freeze({ campaign, session, owner }), session, ...(withRevision ? { sourceRevision } : {}) });
+}
+function referenceSnapshot(kind, references, context, campaigns) {
+  if (kind !== 'summary') throw invalid();
+  const saved = syncSnapshot(context, campaigns, true);
+  if (!Array.isArray(references) || references.length < 1 || references.length > 32 ||
+      Reflect.ownKeys(references).length !== references.length + 1) throw invalid();
+  const copied = [], seen = new Set();
+  for (let index = 0; index < references.length; index++) {
+    const descriptor = Object.getOwnPropertyDescriptor(references, String(index));
+    if (!descriptor || !Object.hasOwn(descriptor, 'value')) throw invalid();
+    const item = descriptor.value;
+    exactData(item, ['ref', 'revision']);
+    if (typeof item.ref !== 'string' || item.ref.length > 160 || !IDENTIFIER.test(item.ref) || seen.has(item.ref) ||
+        !Number.isSafeInteger(item.revision) || item.revision < 0) throw invalid();
+    seen.add(item.ref);
+    copied.push(Object.freeze({ ref: item.ref, revision: item.revision }));
+  }
+  // The reference set, source versions, and complete projection revision all
+  // participate in deduplication. Input ordering does not create duplicate jobs.
+  copied.sort((a, b) => a.ref < b.ref ? -1 : a.ref > b.ref ? 1 : 0);
+  const evidence = Object.freeze({ contract: 'raph-obus-game-evidence-refs-v1', revision: saved.sourceRevision,
+    references: Object.freeze(copied) });
+  const requestId = createHash('sha256').update(JSON.stringify({ kind, promptTemplate: SUMMARY_TEMPLATE, evidence, scope: saved.scope, session: saved.session })).digest('hex');
+  return Object.freeze({ ...saved, evidence, requestId });
+}
+function checkedEvidenceReceipt(receipt, saved, previous) {
+  let checked;
+  try { checked = validateEvidenceReceipt(receipt); } catch { throw outputError(); }
+  if (checked.campaign !== saved.scope.campaign || checked.session !== saved.session) throw outputError();
+  if ((saved.sourceRevision !== undefined && checked.revision !== saved.sourceRevision) ||
+      (previous && (checked.revision !== previous.revision || checked.sourceCount !== previous.sourceCount || checked.participantCount !== previous.participantCount))) {
+    throw new ProviderError('CHRONICLE_STALE', 'Chronicle evidence changed during generation. Request a fresh summary.');
+  }
+  return checked;
+}
+function referenceTrace(result) {
+  if (!record(result) || !Array.isArray(result.trace) || result.trace.length < 1 || result.trace.length > 64) throw outputError();
+  let completed = false;
+  const trace = result.trace.map(stage => {
+    if (!record(stage) || completed || ['function_call', 'functions', 'tool_use'].some(key => Object.hasOwn(stage, key)) ||
+        (stage.tool_calls !== undefined && (!Array.isArray(stage.tool_calls) || stage.tool_calls.length))) throw outputError();
+    if (stage.destination === 'local') {
+      if (stage.status !== undefined && !['failed', 'ready'].includes(stage.status)) throw outputError();
+      completed = stage.status === 'ready';
+      return Object.freeze({ destination: 'local', model: identifier(stage.model, true),
+        ...(stage.status === undefined ? {} : { status: stage.status }) });
+    }
+    if (stage.destination !== 'free' || stage.cost !== 'zero' || stage.attempt !== 1 || !['failed', 'ready'].includes(stage.status)) throw outputError();
+    const saved = { destination: 'free', provider: identifier(stage.provider), model: identifier(stage.model),
+      cost: 'zero', attempt: 1, status: stage.status };
+    if (stage.status === 'failed') return Object.freeze(saved);
+    if (!FREE_PROVIDERS.has(stage.provider) || stage.gateway !== 'openrouter' || stage.endpoint !== FREE_ENDPOINT ||
+        stage.cost_basis !== FREE_COST_BASIS || (stage.completion_tokens !== undefined &&
+          (!Number.isSafeInteger(stage.completion_tokens) || stage.completion_tokens < 0 || stage.completion_tokens > 900)) ||
+        (stage.response_id !== undefined && (typeof stage.response_id !== 'string' || !/^[A-Za-z0-9_-]{1,200}$/.test(stage.response_id))) || stage.model !== result.model) throw outputError();
+    completed = true;
+    return Object.freeze({ ...saved, route_id: identifier(stage.route_id), gateway: 'openrouter', endpoint: FREE_ENDPOINT, cost_basis: FREE_COST_BASIS,
+      ...(stage.completion_tokens === undefined ? {} : { completion_tokens: stage.completion_tokens }),
+      ...(stage.response_id === undefined ? {} : { response_id: stage.response_id }) });
+  });
+  const last = trace.at(-1);
+  if (last.status === 'failed' || (last.destination === 'local' && last.model !== result.model)) throw outputError();
+  return Object.freeze(trace);
+}
+function referencedResult(result, references) {
+  const trace = referenceTrace(result);
+  // Reuse the established text/source validation without widening legacy
+  // inline responses. The independently validated trace retains provenance.
+  const saved = Object.freeze({ ...resultSnapshot({ ...result, trace: trace.map(stage => ({ destination: 'local', model: stage.model })) }), trace }), sources = new Map();
+  if (saved.model === null || [result, ...result.trace].some(value => ['function_call', 'functions', 'tool_use'].some(key => Object.hasOwn(value, key)))) throw outputError();
+  for (const source of saved.sources) {
+    if (sources.has(source.id)) throw outputError();
+    sources.set(source.id, source.revision);
+  }
+  if (references.some(item => !sources.has(item.ref) || sources.get(item.ref) !== item.revision)) throw outputError();
+  return saved;
+}
+
 const RUNTIME_CONTRACT = 'raph-obus-game-runtime-v1';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 function voiceScope(scope, campaigns) {
@@ -108,18 +206,69 @@ function speechSnapshot(context, campaigns) {
     capturedRuntime: runtimeSnapshot(context.capturedRuntime), capturedConsentEpoch: context.capturedConsentEpoch });
 }
 
-/** Portable local-only chronicle adapter. Obus alone chooses and invokes models. */
-export function createObusChronicleProvider({ transport, authorizeCommand, authorizeParticipant, onReceipt, campaigns } = {}) {
+/** Portable Chronicle adapter. Only signed template summaries may request free fallback; Obus authorizes and invokes every model. */
+export function createObusChronicleProvider({ transport, authorizeCommand, authorizeParticipant, onReceipt, campaigns, evidenceBridge } = {}) {
   if (!transport || typeof transport.generate !== 'function' || typeof transport.transcribe !== 'function' ||
       typeof authorizeCommand !== 'function' || (onReceipt !== undefined && typeof onReceipt !== 'function') ||
+      (evidenceBridge !== undefined && (!evidenceBridge || typeof evidenceBridge.sync !== 'function' ||
+        evidenceBridge.syncStored !== undefined && typeof evidenceBridge.syncStored !== 'function' ||
+        evidenceBridge.captureSelection !== undefined && typeof evidenceBridge.captureSelection !== 'function')) ||
       !Array.isArray(campaigns) || campaigns.length < 1 || campaigns.length > 100 ||
       campaigns.some(campaign => typeof campaign !== 'string' || !CAMPAIGN.test(campaign))) {
     throw new TypeError('Supply the explicit Obus transport, host authorization callback and allowed campaigns.');
   }
   const allowedCampaigns = new Set(campaigns), generate = transport.generate.bind(transport), transcribe = transport.transcribe.bind(transport);
+  const syncBridge = evidenceBridge?.sync.bind(evidenceBridge);
+  const syncStoredBridge = evidenceBridge?.syncStored?.bind(evidenceBridge);
   const authorize = async scope => {
     try { if (await authorizeCommand(scope) !== true) throw denied(); }
     catch { throw denied(); }
+  };
+  const captureBridge = evidenceBridge?.captureSelection?.bind(evidenceBridge);
+  const bridgeFailure = error => {
+    if (error?.code === 'EVIDENCE_CHANGED_DURING_SYNC' || error?.code === 'INVALID_EVIDENCE_SELECTION') throw new ProviderError('CHRONICLE_STALE', 'Chronicle evidence changed during generation. Request a fresh summary.');
+    if (error?.code === 'EVIDENCE_ACCESS_DENIED') throw denied();
+    throw error;
+  };
+  const capture = saved => {
+    if (!captureBridge) return null;
+    try {
+      const selected = captureBridge({ ...saved.syncInput, sourceRevision: saved.sourceRevision, references: saved.evidence.references });
+      if (!record(selected) || typeof selected.check !== 'function' || typeof selected.sync !== 'function') throw invalid();
+      const evidence = snapshotEvidence(selected.evidence);
+      exactData(evidence, ['contract', 'revision', 'selectionHash', 'references']);
+      if (evidence.contract !== 'raph-obus-game-evidence-refs-v2' || evidence.revision !== saved.sourceRevision ||
+          typeof evidence.selectionHash !== 'string' || !/^[0-9a-f]{64}$/.test(evidence.selectionHash) ||
+          JSON.stringify(evidence.references) !== JSON.stringify(saved.evidence.references)) throw invalid();
+      const closure = referenceSnapshot('summary', selected.references,
+        { ...saved.syncInput, sourceRevision: saved.sourceRevision }, allowedCampaigns).evidence.references;
+      if (evidence.references.some(ref => !closure.some(item => item.ref === ref.ref && item.revision === ref.revision))) throw invalid();
+      return Object.freeze({ evidence, references: closure, check: selected.check.bind(selected), sync: selected.sync.bind(selected) });
+    } catch (error) { bridgeFailure(error); }
+  };
+  const assertSelection = selection => {
+    if (!selection) return;
+    try { if (selection.check() !== undefined) throw invalid(); }
+    catch (error) { bridgeFailure(error); }
+  };
+  const synchronize = async (saved, previous, selection) => {
+    if (!syncBridge) throw unavailable();
+    await authorize(saved.scope);
+    let receipt;
+    try { receipt = selection ? await selection.sync() : await syncBridge(saved.syncInput); }
+    catch (error) {
+      if (error?.code === 'EVIDENCE_CHANGED_DURING_SYNC') throw new ProviderError('CHRONICLE_STALE', 'Chronicle evidence changed during generation. Request a fresh summary.');
+      if (error?.code === 'EVIDENCE_ACCESS_DENIED') throw denied();
+      throw error;
+    }
+    await authorize(saved.scope);
+    if (selection) {
+      assertSelection(selection);
+      const checked = checkedEvidenceReceipt(receipt, { ...saved, sourceRevision: undefined });
+      if (checked.revision < saved.sourceRevision) throw new ProviderError('CHRONICLE_STALE', 'Obus has not synchronized the selected evidence.');
+      return checked;
+    }
+    return checkedEvidenceReceipt(receipt, saved, previous);
   };
   const participant = async scope => {
     try { return typeof authorizeParticipant === 'function' && await authorizeParticipant(scope) === true; }
@@ -138,6 +287,88 @@ export function createObusChronicleProvider({ transport, authorizeCommand, autho
         const saved = runtimeSnapshot(runtime);
         await authorize(savedScope);
         return saved;
+      } catch (error) { throw error instanceof ProviderError ? error : unavailable(); }
+    },
+    // Only a trusted composition can supply this private store capability.
+    // The periodic worker supplies scope, never a user identity or evidence.
+    ...(syncStoredBridge ? {
+      async syncStoredEvidence(context) {
+        try {
+          exactData(context, ['campaign', 'session']);
+          if (typeof context.campaign !== 'string' || !allowedCampaigns.has(context.campaign) ||
+              typeof context.session !== 'string' || !SESSION.test(context.session)) throw invalid();
+          const scope = Object.freeze({ campaign: context.campaign, session: context.session });
+          const receipt = validateEvidenceReceipt(await syncStoredBridge(scope));
+          if (receipt.campaign !== scope.campaign || receipt.session !== scope.session) throw outputError();
+          return receipt;
+        } catch (error) { throw error instanceof ProviderError ? error : unavailable(); }
+      },
+    } : {}),
+    /** Host-authorized evidence persistence; this never invokes generation. */
+    async syncEvidence(context) {
+      try {
+        const saved = syncSnapshot(context, allowedCampaigns);
+        return await synchronize(saved);
+      } catch (error) { throw error instanceof ProviderError ? error : unavailable(); }
+    },
+    // The service keeps these synchronous guards across all summary chunks and
+    // invokes them inside its final store transaction. They never call a model.
+    ...(captureBridge ? {
+      captureReferences(kind, references, context) {
+        const selected = capture(referenceSnapshot(kind, references, context, allowedCampaigns));
+        assertSelection(selected);
+        return () => assertSelection(selected);
+      },
+    } : {}),
+    /** Raw session summaries may reference only the signed current projection. */
+    async writeReferences(kind, references, context) {
+      try {
+        let saved = referenceSnapshot(kind, references, context, allowedCampaigns);
+        // Capture before the first await, including the current consent history.
+        let selection;
+        try { selection = capture(saved); }
+        catch (error) {
+          // Do not disclose stale-source details before asynchronous Discord
+          // authorization. The source capture still happened before this await.
+          await authorize(saved.scope);
+          throw error;
+        }
+        if (selection) {
+          const evidence = selection.evidence;
+          const requestId = createHash('sha256').update(JSON.stringify({ kind, promptTemplate: SUMMARY_TEMPLATE,
+            evidence, scope: saved.scope, session: saved.session })).digest('hex');
+          saved = Object.freeze({ ...saved, evidence, requestId });
+        }
+        const before = await synchronize(saved, undefined, selection);
+        const evidence = selection ? selection.evidence : evidenceReferences(before, saved.evidence.references);
+        // This is a requested ceiling. Obus intersects the signed host policy
+        // and current source consent before rendering or dispatching a prompt.
+        const policy = Object.freeze({ mode: 'local-free', codex: false, exportable: true, escalationEligible: false,
+          namespace: saved.scope.campaign, tools: false, personal_memory: false, auto_memory: false });
+        const instructions = '';
+        await authorize(saved.scope);
+        assertSelection(selection);
+        const result = referencedResult(await generate(Object.freeze({ scope: saved.scope, task: 'summary', session: saved.session,
+          requestId: saved.requestId, promptTemplate: SUMMARY_TEMPLATE, instructions, evidence, maxTokens: 900, signal: AbortSignal.timeout(120000), policy })), selection?.references ?? saved.evidence.references);
+        if (selection && result.sources.length !== selection.references.length) throw outputError();
+        await authorize(saved.scope);
+        // A correction, deletion or consent change invalidates this result
+        // before any durable receipt callback or text is returned. The bridge
+        // rechecks its runtime fence around each synchronization.
+        await synchronize(saved, before, selection);
+        if (onReceipt) {
+          const receipt = Object.freeze({ scope: saved.scope, session: saved.session, task: 'summary', requestId: saved.requestId,
+            routeId: result.routeId, provider: result.provider, model: result.model, sourceRevision: saved.sourceRevision,
+            trace: result.trace, sources: result.sources, outcome: 'ready' });
+          try { await onReceipt(receipt); }
+          catch { throw new ProviderError('CHRONICLE_RECEIPT', 'The local Obus chronicle receipt could not be saved. The source record is retained.'); }
+          await authorize(saved.scope);
+          // Receipt storage itself is asynchronous. Do not return stale text if
+          // the projection changed while that callback was pending.
+          await synchronize(saved, before, selection);
+        }
+        assertSelection(selection);
+        return result.text;
       } catch (error) { throw error instanceof ProviderError ? error : unavailable(); }
     },
     async write(kind, evidence, context) {

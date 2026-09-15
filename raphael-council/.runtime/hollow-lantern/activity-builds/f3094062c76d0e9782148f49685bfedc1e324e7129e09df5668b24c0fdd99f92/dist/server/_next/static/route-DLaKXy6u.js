@@ -1,0 +1,1 @@
+import{t as e}from"./http-BH-2kM8p.js";var t=`nodejs`,n=e(`activity`);export{n as POST,t as runtime};

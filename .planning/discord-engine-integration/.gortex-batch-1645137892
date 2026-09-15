@@ -1,0 +1,83 @@
+# Discord campaign engine integration
+
+Status: implementation in progress. No public launch or completed integration is claimed.
+Accepted plan: Design Discord camp run template, 2026-09-12.
+Research: C:/Users/Hermes/Projects/DND Discord Research/2026-09-11/report.html
+Player design: .planning/design/discord-campaign-run-template/player-walkthrough.html
+
+## Non-negotiable constraints
+
+- Separate human_gm and ai_dm modes; live and asynchronous participation in either.
+- No new spending; free personal noncommercial public beta on existing hardware.
+- Gameplay inference uses private providers through an enforced Obus allowlist. No cloud/Codex fallback.
+- C# authority commits rules and resources. Discord, browser and Unity consume authorized projections.
+- Preserve GmId, old command fingerprints, committed receipts, existing campaigns and unresolved player choices.
+- Only authenticated web/API ingress becomes public; development services remain private.
+- All project and game data remain outside OneDrive.
+
+## Delivery requirements and proof
+
+| ID | Requirement | Required evidence | Current status |
+| --- | --- | --- | --- |
+| BASE-01 | Preserve current source/config and prove recovery | Snapshot manifest, restore comparison, baseline test output | Pending |
+| ENG-01 | Persist directorMode, authorityEpoch and scoped AI identity | Save/reload and legacy-save tests | In progress |
+| ENG-02 | Atomic handoff with fixed human owner | Mode race, paused transition and stale epoch tests | In progress |
+| ENG-03 | Preserve receipts and pending choices | Old replay, collision, resource-once and unresolved-choice tests | In progress |
+| ENG-04 | Consistent authorization at all three engine gates | AI capability and forbidden admin/player-action tests | In progress |
+| APP-01 | Authenticated campaign registry with isolated stores | Two-campaign isolation and restart tests | Pending |
+| APP-02 | Recoverable presentation events | Commit/crash/replay tests across adapters | Pending |
+| RUN-01 | Versioned Saltglass run template and rules pack | Complete human-GM run, valid character and advancement checks | Pending |
+| UX-01 | Functional 34 original plus 11 added states | Desktop/mobile/keyboard walkthrough evidence for every state | Pending |
+| AI-01 | Private structured Obus gameplay adapter | Provider allowlist, engine validation and network-boundary tests | Pending |
+| AI-02 | One-worker fair queue, cancellation and handoff | Two-table scheduling, timeout, stale completion and restart tests | Pending |
+| AI-03 | Scoped knowledge and memory | Secret, cross-campaign and shared-memory isolation tests | Pending |
+| VOICE-01 | Consent, transcription review and interruption | Real Discord voice session under current voice requirements | Pending |
+| DESIGN-01 | Native Figma draft/components/45 states/mobile layouts | Created file URL, inspected editable nodes and requirement mappings | Blocked: create_new_file rejects exact whoami plan key |
+| UNITY-01 | Same engine contract and audience filtering | Command/projection parity and real client session | Pending |
+| UNITY-02 | Separate Unity 6.3 LTS migration | Compatible packages, baseline parity, original-save recovery | Pending |
+| TOOLS-01 | Citadel requirements and delivery gates | This ledger plus implementation evidence and harness linkage | In progress |
+| TOOLS-02 | Coordinator ownership | Current task claim revision 4; three active claims, overlaps advisory | Established for current bounded edits |
+| TOOLS-03 | Gortex guarded changes | Impact, physical edit receipt, detect/tests/guards/contract output | In progress |
+| TOOLS-04 | Obus/Hermes development boundaries | Integration check without public campaign secrets in shared memory | Pending |
+| TOOLS-05 | Reuse Chronos Governor | Verified single governor recurrence and no duplicate worker schedules | Pending |
+| TOOLS-06 | Official compatible software/plugin updates | Before/after version matrix and smoke checks; no cache patching | Pending |
+| RESEARCH-01 | Dated source/version ledger | Verify Discord, licensing, models and deployment at release gates | Existing report; release refresh pending |
+| BETA-01 | Free HTTPS public web/API with private backends | Verified eligible Funnel configuration, OAuth and permissions | Pending |
+| BETA-02 | Conservative capacity limits | Two tables, six players/table, one inference worker; load evidence | Pending |
+| BETA-03 | Export/delete and recovery | Verified export, deletion, restore and minimal-log checks | Pending |
+| ACCEPT-01 | Full real sessions in both director modes | Exploration, ruling, encounter, camp, recap, restart and handoff | Pending |
+
+## Engine interface decisions
+
+`gm_director_mode` is human-owner-only. Payload: `mode` (`human_gm` or `ai_dm`) and `aiDirectorId` when delegating. Persisted authority epoch changes atomically with delegation. AI commands carry top-level integer `authorityEpoch`. Human legacy requests retain their existing fingerprint shape. Previously committed receipts remain replayable after mode changes. Newly dispatched commands from a stale AI epoch fail. Pending player choices survive handoff and remain controlled by their player.
+
+New campaigns will pin a validated rules/content version; existing campaigns must not silently migrate rules. Public campaign selection must resolve authenticated membership before a per-campaign runtime is constructed. Presentation retries must never repeat authority commits.
+
+## Delivery order
+
+Baseline/recovery -> engine authority -> campaign isolation -> human-GM run -> private AI-DM -> full experience/voice/design/Unity -> public beta and completion audit. Every implementation phase requires focused tests and no new baseline regressions. Documentation or a narrow passing suite cannot mark the whole objective complete.
+
+## Verified implementation checkpoint
+
+- Engine authority and persistence implemented in LanternAuthority.cs and LanternState.cs. DirectorMode defaults to human_gm, AuthorityEpoch to 0. gm_director_mode requires a paused human-owner command; new AI commands require the delegated ai-director: principal and current epoch.
+- LanternDirectorModeTests contains 45 checks covering scoped delegation, forbidden commands, durable state, stale epochs, pending choices, legacy defaults, and receipt replay after handoff/restart.
+- LanternProjection.cs now exposes directorMode and authorityEpoch to public/private/GM audiences; aiDirectorId is emitted only for GM. LanternDirectorProjectionTests verifies defaults, mode visibility, private delegation, unauthorized GM access, and unchanged audience filtering.
+- Final combined `dotnet run --project RPG-Core/RpgIntegration.Tests --no-restore` exited 0 after both feature test suites were registered. Existing Lantern, armor, inspiration, Preserve Life, map, terrain, presentation, journal, and runtime integration suites passed. Initial tests were observed failing before implementation.
+- Gortex impact checks passed before runtime edits. Test mapping recognizes director tests; projection mapping currently reports no linked coverage despite the executed tests. Guards reports no configured rules. Detection and contract analysis timed out or remained pending, so graph verification is incomplete.
+- Original source snapshots exist under C:/Users/Hermes/LocalFiles/DND-Engine-Integration/2026-09-12/engine-director-before and projection-before. No live-save restoration drill is claimed.
+- Node AI-DM wiring is NOT implemented. Existing ai-runtime.mjs controls player companions; preserve those in human-GM mode and preserve human art approval. New director integration still needs the host command/receipt adapter, committed intention event shape, private-only Obus transport, and runtime test fixtures. Gortex discovery returned localization_in_progress after timeout; no Node edits were made.
+
+## Current external evidence
+
+- 2026-09-12: Figma whoami reports one Starter plan with View seat. Creating the approved new draft with its exact returned key failed `INVALID_ARGUMENT: Invalid planKey`. No draft exists from this attempt. This is an integration response, not proof a paid seat is required.
+- Figma browser fallback is signed out. A Figma sign-in tab is retained for user handoff; no draft was created.
+- Citadel official marketplace refresh and plugin install completed successfully; installed version remains 1.3.5. Other requested plugin/application updates remain unverified.
+- Chronos existing Governor pulse is ACTIVE and points to the existing Governor. No schedule was added. Native supervision reports healthy registry but Heartbeat coverage is prior-state/unsupported, not proof of monitored gameplay.
+- Obus loopback endpoint at 127.0.0.1:38174 is reachable. Local gpt-oss:20b is available but cold. General routing also has cloud providers; a private gameplay allowlist remains required before director inference.
+- Unity project remains 2021.3.14f1; registered installed Editor is 6000.6.0f1 with Web support. Official 6000.3.24f1 + Web install downloaded but failed ELEVATION_FAILED even at a writable user path. Web module failed its parent dependency. Original install-path setting C:/Program Files/Unity/Hub/Editor was restored and verified. No project migration occurred. Unity 6.3 installation requires a successful user/admin installation through the supported installer.
+- Working checkout has extensive pre-existing modified and untracked source. Preserve it; no broad stage, reset, cleanup, branch switch or overwrite.
+- Existing Coordinator broad readiness ownership overlaps engine source. Current task owns only assigned narrow files and this folder; expand ownership before additional writes.
+
+## Completion rule
+
+Keep the goal active until every requirement above has authoritative current evidence. Record failures and limitations honestly. Do not count mockups as functioning gameplay or local checks as proof of public multiplayer readiness.

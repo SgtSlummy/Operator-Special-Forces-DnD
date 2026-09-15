@@ -1,0 +1,112 @@
+{
+  "format": "raphael-simulation-acceptance-v1",
+  "generatedAt": "2026-09-07T16:04:52.238Z",
+  "status": "passed",
+  "campaign": "simulation-behind-the-veil",
+  "receipts": [
+    {
+      "revision": 1,
+      "hostGeneration": 1,
+      "kind": "scoped-retrieval",
+      "query": "beacon",
+      "source": "lore-1"
+    },
+    {
+      "revision": 2,
+      "hostGeneration": 1,
+      "kind": "action-rejected",
+      "player": "sim-player-1",
+      "action": "unsupported-teleport",
+      "resourceSpent": false
+    },
+    {
+      "revision": 3,
+      "hostGeneration": 1,
+      "kind": "action-accepted",
+      "player": "sim-player-1",
+      "action": "move-octagonal",
+      "resourceSpent": true
+    },
+    {
+      "revision": 4,
+      "hostGeneration": 1,
+      "kind": "interface-switch",
+      "player": "sim-player-1",
+      "next": "browser"
+    },
+    {
+      "revision": 5,
+      "hostGeneration": 1,
+      "kind": "interface-switch",
+      "player": "sim-player-2",
+      "next": "discord"
+    },
+    {
+      "revision": 6,
+      "hostGeneration": 1,
+      "kind": "transcript",
+      "text": "Synthetic courier report",
+      "persistedRawAudio": false,
+      "persistedGeneralMemory": false
+    },
+    {
+      "revision": 7,
+      "hostGeneration": 1,
+      "kind": "consent-withdrawn"
+    },
+    {
+      "revision": 8,
+      "hostGeneration": 1,
+      "kind": "manual-fallback",
+      "reason": "ai-unavailable",
+      "authority": "human"
+    },
+    {
+      "revision": 9,
+      "hostGeneration": 1,
+      "kind": "council-vote",
+      "votes": [
+        {
+          "role": "explorer",
+          "vote": "proceed",
+          "evidence": "sim-receipt"
+        },
+        {
+          "role": "warden",
+          "vote": "proceed",
+          "evidence": "sim-receipt"
+        },
+        {
+          "role": "scribe",
+          "vote": "proceed",
+          "evidence": "sim-receipt"
+        },
+        {
+          "role": "scholar",
+          "vote": "proceed",
+          "evidence": "sim-receipt"
+        },
+        {
+          "role": "quartermaster",
+          "vote": "proceed",
+          "evidence": "sim-receipt"
+        }
+      ],
+      "equalWeight": true,
+      "confirmed": false
+    },
+    {
+      "revision": 10,
+      "hostGeneration": 2,
+      "kind": "host-restart",
+      "generation": 2
+    },
+    {
+      "revision": 11,
+      "hostGeneration": 2,
+      "kind": "checkpoint-restored",
+      "fromGeneration": 1
+    }
+  ],
+  "finalHostGeneration": 2
+}

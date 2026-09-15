@@ -1,0 +1,119 @@
+{
+  "roomId": "R05",
+  "name": "Caretaker\u2019s Flat",
+  "dimensionsFeet": {
+    "width": 11,
+    "depth": 17,
+    "height": 8
+  },
+  "horizontalSectionFeet": 4,
+  "floorPolygonFeet": [
+    [
+      0,
+      0
+    ],
+    [
+      7,
+      0
+    ],
+    [
+      7,
+      5
+    ],
+    [
+      11,
+      5
+    ],
+    [
+      11,
+      17
+    ],
+    [
+      0,
+      17
+    ]
+  ],
+  "views": {
+    "r05-cutaway": {
+      "width": 1600,
+      "height": 1200,
+      "origin": [
+        335.5262,
+        837.3718
+      ],
+      "xAxis": [
+        828.0595,
+        988.9482
+      ],
+      "yAxis": [
+        771.9407,
+        428.7886
+      ],
+      "zAxis": [
+        335.5262,
+        488.9937
+      ]
+    },
+    "r05-floor-slice": {
+      "width": 1600,
+      "height": 1200,
+      "origin": [
+        448.0,
+        1144.0
+      ],
+      "xAxis": [
+        1152.0,
+        1144.0
+      ],
+      "yAxis": [
+        448.0,
+        56.0
+      ],
+      "zAxis": [
+        448.0,
+        1144.0
+      ]
+    },
+    "r05-low-cutaway": {
+      "width": 1600,
+      "height": 1200,
+      "origin": [
+        303.4932,
+        788.3915
+      ],
+      "xAxis": [
+        829.9945,
+        956.566
+      ],
+      "yAxis": [
+        770.0052,
+        335.0671
+      ],
+      "zAxis": [
+        303.4932,
+        421.8578
+      ]
+    }
+  },
+  "features": [
+    {
+      "id": "R05-a",
+      "name": "Kettle and two mugs",
+      "x": 0.3,
+      "y": 0.4,
+      "z": 0.31875
+    },
+    {
+      "id": "R05-b",
+      "name": "Visitor directions note",
+      "x": 0.73,
+      "y": 0.65,
+      "z": 0.34375
+    }
+  ],
+  "generator": "Blender 4.5.9 Cycles with existing local Stable Diffusion limestone",
+  "limits": [
+    "One domestic L-shaped level; sections are not extra floors.",
+    "Window is a dark opening; no undiscovered harbor layout or solution text is painted."
+  ]
+}

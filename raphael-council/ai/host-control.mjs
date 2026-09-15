@@ -1,4 +1,5 @@
 import { createHash, createHmac, randomBytes } from 'node:crypto';
+import { DOCUMENT_LIMIT, DOCUMENT_SOURCES, UPLOAD_LIMIT, UPLOAD_ROOT, planEvidenceUpload, validateUploadStatus } from './evidence-upload.mjs';
 
 const CONTRACT = 'raph-obus-game-runtime-v1';
 const LIMIT = 8192;
@@ -6,6 +7,9 @@ const DEADLINE_MS = 5000;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const HEX = /^[0-9a-f]{64}$/;
 const ROOT = '/api/game/runtime';
+export const EVIDENCE_CONTRACT = 'raph-obus-game-evidence-v1';
+export const EVIDENCE_LIMIT = 512 * 1024;
+const EVIDENCE_ROOT = '/api/game/evidence/snapshot';
 
 function failure(code, status, message) {
   return Object.assign(new Error(message), { name: 'ObusHostControlError', code, status });
@@ -67,6 +71,110 @@ function denied(status) {
   return failure('OBUS_HOST_CONTROL_UNAVAILABLE', Number.isInteger(status) && status >= 400 && status <= 599 ? status : 502, 'Obus host control is unavailable.');
 }
 
+// Copy only JSON data properties, count exact canonical UTF-8 bytes while copying,
+// and freeze recursively. Getters/toJSON/cycles cannot alter signed evidence.
+function boundedEvidenceCopy(input, limit, maxSources) {
+  let bytes = 0;
+  const active = new WeakSet();
+  const charge = text => { bytes += Buffer.byteLength(text, 'utf8'); if (bytes > limit) invalid(); };
+  function copy(value, depth = 0) {
+    if (depth > 8) invalid();
+    if (value === null || typeof value === 'boolean' || (typeof value === 'number' && integer(value))) {
+      charge(JSON.stringify(value)); return value;
+    }
+    if (typeof value === 'string') {
+      if (value.length > 16000 || !value.isWellFormed()) invalid();
+      charge(JSON.stringify(value)); return value;
+    }
+    if (!value || typeof value !== 'object' || active.has(value)) invalid();
+    active.add(value);
+    let result;
+    if (Array.isArray(value)) {
+      if (value.length > maxSources || Reflect.ownKeys(value).length !== value.length + 1) invalid();
+      result = []; charge('[');
+      for (let index = 0; index < value.length; index++) {
+        const descriptor = Object.getOwnPropertyDescriptor(value, String(index));
+        if (!descriptor || !Object.hasOwn(descriptor, 'value')) invalid();
+        if (index) charge(',');
+        result.push(copy(descriptor.value, depth + 1));
+      }
+      charge(']');
+    } else {
+      if (!plain(value)) invalid();
+      const keys = Reflect.ownKeys(value);
+      if (keys.length > 16 || keys.some(key => typeof key !== 'string' || key.length > 100)) invalid();
+      result = {}; charge('{');
+      keys.sort().forEach((key, index) => {
+        const descriptor = Object.getOwnPropertyDescriptor(value, key);
+        if (!Object.hasOwn(descriptor, 'value')) invalid();
+        if (index) charge(',');
+        charge(`${JSON.stringify(key)}:`);
+        Object.defineProperty(result, key, { value: copy(descriptor.value, depth + 1), enumerable: true });
+      });
+      charge('}');
+    }
+    active.delete(value);
+    return Object.freeze(result);
+  }
+  return copy(input);
+}
+function evidenceId(value, maximum = 100, empty = false) {
+  return typeof value === 'string' && value.length >= (empty ? 0 : 1) && value.length <= maximum;
+}
+function reference(value) {
+  exact(value, ['ref', 'revision']);
+  if (!evidenceId(value.ref, 160) || !integer(value.revision)) invalid();
+}
+
+/** Validate and freeze the complete snapshot before any asynchronous boundary. */
+export function prepareEvidenceSnapshot(input) { return prepareEvidence(input, EVIDENCE_LIMIT, 2048); }
+
+/** Large documents use bounded atomic paging; legacy snapshot limits stay fixed. */
+export function prepareEvidenceDocument(input) { return prepareEvidence(input, DOCUMENT_LIMIT, DOCUMENT_SOURCES); }
+
+/** Local source consistency only; a projection carries no runtime authorization. */
+export function prepareEvidenceProjection(input) { return prepareEvidence(input, DOCUMENT_LIMIT, DOCUMENT_SOURCES, false); }
+
+function prepareEvidence(input, limit, maxSources, withRuntime = true) {
+  const value = boundedEvidenceCopy(input, limit, maxSources);
+  exact(value, ['contract', 'campaign', 'session', 'revision', 'participants', 'sources', ...(withRuntime ? ['runtime'] : [])]);
+  scope(value);
+  if (value.contract !== EVIDENCE_CONTRACT || !integer(value.revision)) invalid();
+  if (withRuntime) {
+    exact(value.runtime, ['contract', 'bootEpoch', 'generation', 'sessionPolicyRevision']);
+    if (value.runtime.contract !== CONTRACT || !uuid(value.runtime.bootEpoch) || !uuid(value.runtime.generation) || !integer(value.runtime.sessionPolicyRevision)) invalid();
+  }
+  if (!Array.isArray(value.participants) || value.participants.length > 256 || !Array.isArray(value.sources) || value.sources.length > maxSources) invalid();
+  const users = new Set(), refs = new Set();
+  for (const participant of value.participants) {
+    exact(participant, ['user', 'capture', 'external', 'captureEpoch', 'externalEpoch']);
+    if (!evidenceId(participant.user) || users.has(participant.user) || typeof participant.capture !== 'boolean' || typeof participant.external !== 'boolean' || !integer(participant.captureEpoch) || !integer(participant.externalEpoch)) invalid();
+    users.add(participant.user);
+  }
+  for (const source of value.sources) {
+    exact(source, ['ref', 'revision', 'audience', 'owner', 'text', 'provenance', 'deleted', 'contributors', 'derivesFrom']);
+    if (!evidenceId(source.ref, 160) || refs.has(source.ref) || !integer(source.revision) || !['party', 'host', 'private'].includes(source.audience) || !evidenceId(source.owner, 100, source.audience !== 'private') || !evidenceId(source.text, 16000, true) || !evidenceId(source.provenance, 160) || typeof source.deleted !== 'boolean' || (source.deleted && source.text !== '')) invalid();
+    if (!Array.isArray(source.contributors) || source.contributors.length > 256 || !Array.isArray(source.derivesFrom) || source.derivesFrom.length > 32) invalid();
+    refs.add(source.ref);
+    for (const contributor of source.contributors) {
+      exact(contributor, ['user', 'captureEpoch', 'externalEpoch', 'exportableAtCapture']);
+      if (!evidenceId(contributor.user) || !(contributor.captureEpoch === null || integer(contributor.captureEpoch)) || !(contributor.externalEpoch === null || integer(contributor.externalEpoch)) || typeof contributor.exportableAtCapture !== 'boolean' || (contributor.exportableAtCapture && (contributor.captureEpoch === null || contributor.externalEpoch === null))) invalid();
+    }
+    source.derivesFrom.forEach(reference);
+    if (new Set(source.contributors.map(item => item.user)).size !== source.contributors.length || new Set(source.derivesFrom.map(item => item.ref)).size !== source.derivesFrom.length) invalid();
+  }
+  return value;
+}
+
+/** Receipt shape validation does not grant access; callers still authorize scope. */
+export function validateEvidenceReceipt(value, expected) {
+  exact(value, ['contract', 'campaign', 'session', 'revision', 'status', 'sourceCount', 'participantCount']);
+  scope(value);
+  if (value.contract !== EVIDENCE_CONTRACT || !integer(value.revision) || !['saved', 'unchanged'].includes(value.status) || !integer(value.sourceCount) || value.sourceCount > DOCUMENT_SOURCES || !integer(value.participantCount) || value.participantCount > 256) invalid();
+  if (expected && (value.campaign !== expected.campaign || value.session !== expected.session || value.revision !== expected.revision || value.sourceCount !== expected.sources.length || value.participantCount !== expected.participants.length)) invalid();
+  return Object.freeze({ ...value });
+}
+
 /** Private, explicit-dependency client. It never reads global settings, retries, or fills CAS fields. */
 export function createObusHostControl(options) {
   exact(options, ['url', 'serviceToken', 'hostControlToken'], ['fetchImpl', 'now', 'nonce']);
@@ -80,8 +188,9 @@ export function createObusHostControl(options) {
     let body;
     const headers = { Accept: 'application/json', 'X-Obus-Game-Token': serviceToken };
     if (input) {
-      body = canonical({ ...input, contract: CONTRACT });
-      if (Buffer.byteLength(body, 'utf8') > LIMIT) invalid();
+      const evidence = path === EVIDENCE_ROOT || path === UPLOAD_ROOT;
+      body = canonical(evidence ? input : { ...input, contract: CONTRACT });
+      if (Buffer.byteLength(body, 'utf8') > (path === UPLOAD_ROOT ? UPLOAD_LIMIT : evidence ? EVIDENCE_LIMIT : LIMIT)) invalid();
       let timestamp, requestNonce;
       try {
         const time = now();
@@ -130,8 +239,13 @@ export function createObusHostControl(options) {
       let data;
       try { data = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(Buffer.concat(chunks))); }
       catch { invalidResponse(); }
-      if (path === `${ROOT}/session/revoke`) {
-        if (!data || data.status !== 'session_revoked' || Object.keys(data).length !== 2 || !Object.hasOwn(data, 'runtime')) invalidResponse();
+      if (path === UPLOAD_ROOT) return data;
+      if (path === EVIDENCE_ROOT) {
+        try { return validateEvidenceReceipt(data, input); }
+        catch { invalidResponse(); }
+      }
+      if (path === `${ROOT}/session/revoke` || path === `${ROOT}/host-generation/release`) {
+        if (!data || data.status !== (path.endsWith('/release') ? 'host_released' : 'session_revoked') || Object.keys(data).length !== 2 || !Object.hasOwn(data, 'runtime')) invalidResponse();
         const result = snapshot(data.runtime);
         if (result.generation !== null || result.leaseExpiresAtMs !== null || result.bootEpoch !== input.expectedBootEpoch || result.sessionPolicyRevision !== input.expectedSessionPolicyRevision + 1) invalidResponse();
         return result;
@@ -150,6 +264,45 @@ export function createObusHostControl(options) {
   }
 
   return Object.freeze({
+    async syncEvidence(input, assertCurrent = () => {}) {
+      if (typeof assertCurrent !== 'function') invalid();
+      const prepared = prepareEvidenceDocument(input);
+      const check = () => { if (assertCurrent() !== undefined) invalid(); };
+      check();
+      if (prepared.sources.length <= 2048 && Buffer.byteLength(canonical(prepared), 'utf8') <= EVIDENCE_LIMIT) {
+        const result = await request('POST', EVIDENCE_ROOT, prepared);
+        check();
+        return result;
+      }
+      const plan = planEvidenceUpload(prepared);
+      async function send(command) {
+        check();
+        const raw = await request('POST', UPLOAD_ROOT, command);
+        check();
+        let result;
+        try { result = validateUploadStatus(raw, plan); }
+        catch { invalidResponse(); }
+        if (result.status === 'deferred') throw failure('OBUS_EVIDENCE_DEFERRED', 503, 'Obus evidence storage is busy; the previous evidence remains blocked.');
+        if (result.status === 'complete') {
+          try { validateEvidenceReceipt(result.receipt, prepared); }
+          catch { invalidResponse(); }
+        }
+        return result;
+      }
+      let result = await send(plan.begin);
+      if (result.status === 'complete') return result.receipt;
+      const received = new Set(result.received);
+      for (const page of plan.pages) {
+        if (received.has(page.index)) continue;
+        result = await send(page);
+        if (result.status === 'complete') return result.receipt;
+        if (!result.received.includes(page.index) || [...received].some(index => !result.received.includes(index))) invalidResponse();
+        result.received.forEach(index => received.add(index));
+      }
+      result = await send(plan.commit);
+      if (result.status !== 'complete') invalidResponse();
+      return result.receipt;
+    },
     async getRuntime(input) {
       exact(input, ['campaign', 'session']); scope(input);
       return request('GET', `${ROOT}?${new URLSearchParams({ campaign: input.campaign, session: input.session })}`);
@@ -168,6 +321,11 @@ export function createObusHostControl(options) {
       exact(input, ['campaign', 'session', 'generation', 'expectedBootEpoch', 'expectedSessionPolicyRevision', 'opId']); scope(input); cas(input);
       if (input.session === 'campaign' || !uuid(input.generation) || !integer(input.expectedSessionPolicyRevision)) invalid();
       return request('POST', `${ROOT}/session/revoke`, input);
+    },
+    async release(input) {
+      exact(input, ['campaign', 'session', 'generation', 'expectedBootEpoch', 'expectedSessionPolicyRevision', 'opId']); scope(input); cas(input);
+      if (input.session !== 'campaign' || !uuid(input.generation) || !integer(input.expectedSessionPolicyRevision)) invalid();
+      return request('POST', `${ROOT}/host-generation/release`, input);
     },
     async configure(input) {
       exact(input, ['campaign', 'session', 'expectedBootEpoch', 'expectedGeneration', 'expectedSessionPolicyRevision', 'opId', 'policy']); scope(input); cas(input);

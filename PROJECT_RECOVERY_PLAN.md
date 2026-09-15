@@ -37,6 +37,28 @@ All new work, builds, logs, assets, databases, and recovery records must use loc
 11. Local Windows hosting with start/stop/status/diagnostics, coordinated backup/restore, reuse of healthy Obus services, one existing bot gateway, and an HTTPS game endpoint for Discord and browser access. Keep model administration, databases, and provider credentials private. Preserve manual play if every AI service is unavailable.
 12. Consolidated execution across the interrupted project tasks, preserving prior work and its evidence. The current user explicitly requests a summary, ordered plan, goal list, continuation, and removal of this project's OneDrive dependence.
 
+## MemPalace project and gameplay memory
+
+September 9, 2026: the user authorized MemPalace for both Codex project memory and live gameplay memory. [Integration, library, isolation and operating notes](docs/memory/MEMPALACE.md) describe the two separate stores.
+
+Developer recall is available through the existing local MemPalace MCP connection, scoped to `operator-dnd-development`; the imported research retains its proposal and not-run labels. Project AGENTS.md defines the ongoing recall/checkpoint workflow. Native Codex, Codex Coordinator, Chronos and Gortex retain their existing responsibilities.
+
+The canonical Obus retrieval layer now contains a private MemPalace adapter that ranks currently authorized source IDs, rechecks source access/revisions, and retains existing retrieval fallback. The private configuration is enabled and the local embedding model is present. Production service activation remains pending because the app's execution policy rejected the service-start action; no running production usage is claimed. Verification passed all 197 selected adapter and game regression checks, including 15 memory checks and the real backend in a disposable store. The gameplay memory cache retains vectors and opaque identifiers without duplicating source or query text. The latest regression also hydrates accepted ranking results from the authoritative database and deduplicates references. A malformed-worker score-boundary reproducer passes 4/4 after the overflow-safe range-guard correction. CodeRabbit's latest review of the four changed files completed with zero findings. This does not close the existing A05/Q01 goals or execute the 48 proposed D&D acceptance cases.
+
+## D&D Gameplay Research — DM Procedures & Acceptance Tests
+
+Documentation imported September 9, 2026 into this existing project:
+
+- [Research index, limitations, and provenance](docs/research/dnd-gameplay/README.md)
+- [Research and proposed play contract](docs/research/dnd-gameplay/Operator_Special_Forces_Dungeon_Research_and_Play_Contract.md)
+- [Acceptance specifications (JSON)](docs/research/dnd-gameplay/Operator_Special_Forces_Dungeon_Acceptance_Specs.json)
+
+Both supplied materials are preserved unchanged. The 48 Given/When/Then cases (G01–G48) are proposals, not executable tests: aggregate status remains `not_run_against_project`; every case remains `not_run`, with no observed result or evidence artifacts. Import checks are not gameplay acceptance. These documents do not establish implemented features, verified defects, or completion of any existing goal.
+
+Retain the research limitations: no completed full-video/transcript or channel audit, no exact repository or D&D JSON corpus audit by the research author, and no game certification. Craft advice remains distinct from official rules; the rescue and numeric examples remain illustrative, not campaign canon. The JSON's `rules_family: null` does not override this plan's stated 2024 direction or migrate a campaign.
+
+These materials can inform later consideration under T01/T02 (mechanics and procedures), W01 (world continuity), and Q01 (integrated acceptance). Mapping cases to verified project/campaign rules and collecting actual evidence remain future work. The instructions within the imported documents are proposed handoff content; this import does not dispatch that work or change existing implementation or acceptance statuses.
+
 ## Evidence recovered so far
 
 Read directly: the migration launcher and `RECOVERY.md`; the local `raphael-council/OBUS_INTEGRATION.md` through Gortex; the accepted Discord/Web plan; the scribe/storyboard/music requests; and the newest coordination history. The archived task inventory was obtained through Codex native tools. Some older task pages remain to be recovered; this document does not claim their full histories were inspected.

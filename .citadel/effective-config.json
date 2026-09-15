@@ -1,0 +1,192 @@
+{
+  "contractVersion": 1,
+  "receiptKind": "citadel.effective-config",
+  "package": {
+    "name": "citadel",
+    "version": "1.3.5"
+  },
+  "status": "degraded",
+  "configKind": "v2",
+  "schemaVersion": 2,
+  "sourceDigest": "sha256:02a892a441faabe59516c97e5fbb993bade7d84222d62fad7fb1df8458c31542",
+  "authority": {
+    "valid": true,
+    "reasonCode": "CONFIG_VALID"
+  },
+  "activation": {
+    "onDemand": "prompt",
+    "allowDegradedRuntime": true
+  },
+  "profile": {
+    "id": "standard",
+    "version": "1.0.0",
+    "digest": "sha256:b0957be6fb656a7822420fec545a3ba2f8140baed15b831a81c10030f2ac5a9d",
+    "source": "harness-config",
+    "base": null
+  },
+  "bundles": {
+    "requested": [
+      "core",
+      "persistence",
+      "parallel"
+    ],
+    "dependencyClosed": [
+      "core",
+      "persistence",
+      "parallel"
+    ],
+    "effective": [
+      "core",
+      "persistence",
+      "parallel"
+    ],
+    "degraded": [
+      {
+        "id": "parallel",
+        "status": "degraded",
+        "reasonCode": "RUNTIME_CAPABILITY_PARTIAL",
+        "capabilities": [
+          "worktrees",
+          "approvals"
+        ],
+        "adapter": "citadel-managed-worktrees-and-approvals"
+      }
+    ],
+    "unavailable": []
+  },
+  "runtime": {
+    "id": "codex",
+    "capabilities": {
+      "agents": {
+        "support": "full",
+        "notes": "Supports projected Codex-native agent manifests and native subagent workflows."
+      },
+      "approvals": {
+        "support": "partial",
+        "notes": "Approval model differs from Claude Code and needs adapter-aware policy handling."
+      },
+      "guidance": {
+        "support": "full",
+        "notes": "Supports layered AGENTS.md guidance, overrides, fallback filenames, and projected guidance files."
+      },
+      "history": {
+        "support": "partial",
+        "notes": "Has native session persistence, but campaign state remains Citadel-owned."
+      },
+      "hooks": {
+        "support": "partial",
+        "notes": "Supports native lifecycle hooks, including tool, permission, compaction, subagent, prompt, and stop events; adapter keeps Citadel hooks portable."
+      },
+      "mcp": {
+        "support": "full",
+        "notes": "Codex supports MCP servers in CLI and IDE, and Codex can run as an MCP server for orchestration."
+      },
+      "skills": {
+        "support": "full",
+        "notes": "Supports repository, user, admin, system, and plugin-bundled skills with implicit invocation metadata."
+      },
+      "surfaces": {
+        "support": "partial",
+        "notes": "Supports skills, plugins, app/IDE/CLI surfaces, and Codex app artifacts; slash-command parity remains runtime-specific."
+      },
+      "telemetry": {
+        "support": "partial",
+        "notes": "Citadel telemetry remains external to runtime-native history."
+      },
+      "workspace": {
+        "support": "full",
+        "notes": "Standard file and shell workflow available."
+      },
+      "worktrees": {
+        "support": "partial",
+        "notes": "Codex app supports native Git worktrees and handoff; CLI flows still use Citadel-managed worktrees where needed."
+      }
+    },
+    "degradations": [
+      "adapter-required-for-hook-parity",
+      "cli-worktree-handoff-not-native"
+    ]
+  },
+  "policy": {
+    "contractVersion": 1,
+    "values": {
+      "maxParallelAgents": 3,
+      "maxBudgetUnits": 50,
+      "verifierRetryLimit": 1,
+      "checkpointMinimum": "risk-boundaries",
+      "allowIndependentOnUnknown": true,
+      "allowAutoWorktreeIntegration": true,
+      "allowConsentGatedExternalMerge": false,
+      "requireArchitectureApproval": true
+    },
+    "provenance": {
+      "maxParallelAgents": {
+        "value": 3,
+        "source": "profile:standard@1.0.0",
+        "reasonCode": "PROFILE_DEFAULT",
+        "enforcement": "hard",
+        "layers": []
+      },
+      "maxBudgetUnits": {
+        "value": 50,
+        "source": "profile:standard@1.0.0",
+        "reasonCode": "PROFILE_DEFAULT",
+        "enforcement": "hard",
+        "layers": []
+      },
+      "verifierRetryLimit": {
+        "value": 1,
+        "source": "profile:standard@1.0.0",
+        "reasonCode": "PROFILE_DEFAULT",
+        "enforcement": "hard",
+        "layers": []
+      },
+      "checkpointMinimum": {
+        "value": "risk-boundaries",
+        "source": "profile:standard@1.0.0",
+        "reasonCode": "PROFILE_DEFAULT",
+        "enforcement": "hard",
+        "layers": []
+      },
+      "allowIndependentOnUnknown": {
+        "value": true,
+        "source": "profile:standard@1.0.0",
+        "reasonCode": "PROFILE_DEFAULT",
+        "enforcement": "hard",
+        "layers": []
+      },
+      "allowAutoWorktreeIntegration": {
+        "value": true,
+        "source": "profile:standard@1.0.0",
+        "reasonCode": "PROFILE_DEFAULT",
+        "enforcement": "hard",
+        "layers": []
+      },
+      "allowConsentGatedExternalMerge": {
+        "value": false,
+        "source": "profile:standard@1.0.0",
+        "reasonCode": "PROFILE_DEFAULT",
+        "enforcement": "hard",
+        "layers": []
+      },
+      "requireArchitectureApproval": {
+        "value": true,
+        "source": "profile:standard@1.0.0",
+        "reasonCode": "PROFILE_DEFAULT",
+        "enforcement": "hard",
+        "layers": []
+      }
+    },
+    "digest": "sha256:cbe55aae4ac5a7d64ebed3e4965e9d87d2df1f64a6391a64054c85dd90e3d5fd"
+  },
+  "invariants": {
+    "missingEvidenceNeverPasses": true,
+    "terminalSuccessRequiresProof": true,
+    "unsupportedBundlesNeverExecute": true,
+    "tierOneSafetyAlwaysApplies": true,
+    "riskAcceptanceNeverChangesEvidence": true
+  },
+  "errors": [],
+  "reconciledAt": "2026-09-14T02:33:35.774Z",
+  "receiptDigest": "sha256:e2f082c39de48e25d8763f5bad1490b120a691dd07946314399f8495644e436e"
+}

@@ -1,0 +1,1 @@
+import{t as e}from"./http-D51SAzdU.js";import{t}from"./runtime-C8jpdbG2.js";var n=`nodejs`,r=e(t),i=r.counsel,a=r.askCounsel;export{i as GET,a as POST,n as runtime};

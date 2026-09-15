@@ -1,0 +1,1 @@
+import{t as e}from"./http-Cl_XznAA.js";import{t}from"./runtime-CxqPqP-T.js";var n=`nodejs`,r=e(t).updates;export{r as GET,n as runtime};

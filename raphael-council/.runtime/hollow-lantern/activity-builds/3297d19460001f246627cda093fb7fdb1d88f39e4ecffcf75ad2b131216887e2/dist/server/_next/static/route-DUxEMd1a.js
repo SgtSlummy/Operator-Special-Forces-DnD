@@ -1,0 +1,1 @@
+import{t as e}from"./http-CvZ40NV7.js";import{t}from"./runtime-CXohDgGO.js";var n=`nodejs`,r=e(t),i=r.counsel,a=r.askCounsel;export{i as GET,a as POST,n as runtime};

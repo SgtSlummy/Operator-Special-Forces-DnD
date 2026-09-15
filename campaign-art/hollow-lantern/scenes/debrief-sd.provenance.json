@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-09-10T16:37:48.664Z",
+  "kind": "offline-public-scene-art-preparation",
+  "provider": "AUTOMATIC1111 loopback",
+  "model": "v1-5-pruned-emaonly.safetensors [6ce0161689]",
+  "sceneId": "debrief-harbor",
+  "request": {
+    "seed": 29091017,
+    "prompt": "(painted watercolor fantasy illustration:1.3), medieval fishing harbor at dawn, weathered stone watchtower on an old harbor wall, anchored wooden sailing boats, warm pale amber sky and cool slate blue water, stone steps and weathered wooden quay in foreground, broad painterly brush strokes, elegant environment concept art, muted teal and ochre palette, medieval European port, empty foreground, no people",
+    "negative_prompt": "photograph, photorealistic, modern furniture, computer, screen, electricity, neon, science fiction, futuristic, guns, people, face, text, letters, labels, watermark, signature, logo, grid, blurry, low quality, distorted architecture, oversaturated",
+    "steps": 28,
+    "width": 768,
+    "height": 448,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "batch_size": 1,
+    "n_iter": 1,
+    "send_images": true,
+    "save_images": false
+  },
+  "elapsedMs": 6605,
+  "sha256": "453b022bb7c489f610175b9f7f9466e5350eb82e41d588fae737f67d0932488e",
+  "path": "C:\\Users\\Hermes\\LocalFiles\\hollow-lantern\\scene-design-20260910\\debrief-harbor-candidate.png",
+  "gameplayCommands": 0,
+  "approved": true,
+  "campaignSceneId": "debrief",
+  "visualReview": "Reviewed as public atmospheric scene art. Does not specify geometry, stock, resources, discoveries or mission outcome."
+}

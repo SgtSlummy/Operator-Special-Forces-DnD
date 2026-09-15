@@ -26,6 +26,53 @@ export async function boundedJson(response, limit = 1024 * 1024) {
   } catch (e) { await reader.cancel(); throw e; }
   return JSON.parse(Buffer.concat(chunks).toString('utf8'));
 }
+function validateTemplateRequest(job) {
+  const exact = (value, keys) => value && typeof value === 'object' && !Array.isArray(value) &&
+    Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value, key));
+  const integer = value => Number.isSafeInteger(value) && value >= 0;
+  const evidence = job.evidence, refs = evidence?.references;
+  const selected = evidence?.contract === 'raph-obus-game-evidence-refs-v2';
+  if (job.promptTemplate !== 'session-summary-v1' || job.task !== 'summary' || job.instructions !== '' ||
+      !integer(job.max_tokens) || job.max_tokens < 1 || job.max_tokens > 4096 || job.policy.codex !== false ||
+      !['local', 'local-free'].includes(job.policy.mode) || typeof job.policy.exportable !== 'boolean' ||
+      job.policy.namespace !== job.scope?.campaign || !exact(evidence, ['contract', 'revision', 'references', ...(selected ? ['selectionHash'] : [])]) ||
+      (!selected && evidence.contract !== 'raph-obus-game-evidence-refs-v1') || !integer(evidence.revision) ||
+      (selected && (typeof evidence.selectionHash !== 'string' || !/^[0-9a-f]{64}$/.test(evidence.selectionHash))) ||
+      !Array.isArray(refs) || refs.length < 1 || refs.length > 32 || Object.keys(refs).length !== refs.length) throw new AiError('Invalid classified Obus game request.');
+  const seen = new Set();
+  for (const item of refs) {
+    if (!exact(item, ['ref', 'revision']) || typeof item.ref !== 'string' || !/^[a-zA-Z0-9][a-zA-Z0-9._:/@+-]{0,159}$/.test(item.ref) ||
+        !integer(item.revision) || seen.has(item.ref)) throw new AiError('Invalid classified Obus evidence references.');
+    seen.add(item.ref);
+  }
+}
+function validateTemplateTrace(result, job) {
+  const id = value => typeof value === 'string' && /^[a-zA-Z0-9][a-zA-Z0-9._:/@+-]{0,255}$/.test(value);
+  const noTools = value => value && typeof value === 'object' && !Array.isArray(value) &&
+    !['function_call', 'functions', 'tool_use'].some(key => Object.hasOwn(value, key)) &&
+    (value.tool_calls === undefined || (Array.isArray(value.tool_calls) && value.tool_calls.length === 0));
+  const reject = () => { throw new AiError('Obus returned unverified classified-route provenance.'); };
+  if (!noTools(result) || !id(result.model) || !id(result.routeId) || result.trace.length > 64) reject();
+  let completed = false;
+  for (const stage of result.trace) {
+    if (!noTools(stage) || completed || !id(stage.model)) reject();
+    if (stage.destination === 'local') {
+      if (stage.status !== undefined && !['failed', 'ready'].includes(stage.status)) reject();
+      completed = stage.status === 'ready';
+      continue;
+    }
+    if (stage.destination !== 'free' || stage.cost !== 'zero' || stage.attempt !== 1 || !['failed', 'ready'].includes(stage.status) || !id(stage.provider)) reject();
+    if (stage.status === 'failed') continue;
+    if (!['Chutes', 'DeepInfra', 'NovitaAI', 'Groq', 'Cerebras'].includes(stage.provider) ||
+        stage.gateway !== 'openrouter' || stage.endpoint !== 'https://openrouter.ai/api/v1/chat/completions' ||
+        stage.cost_basis !== 'free-variant+zero-price-ceiling+response-usage' || !id(stage.route_id) ||
+        (stage.completion_tokens !== undefined && (!Number.isSafeInteger(stage.completion_tokens) || stage.completion_tokens < 0 || stage.completion_tokens > job.max_tokens)) ||
+        (stage.response_id !== undefined && (typeof stage.response_id !== 'string' || !/^[A-Za-z0-9_-]{1,200}$/.test(stage.response_id)))) reject();
+    completed = true;
+  }
+  const last = result.trace.at(-1);
+  if (last.status === 'failed' || last.model !== result.model) reject();
+}
 export class ObusTransport {
   constructor({ url = process.env.RAPHAEL_OBUS_URL || 'http://127.0.0.1:38175', fetchImpl = fetch, serviceToken = process.env.RAPHAEL_OBUS_GAME_TOKEN } = {}) {
     this.url = loopback(url); this.fetch = fetchImpl; this.serviceToken = serviceToken;
@@ -62,12 +109,16 @@ export class ObusTransport {
     if (!snapshot.generation || snapshot.leaseExpiresAtMs <= Date.now() || snapshot.effectivePolicy.enabled !== true) throw new AiError('Obus requires an enabled, current game-host generation.');
     return Object.freeze({ ...runtimeFence(snapshot), leaseExpiresAtMs: snapshot.leaseExpiresAtMs });
   }
-  async generate({ instructions, evidence, maxTokens = 900, signal, scope, task, session, requestId, policy }) {
+  async generate({ instructions, evidence, promptTemplate, maxTokens = 900, signal, scope, task, session, requestId, policy }) {
     let job;
     try { job = structuredClone({ contract: 'raph-obus-game-v1', scope, task, session, requestId, instructions, evidence,
+      ...(promptTemplate === undefined ? {} : { promptTemplate }),
       policy: { ...policy, tools: false, personal_memory: false, auto_memory: false }, max_tokens: maxTokens }); }
     catch { throw new AiError('Invalid Obus game request.'); }
-    await this.capabilities();
+    if (job.promptTemplate !== undefined) validateTemplateRequest(job);
+    const capabilities = await this.capabilities();
+    const selected = job.evidence?.contract === 'raph-obus-game-evidence-refs-v2';
+    if (selected && (!Array.isArray(capabilities.evidence_reference_contracts) || !capabilities.evidence_reference_contracts.includes('raph-obus-game-evidence-refs-v2'))) throw new AiError('Obus needs source-selection support for this summary.');
     const runtime = runtimeFence(await this.runtime(job.scope, job.session));
     policy = job.policy;
     // Obus owns retrieval, advisor selection, model choice, fallback, escalation,
@@ -81,6 +132,8 @@ export class ObusTransport {
       && (stage.destination !== 'codex' || policy.codex === true)
       && (stage.destination !== 'free' || (policy.mode === 'local-free' && stage.cost === 'zero'))
       && (stage.destination === 'local' || policy.exportable === true))) throw new AiError('Obus route violated the campaign provider policy.');
+    if (selected && result.evidenceRevision !== job.evidence.revision) throw new AiError('Obus returned a different evidence selection revision.');
+    if (job.promptTemplate !== undefined) validateTemplateTrace(result, job);
     sameRuntime(runtime, await this.runtime(job.scope, job.session));
     return { text: result.text, provider: 'obus', model: result.model || null, routeId: result.routeId, trace: result.trace, sources: result.sources || [] };
   }

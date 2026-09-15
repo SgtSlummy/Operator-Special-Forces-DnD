@@ -1,0 +1,1 @@
+import{t as e}from"./activity-runtime-BmPGffMi.js";var t=`nodejs`,n=e(`receipt`);export{n as POST,t as runtime};

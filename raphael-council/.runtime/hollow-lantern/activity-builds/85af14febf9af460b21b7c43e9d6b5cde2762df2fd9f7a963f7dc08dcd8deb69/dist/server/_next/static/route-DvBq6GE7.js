@@ -1,0 +1,1 @@
+import{t as e}from"./http-BAQ1fc6v.js";var t=`nodejs`,n=e(`activity`);export{n as POST,t as runtime};

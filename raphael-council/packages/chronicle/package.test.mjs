@@ -21,14 +21,16 @@ const cli = (args, cwd = packageDir) => run(process.execPath, [npm, ...args], { 
 test('bundle audit has only the explicit core source set, Node built-ins and pinned canvas', async () => {
   const audit = JSON.parse(await readFile(join(packageDir, 'dist/build-manifest.json'), 'utf8'));
   assert.deepEqual(Object.keys(audit.sources).sort(), [
-    'chronicle/commands.mjs', 'chronicle/dispatch.mjs', 'chronicle/report.mjs', 'chronicle/service.mjs',
-    'chronicle/store.mjs', 'discord/chronicle-adapter.mjs', 'discord/chronicle-core.mjs', 'packages/chronicle/index.mjs',
-  ]);
+    'ai/evidence-selection.mjs', 'ai/evidence-upload.mjs', 'ai/host-control.mjs', 'chronicle/commands.mjs', 'chronicle/dispatch.mjs', 'chronicle/music.mjs',
+    'chronicle/obus-evidence.mjs', 'chronicle/obus-provider.mjs', 'chronicle/report.mjs', 'chronicle/service.mjs',
+    'chronicle/store.mjs', 'chronicle/voice-receiver.mjs', 'discord/chronicle-adapter.mjs', 'discord/chronicle-core.mjs',
+    'packages/chronicle/davy-host.mjs', 'auth/discord-policy.mjs', 'packages/chronicle/index.mjs',
+  ].sort());
   assert.equal(audit.esbuild, '0.27.3');
   assert.equal(audit.node, '>=22.16.0');
-  assert.deepEqual(audit.dependencies, { '@napi-rs/canvas': '1.0.8' });
+  assert.deepEqual(audit.dependencies, { '@napi-rs/canvas': '1.0.8', '@discordjs/voice': '0.19.2', 'prism-media': '1.3.5' });
   assert.equal(audit.externals.includes('@napi-rs/canvas'), true);
-  assert.equal(audit.externals.every(path => path === '@napi-rs/canvas' || isBuiltin(path)), true);
+  assert.equal(audit.externals.every(path => Object.hasOwn(audit.dependencies, path) || isBuiltin(path)), true);
   assert.equal(digest(await readFile(join(packageDir, 'dist/index.mjs'))), audit.sha256);
   for (const [path, hash] of Object.entries(audit.sources)) assert.equal(digest(await readFile(join(appDir, path))), hash, `Bundle is stale for ${path}`);
 });
@@ -39,9 +41,16 @@ test('tarball payload includes only its manifest, README and portable ESM bundle
   const packed = Array.isArray(packing) ? packing[0] : packing['@operator/chronicle'];
   assert.deepEqual(packed.files.map(file => file.path).sort(), expectedPayload);
   const manifest = JSON.parse(await readFile(join(packageDir, 'package.json'), 'utf8'));
+  const lock = JSON.parse(await readFile(join(packageDir, 'package-lock.json'), 'utf8'));
+  assert.equal(manifest.version, '0.1.2');
+  assert.equal(lock.version, manifest.version);
+  assert.equal(lock.packages[''].version, manifest.version);
+  assert.deepEqual(lock.packages[''].dependencies, manifest.dependencies);
+  assert.deepEqual(lock.packages[''].devDependencies, manifest.devDependencies);
+  for (const [name, version] of Object.entries(manifest.dependencies)) assert.equal(lock.packages[`node_modules/${name}`]?.version, version, `Missing pinned dependency ${name}`);
   assert.equal(manifest.private, true);
   assert.deepEqual(manifest.engines, { node: '>=22.16.0' });
-  assert.deepEqual(manifest.dependencies, { '@napi-rs/canvas': '1.0.8' });
+  assert.deepEqual(manifest.dependencies, { '@napi-rs/canvas': '1.0.8', '@discordjs/voice': '0.19.2', 'prism-media': '1.3.5' });
   assert.deepEqual(manifest.devDependencies, { esbuild: '0.27.3' });
   assert.deepEqual(manifest.exports, { '.': './dist/index.mjs' });
 });
@@ -55,10 +64,11 @@ test('packed artifact installs and runs outside the Operator checkout', { timeou
     assert.equal(basename(resolved).startsWith('operator-chronicle-consumer-'), true);
     await rm(resolved, { recursive: true, force: true });
   });
-  await writeFile(join(consumer, 'package.json'), `${JSON.stringify({ name: 'isolated-chronicle-consumer', version: '1.0.0', private: true, type: 'module' })}\n`);
+  await writeFile(join(consumer, 'package.json'), `${JSON.stringify({ name: 'isolated-chronicle-consumer', version: '1.0.0', private: true, type: 'module' })}
+`);
   let packed;
   if (process.env.OPERATOR_VERIFY_ARTIFACT === '1') {
-    packed = JSON.parse(await readFile(join(packageDir, 'artifacts/manifest-0.1.1.json'), 'utf8'));
+    packed = JSON.parse(await readFile(join(packageDir, 'artifacts/manifest-0.1.2.json'), 'utf8'));
     const archive = join(packageDir, 'artifacts', packed.filename);
     assert.equal(digest(await readFile(archive)), packed.sha256);
     await copyFile(archive, join(consumer, packed.filename));
@@ -78,6 +88,6 @@ test('packed artifact installs and runs outside the Operator checkout', { timeou
   assert.doesNotMatch(stdout, /fail [1-9]/);
   assert.doesNotMatch(stderr, /MODULE_NOT_FOUND|Cannot find package/);
   const installed = JSON.parse(await readFile(join(consumer, 'node_modules/@operator/chronicle/package.json'), 'utf8'));
-  assert.deepEqual(installed.dependencies, { '@napi-rs/canvas': '1.0.8' });
+  assert.deepEqual(installed.dependencies, { '@napi-rs/canvas': '1.0.8', '@discordjs/voice': '0.19.2', 'prism-media': '1.3.5' });
   console.log('Isolated installed artifact: 11 runtime fixtures passed with native canvas resolved from consumer dependencies.');
 });

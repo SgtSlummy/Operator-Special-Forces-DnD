@@ -1,0 +1,1 @@
+import{t as e}from"./http-F_rZquYj.js";import{t}from"./runtime-C3EiwGU2.js";var n=`nodejs`,r=e(t),i=r.departure,a=r.enterDeparture;export{i as GET,a as POST,n as runtime};

@@ -1,0 +1,1 @@
+import{t as e}from"./http-DvcwobAw.js";import{t}from"./runtime-Dm7_DKaw.js";var n=`nodejs`,r=e(t).imageHistory;export{r as GET,n as runtime};

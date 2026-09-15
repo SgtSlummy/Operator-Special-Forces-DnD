@@ -10,7 +10,7 @@ import { runtimeFixture } from './speech-context.fixture.mjs';
 if (process.env.RAPHAEL_VOICE_CAPTURE_TEST_CHILD !== '1') {
   test('scoped voice capture fixtures execute through isolated receiver and decoder modules', () => {
     const env = { ...process.env, RAPHAEL_VOICE_CAPTURE_TEST_CHILD: '1' }; delete env.NODE_TEST_CONTEXT;
-    const result = spawnSync(process.execPath, ['--experimental-test-module-mocks', '--test', fileURLToPath(import.meta.url)], { env, encoding: 'utf8', timeout: 20000 });
+    const result = spawnSync(process.execPath, ['--experimental-test-module-mocks', '--test', '--test-reporter=tap', fileURLToPath(import.meta.url)], { env, encoding: 'utf8', timeout: 20000 });
     assert.ifError(result.error); assert.equal(result.status, 0, `${result.stdout}\n${result.stderr}`);
     assert.match(result.stdout, /# tests 8\b/);
   });
@@ -43,7 +43,14 @@ if (process.env.RAPHAEL_VOICE_CAPTURE_TEST_CHILD !== '1') {
       authorizeParticipant: options.missingAuthority ? undefined : scope => options.authorizeParticipant ? options.authorizeParticipant(scope) : true,
       captureRuntime: options.missingAuthority ? undefined : async (...args) => options.captureRuntime ? options.captureRuntime(...args) : runtime });
     t.after(async () => { await voice.stop(); store.close(); });
-    const speak = async () => { conn.receiver.speaking.emit('start', player); const decoder = lastDecoder; await flush(); return decoder; };
+    const speak = async () => {
+      const previous = lastDecoder; conn.receiver.speaking.emit('start', player);
+      for (let attempt = 0; attempt < 100; attempt++) {
+        if (lastDecoder !== previous && lastDecoder?.listenerCount('data')) return lastDecoder;
+        await flush();
+      }
+      assert.fail('Authorized voice decoder was not ready.');
+    };
     return { store, session, voice, conn, calls, gaps, playerMember, speak, get joins() { return joins; }, get runtime() { return runtime; }, set runtime(value) { runtime = value; } };
   }
 
@@ -52,13 +59,16 @@ if (process.env.RAPHAEL_VOICE_CAPTURE_TEST_CHILD !== '1') {
     await assert.rejects(f.voice.start(f.session.id, host), /membership and Obus host authority/); assert.equal(f.joins, 0);
   });
 
-  test('audio received before participant authority resolves is discarded with an explicit gap', async t => {
-    const allow = deferred();
-    const f = fixture(t, { authorizeParticipant: () => allow.promise }); await f.voice.start(f.session.id, host);
-    f.conn.receiver.speaking.emit('start', player); const decoder = lastDecoder, early = Buffer.alloc(20000, 8);
-    decoder.emit('data', early); assert.ok(early.every(value => value === 0)); assert.equal(f.calls.length, 0); assert.equal(f.gaps.length, 1);
-    allow.resolve(true); await flush(); const bytes = Buffer.alloc(20000, 7); decoder.emit('data', bytes); decoder.emit('end'); await flush();
-    assert.equal(f.calls.length, 1); assert.ok(bytes.every(value => value === 0));
+  test('decoder and subscription wait for current participant authority before receiving audio', async t => {
+    const allow = deferred(), entered = deferred();
+    const f = fixture(t, { authorizeParticipant: () => { entered.resolve(); return allow.promise; } }); await f.voice.start(f.session.id, host);
+    const previous = lastDecoder; let subscriptions = 0;
+    const subscribe = f.conn.receiver.subscribe; f.conn.receiver.subscribe = (...args) => { subscriptions++; return subscribe(...args); };
+    const speaking = f.speak(); await entered.promise;
+    assert.equal(lastDecoder, previous); assert.equal(subscriptions, 0); assert.equal(f.calls.length, 0);
+    allow.resolve(true); const decoder = await speaking, bytes = Buffer.alloc(20000, 7);
+    decoder.emit('data', bytes); decoder.emit('end'); await flush();
+    assert.equal(subscriptions, 1); assert.equal(f.calls.length, 1); assert.ok(bytes.every(value => value === 0));
     assert.equal(f.calls[0].segment.context.scope.owner, player); assert.equal(f.calls[0].segment.context.session, f.session.id);
   });
 
@@ -86,10 +96,10 @@ if (process.env.RAPHAEL_VOICE_CAPTURE_TEST_CHILD !== '1') {
   });
 
   test('withdrawal and regrant during upload authorization cannot reuse the captured consent epoch', async t => {
-    const entered = deferred(), release = deferred(); let checks = 0;
-    const f = fixture(t, { authorizeParticipant: () => { if (++checks === 2) { entered.resolve(); return release.promise; } return true; } });
+    const entered = deferred(), release = deferred(); let deferUpload = false;
+    const f = fixture(t, { authorizeParticipant: () => { if (deferUpload) { entered.resolve(); return release.promise; } return true; } });
     await f.voice.start(f.session.id, host); const decoder = await f.speak(), bytes = Buffer.alloc(20000, 4);
-    decoder.emit('data', bytes); decoder.emit('end'); await entered.promise;
+    decoder.emit('data', bytes); deferUpload = true; decoder.emit('end'); await entered.promise;
     f.store.consent(f.session.id, player, false); f.store.consent(f.session.id, player, true); release.resolve(true); await flush();
     assert.equal(f.calls.length, 0); assert.ok(bytes.every(value => value === 0));
   });
@@ -110,9 +120,9 @@ if (process.env.RAPHAEL_VOICE_CAPTURE_TEST_CHILD !== '1') {
   });
 
   test('a stopped voice generation cannot authorize an upload that was waiting on membership', async t => {
-    const entered = deferred(), release = deferred(); let checks = 0;
-    const f = fixture(t, { authorizeParticipant: () => { if (++checks === 2) { entered.resolve(); return release.promise; } return true; } });
-    await f.voice.start(f.session.id, host); const decoder = await f.speak(); decoder.emit('data', Buffer.alloc(20000, 7)); decoder.emit('end'); await entered.promise;
+    const entered = deferred(), release = deferred(); let deferUpload = false;
+    const f = fixture(t, { authorizeParticipant: () => { if (deferUpload) { entered.resolve(); return release.promise; } return true; } });
+    await f.voice.start(f.session.id, host); const decoder = await f.speak(); decoder.emit('data', Buffer.alloc(20000, 7)); deferUpload = true; decoder.emit('end'); await entered.promise;
     const stopping = f.voice.stop(); release.resolve(true); await stopping;
     assert.equal(f.calls.length, 0); assert.equal(f.voice.status(), 'disconnected');
   });

@@ -8,12 +8,31 @@ Both interfaces use the same persistent service. The host publishes the observab
 
 The code and offline tests are implemented. Live use requires a running host, its credentials, and a published current view. The planning page, tactical `/play` page and Discord adapters do not automatically publish Witnesslight scene snapshots. Publish a new projection after narration, movement, visibility changes or resolved player choices. The existing tactical engine can be connected to `publishScene` for automation; its precise **Map image** is a separate rendering of game state. Until that connection is implemented, the host supplies each updated narrative view.
 
-1. In `raphael-council`, copy `.env.example` to `.env.local` if that file does not already exist. Runtime image generation is routed exclusively through the private Obus game agent and is available only when it advertises an enabled local image route. Configure providers in Obus; no provider key belongs in the game. Set the existing Discord settings for the bot. Never put keys in browser code or chat. The game's Image API connection is separate from the built-in image tool used to make the 66-image art library.
+Approved character portraits are now carried into tactical scene subjects when the portrait record belongs to the visible actor owner. The image service accepts those files only from the configured portrait directory, keeps their paths out of player-facing projections, and uses them as appearance references when a player focuses on that visible character or requests the whole scene. Portrait generation is opt-in with `RAPHAEL_PORTRAIT_ENABLED=1`; it runs after character approval and records a failed portrait separately so sheet acceptance is not blocked.
+
+1. In `raphael-council`, copy `.env.example` to `.env.local` if that file does not already exist. Runtime image generation defaults to the private Obus game agent and is available only when it advertises an enabled local image route. You may select `RAPHAEL_IMAGE_BACKEND=comfyui` for a reviewed local ComfyUI workflow or `RAPHAEL_IMAGE_BACKEND=nano-banana` for the local AI-DnD FastAPI adapter. Configure provider credentials in the provider service; no provider key belongs in the game. Set the existing Discord settings for the bot. Never put keys in browser code or chat. The game's Image API connection is separate from the built-in image tool used to make the 66-image art library.
 2. Use the same `RAPHAEL_IMAGE_DATA_DIR` for the Discord process and browser host. The default is local application data under `Raphael/scene-images`, outside OneDrive. Leave `RAPHAEL_ART_ROOT` empty while the art library remains beside this project; set an absolute path when moving it.
 3. Copy `images/opening-scene.example.json` to a host scene record and set its campaign, visible facts and source event. Use the opening example unchanged only for that actual opening. Publish with `npm run images:host -- publish path/to/scene.json`. Publication records an observation snapshot; it never moves a hero or changes the story itself.
 4. Run `npm run dev:game` for the local Node browser host, or `npm run build:game` then `npm run start:game`. This mode supports local SQLite and image files. The existing Cloudflare/Sites presentation mode is not the persistent image host. Remote players need an appropriately hosted Node app with persistent storage and HTTPS; no remote deployment is performed by this feature.
 5. For Discord, run the existing `npm run bot:publish` once to update the pinned desk when ready, then `npm run bot`. Publishing sends a message to the configured channel; it is not part of local verification. The desk includes **Show what I see**. Existing scene/turn/pause cards also expose it when the adventure adapter renders those cards.
 6. Players connect their browser privately using **Show what I see → Browser access** in Discord, or a code issued by the host with `npm run images:host -- access greyharbor DISCORD_PLAYER_ID`. Enter it in the browser's image panel. Use the same player identifier in individual scene records. Codes expire after 30 days; `npm run images:host -- revoke greyharbor DISCORD_PLAYER_ID` revokes that player's browser codes, including existing browser sessions. Revoke codes when a player leaves the campaign.
+
+### Local AI-DnD Nano Banana adapter
+
+The project includes a local-only adapter for the referenced AI-DnD FastAPI
+contract. Set `RAPHAEL_IMAGE_BACKEND=nano-banana` and leave
+`RAPHAEL_NANO_BANANA_URL=http://127.0.0.1:8000/api/v1` unless the local service
+uses another loopback port. The adapter checks `GET /health`, sends the
+documented `POST /api/v1/images/generate` fields (`subject_type`,
+`subject_name`, `prompt`, and `aspect_ratio`), accepts a local `image_url` or
+data URI, and normalizes the result to PNG. The API service owns its Gemini
+credentials; they are not copied into this project.
+
+The reference API does not define raw reference-image uploads for Nano Banana.
+If an approved reference is required, the runtime routes that job to ComfyUI
+or Obus instead of silently discarding the reference. PixelLab remains an
+explicit future MCP provider; it is not assumed to be installed. See the
+specialist contract at `../agents/scene-image-generation/SKILL.md`.
 
 Check local configuration without connecting to a provider or Discord:
 

@@ -1,7 +1,7 @@
 {
   "inputs": {
     "chronicle/store.mjs": {
-      "bytes": 15227,
+      "bytes": 22971,
       "imports": [
         {
           "path": "node:sqlite",
@@ -37,8 +37,56 @@
       ],
       "format": "esm"
     },
+    "ai/evidence-upload.mjs": {
+      "bytes": 5078,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "ai/host-control.mjs": {
+      "bytes": 20533,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "ai/evidence-upload.mjs",
+          "kind": "import-statement",
+          "original": "./evidence-upload.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "ai/evidence-selection.mjs": {
+      "bytes": 5105,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "ai/host-control.mjs",
+          "kind": "import-statement",
+          "original": "./host-control.mjs"
+        },
+        {
+          "path": "ai/evidence-upload.mjs",
+          "kind": "import-statement",
+          "original": "./evidence-upload.mjs"
+        }
+      ],
+      "format": "esm"
+    },
     "chronicle/service.mjs": {
-      "bytes": 16494,
+      "bytes": 22371,
       "imports": [
         {
           "path": "node:crypto",
@@ -64,6 +112,16 @@
           "path": "chronicle/report.mjs",
           "kind": "import-statement",
           "original": "./report.mjs"
+        },
+        {
+          "path": "ai/host-control.mjs",
+          "kind": "import-statement",
+          "original": "../ai/host-control.mjs"
+        },
+        {
+          "path": "ai/evidence-selection.mjs",
+          "kind": "import-statement",
+          "original": "../ai/evidence-selection.mjs"
         }
       ],
       "format": "esm"
@@ -117,7 +175,7 @@
       "format": "esm"
     },
     "discord/chronicle-core.mjs": {
-      "bytes": 5215,
+      "bytes": 6867,
       "imports": [
         {
           "path": "node:crypto",
@@ -128,6 +186,11 @@
           "path": "chronicle/service.mjs",
           "kind": "import-statement",
           "original": "../chronicle/service.mjs"
+        },
+        {
+          "path": "chronicle/store.mjs",
+          "kind": "import-statement",
+          "original": "../chronicle/store.mjs"
         },
         {
           "path": "discord/chronicle-adapter.mjs",
@@ -142,8 +205,117 @@
       ],
       "format": "esm"
     },
+    "chronicle/music.mjs": {
+      "bytes": 2154,
+      "imports": [],
+      "format": "esm"
+    },
+    "chronicle/obus-evidence.mjs": {
+      "bytes": 10464,
+      "imports": [
+        {
+          "path": "ai/host-control.mjs",
+          "kind": "import-statement",
+          "original": "../ai/host-control.mjs"
+        },
+        {
+          "path": "ai/evidence-selection.mjs",
+          "kind": "import-statement",
+          "original": "../ai/evidence-selection.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "chronicle/obus-provider.mjs": {
+      "bytes": 27574,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "chronicle/obus-evidence.mjs",
+          "kind": "import-statement",
+          "original": "./obus-evidence.mjs"
+        },
+        {
+          "path": "ai/host-control.mjs",
+          "kind": "import-statement",
+          "original": "../ai/host-control.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "auth/discord-policy.mjs": {
+      "bytes": 1625,
+      "imports": [],
+      "format": "esm"
+    },
+    "packages/chronicle/davy-host.mjs": {
+      "bytes": 5911,
+      "imports": [
+        {
+          "path": "node:async_hooks",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "discord/chronicle-core.mjs",
+          "kind": "import-statement",
+          "original": "../../discord/chronicle-core.mjs"
+        },
+        {
+          "path": "chronicle/store.mjs",
+          "kind": "import-statement",
+          "original": "../../chronicle/store.mjs"
+        },
+        {
+          "path": "chronicle/obus-provider.mjs",
+          "kind": "import-statement",
+          "original": "../../chronicle/obus-provider.mjs"
+        },
+        {
+          "path": "chronicle/obus-evidence.mjs",
+          "kind": "import-statement",
+          "original": "../../chronicle/obus-evidence.mjs"
+        },
+        {
+          "path": "auth/discord-policy.mjs",
+          "kind": "import-statement",
+          "original": "../../auth/discord-policy.mjs"
+        }
+      ],
+      "format": "esm"
+    },
+    "chronicle/voice-receiver.mjs": {
+      "bytes": 15470,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@discordjs/voice",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "chronicle/store.mjs",
+          "kind": "import-statement",
+          "original": "./store.mjs"
+        },
+        {
+          "path": "prism-media",
+          "kind": "dynamic-import",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
     "packages/chronicle/index.mjs": {
-      "bytes": 525,
+      "bytes": 796,
       "imports": [
         {
           "path": "discord/chronicle-core.mjs",
@@ -161,9 +333,29 @@
           "original": "../../chronicle/commands.mjs"
         },
         {
+          "path": "chronicle/music.mjs",
+          "kind": "import-statement",
+          "original": "../../chronicle/music.mjs"
+        },
+        {
           "path": "discord/chronicle-adapter.mjs",
           "kind": "import-statement",
           "original": "../../discord/chronicle-adapter.mjs"
+        },
+        {
+          "path": "packages/chronicle/davy-host.mjs",
+          "kind": "import-statement",
+          "original": "./davy-host.mjs"
+        },
+        {
+          "path": "auth/discord-policy.mjs",
+          "kind": "import-statement",
+          "original": "../../auth/discord-policy.mjs"
+        },
+        {
+          "path": "chronicle/voice-receiver.mjs",
+          "kind": "import-statement",
+          "original": "../../chronicle/voice-receiver.mjs"
         }
       ],
       "format": "esm"
@@ -231,6 +423,36 @@
           "path": "node:crypto",
           "kind": "import-statement",
           "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:async_hooks",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@discordjs/voice",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "prism-media",
+          "kind": "dynamic-import",
+          "external": true
         }
       ],
       "exports": [
@@ -239,37 +461,68 @@
         "ChronicleError",
         "ChronicleStore",
         "SESSION_COMMAND",
+        "createAdaptiveMusic",
         "createChronicleRuntime",
-        "createChronicleRuntimeCore"
+        "createChronicleRuntimeCore",
+        "createDavyChronicleHost",
+        "createVoiceReceiver",
+        "discordCampaignBindings"
       ],
       "entryPoint": "packages/chronicle/index.mjs",
       "inputs": {
         "discord/chronicle-core.mjs": {
-          "bytesInOutput": 4641
+          "bytesInOutput": 6098
         },
         "chronicle/service.mjs": {
-          "bytesInOutput": 15849
+          "bytesInOutput": 21778
         },
         "chronicle/store.mjs": {
-          "bytesInOutput": 15605
+          "bytesInOutput": 23037
         },
         "chronicle/report.mjs": {
           "bytesInOutput": 3325
         },
+        "ai/evidence-upload.mjs": {
+          "bytesInOutput": 741
+        },
+        "ai/host-control.mjs": {
+          "bytesInOutput": 7474
+        },
+        "ai/evidence-selection.mjs": {
+          "bytesInOutput": 4746
+        },
         "discord/chronicle-adapter.mjs": {
-          "bytesInOutput": 15391
+          "bytesInOutput": 15407
         },
         "chronicle/dispatch.mjs": {
-          "bytesInOutput": 5517
+          "bytesInOutput": 5540
         },
         "chronicle/commands.mjs": {
-          "bytesInOutput": 10255
+          "bytesInOutput": 10287
         },
         "packages/chronicle/index.mjs": {
           "bytesInOutput": 0
+        },
+        "chronicle/music.mjs": {
+          "bytesInOutput": 2118
+        },
+        "packages/chronicle/davy-host.mjs": {
+          "bytesInOutput": 5174
+        },
+        "chronicle/obus-provider.mjs": {
+          "bytesInOutput": 27053
+        },
+        "chronicle/obus-evidence.mjs": {
+          "bytesInOutput": 8803
+        },
+        "auth/discord-policy.mjs": {
+          "bytesInOutput": 1208
+        },
+        "chronicle/voice-receiver.mjs": {
+          "bytesInOutput": 16338
         }
       },
-      "bytes": 71058
+      "bytes": 160038
     }
   }
 }

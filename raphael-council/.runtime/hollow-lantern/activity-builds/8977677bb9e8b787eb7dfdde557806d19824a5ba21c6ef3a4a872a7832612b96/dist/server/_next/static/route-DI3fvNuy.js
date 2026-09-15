@@ -1,0 +1,1 @@
+import{t as e}from"./http-BSzGlPN_.js";import{t}from"./runtime-LHWI5HCE.js";var n=`nodejs`,r=e(t),i=r.reachOptions,a=r.reach;export{i as GET,a as POST,n as runtime};

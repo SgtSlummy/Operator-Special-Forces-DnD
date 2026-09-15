@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-09-10T15:25:20.347Z",
+  "kind": "offline-public-scene-art-preparation",
+  "provider": "AUTOMATIC1111 loopback",
+  "model": "v1-5-pruned-emaonly.safetensors [6ce0161689]",
+  "sceneId": "coastal-road",
+  "request": {
+    "seed": 29091002,
+    "prompt": "Hand painted fantasy adventure background, wide cinematic composition, winding dirt coastal road along a windswept grassy headland, slate blue sea and chalk cliffs, distant small medieval signal tower on the horizon, clear overcast daylight, earthy ochre path and muted sage grass, beautifully painted environment concept art, restrained teal and antique gold palette, layered landscape, readable shapes, peaceful but mysterious, empty scene, no people",
+    "negative_prompt": "photograph, photorealistic, modern furniture, computer, screen, electricity, neon, science fiction, futuristic, guns, people, face, text, letters, labels, watermark, signature, logo, grid, blurry, low quality, distorted architecture, oversaturated",
+    "steps": 28,
+    "width": 768,
+    "height": 448,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "batch_size": 1,
+    "n_iter": 1,
+    "send_images": true,
+    "save_images": false
+  },
+  "elapsedMs": 6283,
+  "sha256": "d3209cb86d7986e5cd8161bd7814b77b0a9d4eb6b5e756a13ec7d372a9b76eb1",
+  "path": "C:\\Users\\Hermes\\LocalFiles\\hollow-lantern\\scene-design-20260910\\coastal-road-candidate.png",
+  "approved": true,
+  "gameplayCommands": 0,
+  "visualReview": "Reviewed for public scene atmosphere only; illustration does not define geometry, obstacles, object positions, or discoveries.",
+  "approvedPath": "C:\\Users\\Hermes\\Projects\\Operator Special Forces Dungeon and Dragons\\campaign-art\\hollow-lantern\\scenes\\coastal-road-sd.png"
+}

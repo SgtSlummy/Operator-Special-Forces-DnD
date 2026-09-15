@@ -1,0 +1,1 @@
+import{t as e}from"./http-CwLk5738.js";import{t}from"./runtime-CfnE9SFh.js";var n=`nodejs`,r=e(t);async function i(e,t){return r.imageContent(e,(await t.params).id)}export{i as GET,n as runtime};

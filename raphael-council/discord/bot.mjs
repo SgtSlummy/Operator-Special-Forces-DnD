@@ -5,6 +5,7 @@ import { pathToFileURL } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { CharacterStore } from '../characters/store.mjs';
 import { ImportService } from '../characters/service.mjs';
+import { getCharacterPortraitService } from '../characters/runtime.mjs';
 import { checkOcrAssets } from '../characters/pdf.mjs';
 import { createImportHandler, authenticateInteraction } from './import-adapter.mjs';
 import { entryScreen } from './import-ui.mjs';
@@ -21,6 +22,7 @@ import { createCouncilHandler } from './council-adapter.mjs';
 import { createDepartureHandler } from './departure-adapter.mjs';
 import { createChronicleRuntime, registerSessionCommand } from './chronicle-runtime.mjs';
 import { createLaunchHandler, registerLaunchCommand } from './launch-adapter.mjs';
+import { createCharacterThreadDelivery } from './character-thread-delivery.mjs';
 
 // Discord REST expects binary files beside the JSON body, never inside it.
 export function restPayload(payload) {
@@ -49,7 +51,7 @@ export function readConfig(env = process.env) {
     campaignId: env.RAPHAEL_CAMPAIGN_ID, playerIds, playerRoleId, dmIds, dmRoleId, journalChannelId, publicOrigin,
     chronicleEnabled: env.RAPHAEL_CHRONICLE_ENABLED === '1',
     chronicleDir: resolve(env.RAPHAEL_CHRONICLE_DATA_DIR || join(localBase, 'Raphael', 'chronicle', env.RAPHAEL_CAMPAIGN_ID)),
-    dataDir: resolve(env.RAPHAEL_DATA_DIR || join(localBase, 'Raphael', 'character-importer')) };
+    dataDir: resolve(env.RAPHAEL_DATA_DIR || join(localBase, 'Raphael', 'character-importer')), portraitEnabled: env.RAPHAEL_PORTRAIT_ENABLED === '1' };
 }
 import { createAdjudicationHandler } from './adjudication-adapter.mjs';
 import { createReactionsHandler } from './reactions-adapter.mjs';
@@ -65,7 +67,8 @@ export async function main(args = process.argv.slice(2)) {
   }
   const log = event => console.log(JSON.stringify({ component: 'character-importer', ...event }));
   const store = new CharacterStore(join(config.dataDir, 'characters.sqlite'));
-  const service = new ImportService(store, join(config.dataDir, 'sources'), { log });
+  const portraitService = getCharacterPortraitService();
+  const service = new ImportService(store, join(config.dataDir, 'sources'), { log, portraitService });
   let hostLock;
   if (!controlOnly) {
     // A separate SQLite lock survives concurrent starts but is automatically
@@ -87,14 +90,18 @@ export async function main(args = process.argv.slice(2)) {
   const game = getGameStore();
   const delivery = new BoardDelivery({ game, transport, secret: config.token,
     authorize: async (scope, context) => {
-      if (scope.campaign !== config.campaignId || context.guild !== config.guildId || context.channel !== config.channelId) return false;
+      if (scope.campaign !== config.campaignId || context.guild !== config.guildId || (context.channel !== config.channelId && !config.characterThreadIds?.has(context.channel))) return false;
       const member = await client.rest.get(Routes.guildMember(config.guildId, scope.owner));
       try { authenticateInteraction({ guild_id: context.guild, channel_id: context.channel, member }, config); return true; }
       catch { return false; }
     } });
   const imageHandler = createImageHandler({ service: imageService, game, config, transport, log });
+  const characterThreads = createCharacterThreadDelivery({ client, config, store, log });
   const adventureHandler = createAdventureHandler({ game, config, transport, delivery, log });
-  const importHandler = createImportHandler({ store, service, config, transport, log });
+  const importHandler = createImportHandler({ store, service, config, transport, onCharacterApproved: async (character, scope) => {
+    try { await characterThreads.ensure(scope, character); }
+    catch (error) { log({ outcome: 'character_thread_failed', campaign: scope.campaign, owner: scope.owner, code: error?.code ?? 'THREAD_FAILED' }); }
+  }, log });
   const companionHandler = createCompanionHandler({ game, characters: store, config, transport, log });
   const checksHandler = createChecksHandler({ game, config, transport, log });
   const reactionsHandler = createReactionsHandler({ game, config, transport, log });

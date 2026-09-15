@@ -3,6 +3,8 @@ import { mkdir, readFile, writeFile, rename } from 'node:fs/promises';
 import { join } from 'node:path';
 import { bounded, ChronicleError } from './store.mjs';
 import { makeReport, thumbnail } from './report.mjs';
+import { EVIDENCE_CONTRACT, prepareEvidenceProjection } from '../ai/host-control.mjs';
+import { isEvidenceAppend } from '../ai/evidence-selection.mjs';
 
 export function chunks(entries, limit = 18000) {
   const out = []; let current = [], size = 0;
@@ -17,6 +19,7 @@ export function chunks(entries, limit = 18000) {
 export class ChronicleService {
   constructor({ store, provider, images, dataDir, now = Date.now }) {
     Object.assign(this, { store, provider, images, dataDir, now }); this.tasks = new Map(); this.audio = new Set(); this.retryAt = new Map();
+    this.evidenceSeen = new Set(); this.evidenceCursor = '';
   }
   once(key, work) {
     if (this.tasks.has(key)) return this.tasks.get(key);
@@ -30,11 +33,87 @@ export class ChronicleService {
       });
     }
   }
+  evidenceTick() {
+    const fromStore = typeof this.provider.syncStoredEvidence === 'function';
+    const synchronize = fromStore ? this.provider.syncStoredEvidence.bind(this.provider)
+      : typeof this.provider.syncEvidence === 'function' ? this.provider.syncEvidence.bind(this.provider) : null;
+    if (!synchronize) return Promise.resolve(null);
+    return this.once('evidence-sync', async () => {
+      const now = this.now();
+      const due = this.store.all().flatMap(session => {
+        let state = { revision: -1, lastSuccess: 0, attempts: 0, nextAttempt: 0, lastError: null };
+        try {
+          state = this.store.evidenceSync(session.id);
+          if (state.nextAttempt > now) return [];
+          const revision = this.store.evidenceRevision(session.id);
+          return !this.evidenceSeen.has(session.id) || state.revision !== revision || now - state.lastSuccess >= 30000
+            ? [{ session, state, revision }] : [];
+        } catch (error) { return [{ session, state, error }]; }
+      }).sort((a, b) => a.session.id.localeCompare(b.session.id));
+      const item = due.find(value => value.session.id > this.evidenceCursor) ?? due[0];
+      if (!item) return null;
+      const { session, state, revision } = item;
+      this.evidenceCursor = session.id;
+      try {
+        if (item.error) throw item.error;
+        const projection = prepareEvidenceProjection({ contract: EVIDENCE_CONTRACT, campaign: session.campaign,
+          session: session.id, ...this.store.evidenceProjection(session.id) });
+        const receipt = await synchronize({ campaign: session.campaign, session: session.id,
+          ...(fromStore ? {} : { owner: session.host }) });
+        this.store.transaction(() => {
+          const current = prepareEvidenceProjection({ contract: EVIDENCE_CONTRACT, campaign: session.campaign,
+            session: session.id, ...this.store.evidenceProjection(session.id) });
+          if (receipt?.contract !== 'raph-obus-game-evidence-v1' || receipt.campaign !== session.campaign ||
+              receipt.session !== session.id || receipt.revision !== revision || projection.revision !== revision || !isEvidenceAppend(projection, current) ||
+              !['saved', 'unchanged'].includes(receipt.status) || receipt.sourceCount !== projection.sources.length ||
+              receipt.participantCount !== projection.participants.length) {
+            throw Object.assign(new Error('Evidence changed during synchronization.'), { code: 'EVIDENCE_STALE' });
+          }
+          this.store.saveEvidenceSync(session.id, { revision, lastSuccess: this.now(), attempts: 0, nextAttempt: 0, lastError: null });
+        });
+        this.evidenceSeen.add(session.id);
+        return receipt;
+      } catch (error) {
+        const attempts = Math.min(state.attempts + 1, 1000000);
+        this.store.saveEvidenceSync(session.id, { revision: state.revision, lastSuccess: state.lastSuccess, attempts,
+          nextAttempt: this.now() + Math.min(60000, 1000 * 2 ** Math.min(attempts - 1, 6)),
+          lastError: error?.code === 'EVIDENCE_STALE' ? 'stale' : 'unavailable' });
+        return null;
+      }
+    });
+  }
+  sourceChunks(entries) {
+    if (typeof this.provider.writeReferences !== 'function') return chunks(entries);
+    const groups = []; let group = [], size = 2;
+    for (const record of chunks(entries).flat()) {
+      const length = JSON.stringify(record).length;
+      if (length + 2 > 14000) throw new ChronicleError('A source entry exceeds the bounded summary size. Correct or shorten the source before retrying.');
+      if (group.length === 32 || size + length + (group.length ? 1 : 0) > 14000) {
+        groups.push(group); group = []; size = 2;
+      }
+      size += length + (group.length ? 1 : 0); group.push(record);
+    }
+    if (group.length) groups.push(group);
+    return groups;
+  }
+  referenceRequest(id, evidence) {
+    const s = this.store.get(id), projection = this.store.evidenceProjection(id);
+    const sources = new Map(projection.sources.map(source => [source.ref, source]));
+    const references = evidence.map(entry => {
+      const source = entry && sources.get(`chronicle:${id}:${entry.ref}`);
+      if (!source || source.deleted || source.text !== entry.text) throw new ChronicleError('The evidence changed. Request a fresh summary.');
+      return { ref: source.ref, revision: source.revision };
+    });
+    return { references, context: { campaign: s.campaign, owner: s.host, session: id, sourceRevision: projection.revision } };
+  }
   write(id, kind, evidence) {
     const s = this.store.get(id);
-    // External consent is stored separately from capture consent. Full transcripts
-    // and recaps remain local until bounded, opted-in excerpt routing is implemented.
-    // Obus owns every AI request, including local routing and retrieval.
+    if (kind === 'summary' && typeof this.provider.writeReferences === 'function' && Array.isArray(evidence) && evidence.some(e => typeof e !== 'string')) {
+      const { references, context } = this.referenceRequest(id, evidence);
+      return this.provider.writeReferences(kind, references, context);
+    }
+    // Chapter synthesis and final recaps stay explicitly local. Obus owns every
+    // model call; unclassified inline evidence never enables an external route.
     return this.provider.write(kind, evidence, { campaign: s.campaign, owner: s.host, session: id, exportable: false, sourceRevision: this.store.entries(id).at(-1)?.seq || 0 });
   }
   async cue(id) {
@@ -96,13 +175,27 @@ export class ChronicleService {
       const evidence = this.store.evidence(id, snapshot.watermark);
       if (!evidence.length) { const s = this.store.get(id); s.nextDue = this.now() + s.minutes * 60000; this.store.save(s); return null; }
       const end = evidence.at(-1).seq, correctionVersion = this.store.entries(id).filter(e => e.kind === 'correction').at(-1)?.seq ?? 0;
-      const summaries = [];
-      for (const group of chunks(evidence)) summaries.push(await this.write(id, 'summary', group));
+      const groups = this.sourceChunks(evidence), summaries = [];
+      // Capture every chunk before the first await. Checks are synchronous and
+      // run again in the final transaction, including consent for earlier chunks.
+      const guards = typeof this.provider.writeReferences === 'function' && typeof this.provider.captureReferences === 'function'
+        ? groups.map(group => {
+          const { references, context } = this.referenceRequest(id, group);
+          const guard = this.provider.captureReferences('summary', references, context);
+          if (typeof guard !== 'function') throw new ChronicleError('A synchronous evidence guard is required.');
+          return guard;
+        }) : null;
+      for (const group of groups) summaries.push(await this.write(id, 'summary', group));
       return this.store.transaction(() => {
         const s = this.store.get(id), currentCorrection = this.store.entries(id).filter(e => e.kind === 'correction').at(-1)?.seq ?? 0;
-        if (!['active', 'paused'].includes(s.status) || currentCorrection !== correctionVersion || s.watermark !== snapshot.watermark) return null;
-        const entry = this.store.append(id, `summary:${snapshot.watermark}:${end}:${correctionVersion}`, 'summary', {
-          text: summaries.join('\n\n'), from: evidence[0].seq, through: end, correctionVersion,
+        if (!['active', 'paused'].includes(s.status) || s.watermark !== snapshot.watermark) return null;
+        if (guards) {
+          try { for (const guard of guards) if (guard() !== undefined) return null; }
+          catch { return null; }
+        } else if (currentCorrection !== correctionVersion) return null;
+        const version = guards ? currentCorrection : correctionVersion;
+        const entry = this.store.append(id, `summary:${snapshot.watermark}:${end}:${version}`, 'summary', {
+          text: summaries.join('\n\n'), from: evidence[0].seq, through: end, correctionVersion: version,
         });
         s.watermark = end; s.nextDue = this.now() + s.minutes * 60000; this.store.save(s); return entry;
       });
@@ -149,7 +242,7 @@ export class ChronicleService {
       const pending = this.store.entries(id).filter(e => e.kind === 'image-request' && !this.store.find(id, `image-result:${e.seq}`));
       if (pending.length) throw new ChronicleError('Capture stopped. Scene images are still rendering; the recap will finish automatically when they are ready.');
       // Final recap always reads the entire corrected source record, not just the last time window.
-      const groups = chunks(this.store.evidence(id)), chapters = [];
+      const groups = this.sourceChunks(this.store.evidence(id)), chapters = [];
       for (let i = 0; i < groups.length; i++) {
         const source = `final-chapter:${i}`;
         const cached = this.store.find(id, source);

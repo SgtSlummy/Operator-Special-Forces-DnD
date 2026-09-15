@@ -1,0 +1,101 @@
+{
+  "roomId": "R01",
+  "name": "Brass Vestibule",
+  "dimensionsFeet": {
+    "width": 18,
+    "depth": 12,
+    "height": 10
+  },
+  "horizontalSectionFeet": 4,
+  "views": {
+    "r01-cutaway": {
+      "width": 1600,
+      "height": 1200,
+      "origin": [
+        318.3778,
+        753.4591
+      ],
+      "xAxis": [
+        1072.2213,
+        979.6618
+      ],
+      "yAxis": [
+        611.5391,
+        494.9417
+      ],
+      "zAxis": [
+        318.3778,
+        337.6767
+      ]
+    },
+    "r01-floor-slice": {
+      "width": 1600,
+      "height": 1200,
+      "origin": [
+        266.6667,
+        955.5555
+      ],
+      "xAxis": [
+        1333.3333,
+        955.5555
+      ],
+      "yAxis": [
+        266.6667,
+        244.4444
+      ],
+      "zAxis": [
+        266.6667,
+        955.5555
+      ]
+    },
+    "r01-low-cutaway": {
+      "width": 1600,
+      "height": 1200,
+      "origin": [
+        270.2156,
+        678.1585
+      ],
+      "xAxis": [
+        1099.4434,
+        941.1597
+      ],
+      "yAxis": [
+        592.693,
+        377.5856
+      ],
+      "zAxis": [
+        270.2156,
+        230.5461
+      ]
+    }
+  },
+  "features": [
+    {
+      "id": "umbrella-stand",
+      "name": "Umbrella stand",
+      "x": 0.07222222222222223,
+      "y": 0.16666666666666666,
+      "z": 0
+    },
+    {
+      "id": "R01-a",
+      "name": "Public service roster",
+      "x": 0.4666666666666667,
+      "y": 0.975,
+      "z": 0.55
+    },
+    {
+      "id": "R01-b",
+      "name": "Speaking tube",
+      "x": 0.16666666666666666,
+      "y": 0.9416666666666668,
+      "z": 0.48
+    }
+  ],
+  "limits": [
+    "Door and furnishing placements are authored illustration coordinates, pending merge with the tactical catalog.",
+    "No player discoveries, secret mechanisms or check results are asserted.",
+    "Full room is one occupied floor; the four-foot slice is an architectural cut, not a second story."
+  ],
+  "generator": "Blender 4.5.9 Cycles; local Stable Diffusion surface images; deterministic measured geometry"
+}

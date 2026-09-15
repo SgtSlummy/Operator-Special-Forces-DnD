@@ -1,12 +1,16 @@
 {
   "name": "@operator/obus-chronicle-provider",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "esbuild": "0.27.3",
   "node": ">=22.16.0",
   "dependencies": {},
   "sources": {
-    "ai/obus.mjs": "b5d596d1deb6d4d6263d50a3dc9d2aa1ce81aecdf5fd7c201f72329917393f87",
-    "chronicle/obus-provider.mjs": "7f4fb6c17941e86fee2d272b6e2129e95307c0cc7885473d40abc1b9ae8319e6",
+    "ai/evidence-selection.mjs": "d16b702169ba0818103b32c1be710ea9f854f7e71203f0e1454737766c973b65",
+    "ai/evidence-upload.mjs": "79393a71b1b3d0977cf159c7f977814cebb12030a6f23dd2bdf5828cdaa11167",
+    "ai/host-control.mjs": "e1808f4a5c92330f5c83fedf53a6d1e11fd969587a87ae0232347a4972b8f157",
+    "ai/obus.mjs": "e357ae6ed9e0bf87740efb3bb07bb0a5412152a593ea4a793f93894abdc93d4f",
+    "chronicle/obus-evidence.mjs": "2d2275c3eb4b907fdbc21e72f5997cb63ab7d20ce107da53cec9c176ae3337b7",
+    "chronicle/obus-provider.mjs": "37d109db197ec96e10526c8df8671b69d73a59105d33819eec381a4c70c04a1e",
     "packages/obus-provider/index.mjs": "85da411ab607342ca119f8049cea707f399e23cdbd25cd2ccd0ca4dddfcc6a11"
   },
   "externalImports": [
@@ -15,8 +19,8 @@
     "node:os",
     "node:path"
   ],
-  "bytes": 22461,
-  "sha256": "2568cb108e40374a1f676226006f9c9b2dcd050528c6ce4497aa10f57f8805a6",
+  "bytes": 45497,
+  "sha256": "158a984101bf8ef9a4c5bc9ede3d1fca4a9e801ac4afdf7f7194b4b2986e7471",
   "exports": [
     "ObusTransport",
     "createObusChronicleProvider"

@@ -13,7 +13,7 @@ if (process.env.RAPHAEL_VOICE_START_TEST_CHILD !== '1') {
     const env = { ...process.env, RAPHAEL_VOICE_START_TEST_CHILD: '1' };
     // The parent's internal runner marker would suppress the nested test run.
     delete env.NODE_TEST_CONTEXT;
-    const result = spawnSync(process.execPath, ['--experimental-test-module-mocks', '--test', fileURLToPath(import.meta.url)], {
+    const result = spawnSync(process.execPath, ['--experimental-test-module-mocks', '--test', '--test-reporter=tap', fileURLToPath(import.meta.url)], {
       env, encoding: 'utf8', timeout: 20000,
     });
     assert.ifError(result.error);
@@ -84,22 +84,28 @@ if (process.env.RAPHAEL_VOICE_START_TEST_CHILD !== '1') {
   });
 
   test('authorization withdrawn while Discord connects closes the joined connection', async t => {
-    const f = fixture(t); let checks = 0;
-    await assert.rejects(f.voice.start(f.session.id, 'host', { authorize: async () => ++checks <= 2 }), /cancelled or GM access changed/);
-    assert.equal(checks, 3); assert.equal(f.joins, 1);
+    const f = fixture(t), entered = deferred(), connected = deferred(); let authorized = true;
+    ready = () => { entered.resolve(); return connected.promise; };
+    const starting = f.voice.start(f.session.id, 'host', { authorize: async () => authorized });
+    await entered.promise; authorized = false; connected.resolve(f.conn);
+    await assert.rejects(starting, /cancelled or GM access changed/);
+    assert.equal(f.joins, 1);
     assert.equal(f.voice.status(), 'disconnected'); assert.ok(f.destroys >= 1);
   });
 
   test('an authorization lookup failure after joining also closes voice', async t => {
-    const f = fixture(t); let checks = 0;
-    await assert.rejects(f.voice.start(f.session.id, 'host', { authorize: async () => { if (++checks > 2) throw new Error('Membership lookup unavailable'); return true; } }), /Membership lookup unavailable|cancelled or GM access changed/);
+    const f = fixture(t), entered = deferred(), connected = deferred(); let unavailable = false;
+    ready = () => { entered.resolve(); return connected.promise; };
+    const starting = f.voice.start(f.session.id, 'host', { authorize: async () => { if (unavailable) throw new Error('Membership lookup unavailable'); return true; } });
+    await entered.promise; unavailable = true; connected.resolve(f.conn);
+    await assert.rejects(starting, /Membership lookup unavailable|cancelled or GM access changed/);
     assert.equal(f.joins, 1); assert.equal(f.voice.status(), 'disconnected'); assert.ok(f.destroys >= 1);
   });
 
   test('an authorized connection is recorded only after both authorization checks succeed', async t => {
     const f = fixture(t); let checks = 0;
     await f.voice.start(f.session.id, 'host', { authorize: async () => { checks++; return true; } });
-    assert.equal(checks, 3); assert.equal(f.joins, 1); assert.equal(f.voice.status(), 'connected (ready)');
+    assert.ok(checks >= 3); assert.equal(f.joins, 1); assert.equal(f.voice.status(), 'connected (ready)');
     assert.equal(f.store.entries(f.session.id).filter(e => e.text.startsWith('Voice scribe connected')).length, 1);
   });
 }

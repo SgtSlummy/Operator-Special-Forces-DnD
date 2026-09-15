@@ -1,0 +1,59 @@
+{
+  "campaign": "operation-hollow-lantern",
+  "guildId": "1463393482306486387",
+  "parentId": "1546676505780944979",
+  "botId": "1540006061099188274",
+  "dmUserId": "1230264975533281312",
+  "spaces": {
+    "dm": {
+      "id": "1547344727542734879",
+      "name": "Hollow Lantern · DM",
+      "parentId": "1546676505780944979",
+      "type": 12,
+      "dmAdded": true,
+      "deliveryUncertain": false,
+      "panelMessageId": "1547357118380773567",
+      "panelRevision": 0
+    },
+    "fighter": {
+      "id": "1547344732576026735",
+      "name": "Hollow Lantern · Mara",
+      "parentId": "1546676505780944979",
+      "type": 12,
+      "dmAdded": true,
+      "deliveryUncertain": false,
+      "panelMessageId": "1547357133845037187",
+      "panelRevision": 0
+    },
+    "rogue": {
+      "id": "1547344736476733612",
+      "name": "Hollow Lantern · Kestrel",
+      "parentId": "1546676505780944979",
+      "type": 12,
+      "dmAdded": true,
+      "deliveryUncertain": false,
+      "panelMessageId": "1547357146729938944",
+      "panelRevision": 0
+    },
+    "cleric": {
+      "id": "1547344741023088811",
+      "name": "Hollow Lantern · Ash",
+      "parentId": "1546676505780944979",
+      "type": 12,
+      "dmAdded": true,
+      "deliveryUncertain": false,
+      "panelMessageId": "1547357166241976401",
+      "panelRevision": 0
+    },
+    "shop": {
+      "id": "1547344744135393362",
+      "name": "Hollow Lantern · Outfitter",
+      "parentId": "1546676505780944979",
+      "type": 12,
+      "dmAdded": true,
+      "deliveryUncertain": false,
+      "panelMessageId": "1547357172206145589",
+      "panelRevision": 0
+    }
+  }
+}

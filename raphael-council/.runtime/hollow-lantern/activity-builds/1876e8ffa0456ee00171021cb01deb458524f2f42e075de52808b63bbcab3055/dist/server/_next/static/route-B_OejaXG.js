@@ -1,0 +1,1 @@
+import{t as e}from"./http-DM5eJhQP.js";import{n as t}from"./runtime-B0RmmhBm.js";import{t as n}from"./runtime-DqZUSi2M.js";var r=`nodejs`,i=e(n,{getCharacters:t}),a=i.checkRequestOptions,o=i.requestCheck;export{a as GET,o as POST,r as runtime};

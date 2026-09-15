@@ -1,0 +1,211 @@
+// Kept self-contained so the report can embed this function in a portable HTML file.
+export function mountReplay(data, assets) {
+  const $ = id => document.getElementById(id);
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const steps = Array.isArray(data.steps) ? data.steps : [];
+  const available = new Set(assets);
+  const party = Array.isArray(data.party) ? data.party : [];
+  const draftKey = 'party-deck:draft:' + (data.session || 'replay');
+  const labels = { accept_characters: 'Accept characters', listen: 'Listen', move: 'Move', attack: 'Attack', end_turn: 'End turn', help_the_courier: 'Help the courier', decision: 'Carry the seal' };
+  let current = 0;
+  let enlarged = false;
+  let viewer = 'admin';
+  const words = value => String(value || '').replace(/[_-]+/g, ' ').replace(/^./, c => c.toUpperCase());
+  const actor = (step, id) => (step.actors || []).find(a => a.id === id);
+  const actorName = (step, id) => actor(step, id)?.name || party.find(p => p.id === id)?.name || 'The character';
+  const cell = p => p && Number.isFinite(p.x) && Number.isFinite(p.y) ? String.fromCharCode(65 + p.x) + (p.y + 1) : 'an unrecorded position';
+  const localImage = path => typeof path === 'string' && available.has(path) ? path : '';
+  const sceneImage = step => localImage('images/' + step.image?.approvedImage + '.png');
+  // Legacy player maps are not evidence of a visibility-scoped snapshot.
+  const mapImage = step => viewer === 'admin' ? localImage(step.mapImages?.admin) : viewer === 'adminTactical' ? localImage(step.mapImages?.adminTactical) : '';
+  function mapTitle(step) {
+    if (typeof step.mapScene === 'string') return step.mapScene;
+    return step.mapScene?.title || step.mapScene?.label || (step.map?.id === step.location?.id ? step.location?.title : words(step.map?.id)) || 'Recorded map';
+  }
+  function warnings(step) {
+    const items = Array.isArray(step.displayWarnings) ? step.displayWarnings : step.displayWarnings ? [step.displayWarnings] : [];
+    const messages = items.map(item => typeof item === 'string' ? item : item.message || item.text || item.summary || '').filter(Boolean);
+    if (!messages.length && step.map?.id && step.location?.id && step.map.id !== step.location.id) {
+      messages.push('The scene is ' + step.location.title + ', but the map still shows ' + mapTitle(step) + '. No map transition is recorded.');
+    }
+    return messages;
+  }
+  function actionTitle(step) {
+    const action = step.action || {};
+    if (action.type === 'move') return actorName(step, action.actorId) + ' moves to ' + cell(action.path?.at(-1));
+    if (action.type === 'attack') return actorName(step, action.actorId) + ' attacks';
+    if (action.type === 'end_turn') return actorName(step, action.actorId) + ' ends the turn';
+    if (action.type === 'decision') return action.choice || 'Make a decision';
+    return labels[action.type] || words(action.type) || 'Recorded moment';
+  }
+  function resultText(step) {
+    const action = step.action || {};
+    const notes = step.notes || {};
+    if (action.type === 'move') {
+      const path = (action.path || []).map(cell).join(' to ');
+      const remaining = notes.result?.movementRemaining;
+      return (notes.result?.stopped ? 'Movement stopped' : 'Moved') + (path ? ' along ' + path : '') + '. ' + (action.cost ? 'Cost: ' + action.cost + '. ' : '') + (remaining != null ? remaining + ' feet of movement remain.' : '');
+    }
+    if (action.type === 'attack') {
+      if (typeof action.roll?.hit !== 'boolean') return 'The attack was recorded; its outcome is unavailable.';
+      return (action.roll.critical ? 'Critical hit' : action.roll.hit ? 'Hit' : 'Miss') + ' against ' + actorName(step, action.targetId) + (action.roll.damage != null ? ' for ' + action.roll.damage + ' damage' : '') + '.';
+    }
+    if (action.type === 'end_turn') return notes.result?.complete ? 'The recorded encounter is complete.' : 'The turn ended. The initiative order advances.';
+    if (action.type === 'decision') return 'Decision recorded: ' + (action.choice || 'No choice text was saved.') + (notes.worldChange ? '. ' + words(notes.worldChange) + '.' : '');
+    if (action.type === 'accept_characters') return 'The party is ready. Character details are available below.';
+    if (action.type === 'listen' && notes.visibleLeads?.length) return 'Noticed: ' + notes.visibleLeads.join(', ') + '.';
+    return notes.consequence ? words(notes.consequence) + '.' : 'This moment was recorded without a separate outcome.';
+  }
+  function sceneText(step) {
+    if (step.notes?.visibleLeads?.length) return 'In view: ' + step.notes.visibleLeads.join(', ') + '.';
+    const description = step.location?.readAloud || step.readAloud || step.location?.description || '';
+    // The current session also stores renderer instructions in description; keep those in diagnostics.
+    const prose = description.split('\n').filter(line => !/^(Observable tactical scene:|Coordinates describe|Render only|Appearance is|Do not infer|Visible actors:|Visible effect zones:|Saved revision)/i.test(line.trim())).join(' ').trim();
+    return prose || 'The party is at ' + (step.location?.title || 'this location') + '. Review the recorded scene and saved DM map.';
+  }
+  function rollMarkup(step) {
+    const roll = step.action?.roll;
+    if (!roll) return '<p class="roll-note">No roll was needed for this moment.</p>';
+    const modifier = (roll.modifiers || []).reduce((total, m) => total + (Number(m.value) || 0), 0);
+    const values = [
+      ['d20', (roll.dice || []).join(', ') || 'Not recorded'],
+      ['Modifier', (modifier >= 0 ? '+' : '') + modifier],
+      ['Total', roll.total ?? 'Not recorded'],
+      ['Outcome', roll.critical ? 'Critical hit' : roll.hit === true ? 'Hit' : roll.hit === false ? 'Miss' : 'Not recorded']
+    ];
+    if (roll.damage != null) values.push(['Damage', roll.damage]);
+    return '<dl class="roll" aria-label="Recorded roll">' + values.map(([key, value]) => '<div><dt>' + esc(key) + '</dt><dd>' + esc(value) + '</dd></div>').join('') + '</dl>' + (roll.weapon ? '<p class="roll-note">' + esc(roll.weapon) + (roll.damageDice?.length ? ' · Damage dice: ' + esc(roll.damageDice.join(' + ')) + (roll.damageModifier != null ? ' + ' + esc(roll.damageModifier) : '') : '') + '</p>' : '');
+  }
+  function portrait(id) {
+    const key = String(id || '').startsWith('brine') ? 'brine' : id;
+    const path = localImage('images/portrait-' + key + '.png');
+    return path ? '<img class="portrait" src="' + esc(path) + '" alt="" width="54" height="64" loading="lazy">' : '';
+  }
+  function renderParty(step) {
+    $('party').innerHTML = party.length ? party.map(person => {
+      const state = actor(step, person.id);
+      return '<li>' + portrait(person.id) + '<div><strong>' + esc(person.name) + '</strong><p>' + esc(person.ancestry) + ' ' + esc(person.className) + ' · Level ' + esc(person.level) + '</p><p>HP ' + esc(state?.hp ?? person.hp ?? 'Unknown') + ' · AC ' + esc(state?.ac ?? person.ac ?? 'Unknown') + (state?.coordinate ? ' · ' + esc(state.coordinate) : '') + '</p></div></li>';
+    }).join('') : '<li>No party details were saved.</li>';
+  }
+  function renderCell() {
+    const selected = $('cell-select').value;
+    const found = (steps[current]?.tactical?.cells || []).find(item => item.label === selected);
+    if (!found) { $('cell-details').innerHTML = '<p class="muted">Choose a cell to read its recorded terrain.</p>'; return; }
+    const facts = [['Terrain', found.terrain], ['Cover', found.blocked ? 'Blocked / full cover' : found.cover], ['Concealment', found.concealment], ['Level', found.level], ['Movement', found.blocked ? 'Cannot enter' : found.requiresStairs ? 'Use stairs between levels' : found.movementCost + ' feet']];
+    $('cell-details').innerHTML = '<dl class="facts">' + facts.map(([key, value]) => '<div><dt>' + esc(key) + '</dt><dd>' + esc(words(value) || 'Not recorded') + '</dd></div>').join('') + '</dl>';
+  }
+  function updateMap() {
+    const step = steps[current];
+    const source = mapImage(step);
+    const label = mapTitle(step);
+    $('map-title').textContent = viewer === 'player' ? 'Player view' : 'DM map';
+    $('map-caption').textContent = viewer === 'player' ? '' : label + (viewer === 'adminTactical' ? ' · DM tactical overlay' : ' · Saved DM map');
+    $('map-missing').textContent = viewer === 'player' ? 'Player view unavailable — visibility-scoped snapshot required' : 'The saved DM map is unavailable for this moment.';
+    $('map-image').hidden = !source;
+    $('map-missing').hidden = !!source;
+    $('map-link').hidden = !source;
+    $('enlarge-map').disabled = !source;
+    if (source) {
+      $('map-image').src = source;
+      $('map-image').alt = 'Saved DM map of ' + label + '. Open the full image for a closer look.';
+      $('map-link').href = source;
+    } else {
+      $('map-image').removeAttribute('src');
+      $('map-link').removeAttribute('href');
+    }
+    $('map-area').classList.toggle('enlarged', enlarged);
+    $('enlarge-map').setAttribute('aria-expanded', String(enlarged));
+    $('enlarge-map').textContent = enlarged ? 'Fit map' : 'Enlarge map';
+  }
+  function render(announce = false) {
+    const step = steps[current];
+    if (!step) {
+      $('location-title').textContent = 'No replay moments yet';
+      $('replay-content').hidden = true;
+      $('count').textContent = '0 of 0';
+      $('previous').disabled = $('next').disabled = true;
+      $('empty-session').hidden = false;
+      return;
+    }
+    const title = step.location?.title || 'Recorded scene';
+    const action = actionTitle(step);
+    $('location-title').textContent = title;
+    document.title = title + ' · Local DM replay preview';
+    $('count').textContent = (current + 1) + ' of ' + steps.length;
+    $('previous').disabled = current === 0;
+    $('next').disabled = current === steps.length - 1;
+    $('history-select').value = String(current);
+    $('action-title').textContent = action;
+    $('selected-action').textContent = 'Recorded action: ' + (labels[step.action?.type] || words(step.action?.type));
+    $('result-text').textContent = resultText(step);
+    $('roll').innerHTML = rollMarkup(step);
+    $('scene-copy').textContent = sceneText(step);
+    const source = sceneImage(step);
+    $('scene-image').hidden = !source;
+    $('scene-missing').hidden = !!source;
+    if (source) { $('scene-image').src = source; $('scene-image').alt = 'Illustration of ' + title; }
+    $('scene-caption').textContent = title + ' · Scene illustration';
+    const notices = warnings(step);
+    $('display-warnings').hidden = !notices.length;
+    $('display-warnings').textContent = notices.join(' ');
+    $('viewer-select').innerHTML = '<option value="admin">DM map · Local preview</option>' + (localImage(step.mapImages?.adminTactical) ? '<option value="adminTactical">DM tactical overlay</option>' : '') + '<option value="player">Player view · Unavailable</option>';
+    if (viewer === 'adminTactical' && !localImage(step.mapImages?.adminTactical)) viewer = 'admin';
+    $('viewer-select').value = viewer;
+    updateMap();
+    renderParty(step);
+    const cells = step.tactical?.cells || [];
+    $('cell-select').innerHTML = '<option value="">Choose a cell</option>' + cells.map(item => '<option value="' + esc(item.label) + '">' + esc(item.label) + ' · ' + esc(item.terrain) + '</option>').join('');
+    $('cell-select').disabled = !cells.length;
+    renderCell();
+    $('legend').innerHTML = (step.tactical?.legend || []).map(item => '<li><strong>' + esc(item.label) + '.</strong> ' + esc(item.description) + '</li>').join('');
+    $('actions-list').innerHTML = (step.buttons || []).map(item => '<li' + (item.toLowerCase() === (labels[step.action?.type] || '').toLowerCase() ? ' aria-current="true"' : '') + '>' + esc(item) + '</li>').join('') || '<li>No action menu was saved.</li>';
+    $('agents').innerHTML = (step.agentProposals || []).map(proposal => '<article class="proposal"><h3>' + esc(proposal.label) + '</h3><span class="muted">' + esc(proposal.status) + '</span><p>' + esc(proposal.summary) + '</p></article>').join('') || '<p>No role diagnostics were saved.</p>';
+    const adminMap = localImage(step.mapImages?.admin);
+    $('admin-map').hidden = !adminMap;
+    if (adminMap) { $('admin-map').src = adminMap; $('admin-map').alt = 'DM map of ' + mapTitle(step); }
+    $('admin-actors').innerHTML = (step.actors || []).map(item => '<li>' + portrait(item.id) + '<div><strong>' + esc(item.name) + '</strong><p>' + esc(item.coordinate || cell(item)) + ' · HP ' + esc(item.hp ?? 'Unknown') + (item.maxHp != null ? '/' + esc(item.maxHp) : '') + (item.defeated ? ' · Defeated' : '') + '</p></div></li>').join('');
+    $('diagnostics').textContent = JSON.stringify({ screen: step.screen, phase: step.phase, round: step.round, turn: step.turn, gameRevision: step.gameRevision, mapScene: step.mapScene, mapId: step.map?.id, locationId: step.location?.id, sceneRevision: step.sceneRevision, image: step.image, afterImage: step.afterImage, description: step.location?.description, rulesComponents: step.rulesComponents }, null, 2);
+    if (announce) $('replay-status').textContent = 'Moment ' + (current + 1) + ' of ' + steps.length + '. ' + title + '. ' + action + '. ' + notices.join(' ');
+  }
+  function go(index) {
+    if (index < 0 || index >= steps.length || index === current) return;
+    current = index;
+    render(true);
+  }
+  $('previous').addEventListener('click', () => go(current - 1));
+  $('next').addEventListener('click', () => go(current + 1));
+  $('history-select').innerHTML = steps.map((step, index) => '<option value="' + index + '">' + (index + 1) + '. ' + esc(actionTitle(step)) + ' · ' + esc(step.location?.title) + '</option>').join('');
+  $('history-select').addEventListener('change', event => go(Number(event.target.value)));
+  $('viewer-select').value = viewer;
+  $('viewer-select').addEventListener('change', event => { viewer = event.target.value; updateMap(); });
+  $('cell-select').addEventListener('change', renderCell);
+  $('enlarge-map').addEventListener('click', () => { enlarged = !enlarged; updateMap(); });
+  $('player-input').addEventListener('submit', event => {
+    event.preventDefault();
+    const draft = $('intent').value.trim();
+    if (!draft) { $('input-status').textContent = 'Type an action before saving your local draft.'; $('intent').focus(); return; }
+    try {
+      localStorage.setItem(draftKey, draft);
+      $('input-status').textContent = 'Draft saved in this browser. It has not been sent or added to the replay.';
+    } catch { $('input-status').textContent = 'Browser storage is unavailable. Your draft is still here; copy it before closing this page.'; }
+  });
+  $('intent').addEventListener('input', () => { $('input-status').textContent = 'Unsaved local draft. Save it here or copy it for your DM.'; });
+  $('copy-draft').addEventListener('click', async () => {
+    const draft = $('intent').value.trim();
+    if (!draft) { $('input-status').textContent = 'Type an action before copying.'; $('intent').focus(); return; }
+    try { await navigator.clipboard.writeText(draft); $('input-status').textContent = 'Draft copied. Paste it where you contact your DM.'; }
+    catch { $('intent').focus(); $('intent').select(); $('input-status').textContent = 'Clipboard access is unavailable. Your draft is selected; use your device’s Copy command.'; }
+  });
+  try {
+    const saved = localStorage.getItem(draftKey);
+    if (saved) { $('intent').value = saved; $('input-status').textContent = 'Saved local draft restored. It has not been sent or added to the replay.'; }
+  } catch { $('input-status').textContent = 'Browser storage is unavailable. Copy your draft before closing this page.'; }
+  document.addEventListener('error', event => {
+    const image = event.target;
+    if (!(image instanceof HTMLImageElement)) return;
+    image.hidden = true;
+    if (image.id === 'map-image') { $('map-link').hidden = true; $('map-missing').hidden = false; $('enlarge-map').disabled = true; }
+    if (image.id === 'scene-image') $('scene-missing').hidden = false;
+  }, true);
+  render();
+}

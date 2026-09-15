@@ -1,11 +1,11 @@
 'use client';
 import { apiFetch as fetch, apiPath } from '../client/api.mjs';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import SceneReach from './scene-reach';
 
 type Scene = {
-  id: string; revision: number | string; title: string; description: string;
+  id: string; revision: number | string; gameRevision: number | null; title: string; description: string;
   subjects: { id: string; label: string }[]; sourceEventId: string;
 };
 type ImageJob = {
@@ -13,6 +13,7 @@ type ImageJob = {
   focusLabel: string; sceneRevision: number | string; sourceEventId: string;
   message?: string; stale: boolean;
 };
+type HistoryImage = ImageJob & { createdAt: string };
 class RequestError extends Error {
   constructor(message: string, public status: number) { super(message); }
 }
@@ -31,7 +32,7 @@ async function fetchApi<T>(base: string, path = '', options: RequestInit = {}): 
 const button = 'rounded-lg border border-white/20 px-3 py-2 text-sm font-medium text-stone-200 hover:bg-white/10 disabled:cursor-wait disabled:opacity-50';
 
 /** A view request never changes campaign state and is available during every phase. */
-export default function SceneImages({ apiBase = '/api/scene-images', sharedSession = false, reachApiBase = '/api/scene-images', reachSessionKey = 'image-access' }: { apiBase?: string; sharedSession?: boolean; reachApiBase?: string; reachSessionKey?: string }) {
+export default function SceneImages({ apiBase = '/api/scene-images', sharedSession = false, reachApiBase = '/api/scene-images', reachSessionKey = 'image-access', autoRevision = null }: { apiBase?: string; sharedSession?: boolean; reachApiBase?: string; reachSessionKey?: string; autoRevision?: number | string | null }) {
   const api = useCallback(<T,>(path = '', options: RequestInit = {}) => fetchApi<T>(apiBase, path, options), [apiBase]);
   const [open, setOpen] = useState(false);
   const [connected, setConnected] = useState<boolean | null>(null);
@@ -39,11 +40,14 @@ export default function SceneImages({ apiBase = '/api/scene-images', sharedSessi
   const [scene, setScene] = useState<Scene | null>(null);
   const [focusId, setFocusId] = useState('scene');
   const [job, setJob] = useState<ImageJob | null>(null);
+  const [imageHistory, setImageHistory] = useState<HistoryImage[]>([]);
+  const autoRunningRevision = useRef<number | string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [pollPaused, setPollPaused] = useState(false);
   const [pendingRequest, setPendingRequest] = useState<{ requestId: string; focusId: string } | null>(null);
   const [accessRevision, setAccessRevision] = useState(0);
+  const autoRequestedRevision = useRef<number | string | null>(null);
 
   const showError = useCallback((reason: unknown) => {
     if (reason instanceof RequestError && [401, 403].includes(reason.status)) {
@@ -66,6 +70,11 @@ export default function SceneImages({ apiBase = '/api/scene-images', sharedSessi
     }
   }, [showError, api]);
 
+  const loadHistory = useCallback(async () => {
+    try { const data = await api<{ images: HistoryImage[] }>('/history'); setImageHistory(data.images); }
+    catch (reason) { showError(reason); }
+  }, [api, showError]);
+
   const jobId = job?.id;
   const jobStatus = job?.status;
   useEffect(() => {
@@ -79,6 +88,7 @@ export default function SceneImages({ apiBase = '/api/scene-images', sharedSessi
         const data = await api<{ job: ImageJob }>(`/${encodeURIComponent(id)}`);
         if (cancelled) return;
         setJob(data.job);
+        if (data.job.status === 'ready' || data.job.status === 'failed') void loadHistory();
         if (!['queued', 'running'].includes(data.job.status)) return;
         if (Date.now() >= deadline) { setPollPaused(true); return; }
         timer = setTimeout(poll, 4000);
@@ -89,7 +99,7 @@ export default function SceneImages({ apiBase = '/api/scene-images', sharedSessi
     }
     timer = setTimeout(poll, 2000);
     return () => { cancelled = true; clearTimeout(timer); };
-  }, [jobId, jobStatus, showError, api]);
+  }, [jobId, jobStatus, showError, api, loadHistory]);
 
   async function connect(event: React.FormEvent) {
     event.preventDefault(); setBusy(true); setError('');
@@ -108,10 +118,39 @@ export default function SceneImages({ apiBase = '/api/scene-images', sharedSessi
     setPendingRequest(request);
     try {
       const data = await api<{ job: ImageJob }>('', { method: 'POST', body: JSON.stringify(request) });
-      setJob(data.job); setPendingRequest(null);
+      setJob(data.job); setPendingRequest(null); if (data.job.status === 'ready' || data.job.status === 'failed') void loadHistory();
     } catch (reason) { showError(reason); }
     finally { setBusy(false); }
   }
+
+  // The tactical revision is authoritative. Once this shared player view has
+  // been used, every newer committed movement/combat/exploration revision asks
+  // for the matching scene image automatically, using the same durable service
+  // and revision metadata that Discord receives.
+  useEffect(() => {
+    if (!sharedSession || autoRevision === null || autoRevision === undefined) return;
+    if (autoRequestedRevision.current === autoRevision || autoRunningRevision.current === autoRevision) return;
+    autoRunningRevision.current = autoRevision;
+    let cancelled = false;
+    async function followRevision() {
+      setOpen(true); setBusy(true); setError('');
+      const currentScene = await loadScene();
+      if (cancelled) return;
+      if (currentScene && currentScene.gameRevision === autoRevision) {
+        autoRequestedRevision.current = autoRevision;
+        const request = { requestId: crypto.randomUUID(), focusId: 'scene' };
+        setPendingRequest(request);
+        try { const data = await api<{ job: ImageJob }>('', { method: 'POST', body: JSON.stringify(request) }); if (!cancelled) { autoRequestedRevision.current = autoRevision; setJob(data.job); setPendingRequest(null); if (data.job.status === 'ready' || data.job.status === 'failed') void loadHistory(); } }
+        catch (reason) { autoRunningRevision.current = null; if (!cancelled) showError(reason); }
+      } else {
+        autoRunningRevision.current = null;
+      }
+      if (!cancelled && autoRunningRevision.current === autoRevision) autoRunningRevision.current = null;
+      if (!cancelled) setBusy(false);
+    }
+    void followRevision();
+    return () => { cancelled = true; };
+  }, [api, autoRevision, loadHistory, loadScene, sharedSession, showError]);
 
   async function showView() {
     if (busy) return;
@@ -127,7 +166,7 @@ export default function SceneImages({ apiBase = '/api/scene-images', sharedSessi
     setBusy(true); setError('');
     try {
       const data = await api<{ job: ImageJob }>(`/${encodeURIComponent(job.id)}`);
-      setJob(data.job);
+      setJob(data.job); if (data.job.status === 'ready' || data.job.status === 'failed') await loadHistory();
       setPollPaused(['queued', 'running'].includes(data.job.status));
       await loadScene();
     } catch (reason) { showError(reason); }
@@ -198,6 +237,19 @@ export default function SceneImages({ apiBase = '/api/scene-images', sharedSessi
           <img src={imageUrl} alt={`${job.focusLabel} in ${job.title}, view revision ${job.sceneRevision}`} onError={() => setError('The image could not be loaded. Check its status or reconnect your player.')} className="max-h-[70vh] w-full rounded-lg border border-white/10 bg-black/30 object-contain" />
           <figcaption className="mt-2 text-xs text-stone-500">Dramatic realism, with detail where your attention rests.</figcaption>
         </figure>}
+        {imageHistory.length > 1 && <section className="mt-6 border-t border-white/10 pt-4" aria-label="Scene image history">
+          <h4 className="text-sm font-semibold uppercase tracking-wider text-amber-200">Session image history</h4>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            {imageHistory.map(item => <a key={item.id} href={item.status === 'ready' ? apiPath(`${apiBase}/${encodeURIComponent(item.id)}/image`) : undefined} className="rounded-lg border border-white/10 bg-black/20 p-2 hover:border-amber-200/50">
+              {item.status === 'ready' && <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={apiPath(`${apiBase}/${encodeURIComponent(item.id)}/image`)} alt={`${item.focusLabel} at scene revision ${item.sceneRevision}`} className="aspect-video w-full rounded object-cover" />
+              </>}
+              <p className="mt-2 text-xs text-stone-200">Revision {item.sceneRevision} · {item.focusLabel}</p>
+              <p className="text-xs text-stone-500">{item.stale ? 'Earlier scene' : 'Current scene'} · {item.sourceEventId}</p>
+            </a>)}
+          </div>
+        </section>}
         <div className="mt-3 flex flex-wrap gap-2"><button type="button" disabled={busy} className={button} onClick={() => void refreshJob()}>Check image status</button>{job.status === 'ready' && <a href={imageUrl} download={`witnesslight-${job.id}.png`} className={button}>Save image</a>}{job.status === 'failed' && <button type="button" className={button} disabled={busy || !scene} onClick={() => void requestImage()}>Try a new image</button>}</div>
       </article>}
     </div>}

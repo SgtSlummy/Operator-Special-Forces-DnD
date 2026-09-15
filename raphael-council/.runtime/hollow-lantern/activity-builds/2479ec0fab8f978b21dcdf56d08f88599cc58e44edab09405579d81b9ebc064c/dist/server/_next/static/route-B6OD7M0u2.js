@@ -1,0 +1,1 @@
+import{t as e}from"./activity-runtime-CqVOhaCg.js";var t=`nodejs`,n=e(`view`);export{n as GET,t as runtime};

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "kind": "undertow-player-view",
+  "audience": "player",
+  "packId": "unwritten-coast-undertow",
+  "sourceRevision": "cc3c2b4401479f40ccdfd7be0daaed77b2207950bb95643f025960f50ca23e1b",
+  "currentRoomId": "R01",
+  "rooms": [
+    {
+      "id": "R01",
+      "name": "Brass Vestibule",
+      "arrival": "a wooden sign asks visitors to wipe their boots before entering the storm machinery. The brass door has a dent where someone repeatedly opened it into a chair."
+    }
+  ],
+  "routes": []
+}

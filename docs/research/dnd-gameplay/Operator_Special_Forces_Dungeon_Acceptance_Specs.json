@@ -1,0 +1,774 @@
+{
+  "document_type": "acceptance_test_specifications_not_executable_tests",
+  "project_label_from_user": "Operator Special Forces Dungeon",
+  "created_on": "2026-09-09",
+  "schema_version": "1.0",
+  "implementation_status": "No project repository or D&D JSON corpus was verified or modified.",
+  "rules_family": null,
+  "execution_status": "not_run_against_project",
+  "notes": [
+    "These Given/When/Then cases require adapters to the real project before execution.",
+    "Specifications are proposals, not proof that the current project has these defects.",
+    "Source references identify rules to verify; no external rule text is embedded.",
+    "Creative fixtures are not existing campaign canon or official creature stat blocks.",
+    "A blocked application request is not equivalent to an in-world failed action."
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Wizards of the Coast: Basic Rules (2014), Introduction",
+      "url": "https://www.dndbeyond.com/sources/dnd/basic-rules-2014/introduction",
+      "coverage": "Official written play example and core conversational loop; relevant text inspected."
+    },
+    {
+      "id": "S02",
+      "title": "Wizards of the Coast: The Basics (2024 rules family)",
+      "url": "https://www.dndbeyond.com/sources/dnd/br-2024/the-basics",
+      "coverage": "Official DM guidance; relevant text inspected."
+    },
+    {
+      "id": "S03",
+      "title": "Wizards of the Coast: Playing the Game (2024 rules family)",
+      "url": "https://www.dndbeyond.com/sources/dnd/br-2024/playing-the-game",
+      "coverage": "Official exploration and combat procedures; relevant text inspected."
+    },
+    {
+      "id": "S04",
+      "title": "Wizards of the Coast: Combat (2014)",
+      "url": "https://www.dndbeyond.com/sources/dnd/basic-rules-2014/combat",
+      "coverage": "Official legacy combat rules, including surprise and reactions; relevant text inspected."
+    },
+    {
+      "id": "S05",
+      "title": "Wizards of the Coast: Spells (2024 rules family)",
+      "url": "https://www.dndbeyond.com/sources/dnd/br-2024/spells",
+      "coverage": "Official casting requirements and invalid-target handling; relevant text inspected."
+    },
+    {
+      "id": "S06",
+      "title": "Wizards of the Coast: Rules Glossary (2024 rules family)",
+      "url": "https://www.dndbeyond.com/sources/dnd/br-2024/rules-glossary",
+      "coverage": "Official defined terms including concentration, cover, and conditions; relevant entries inspected."
+    },
+    {
+      "id": "S07",
+      "title": "Wizards of the Coast: DM’s Toolbox (2024 rules family)",
+      "url": "https://www.dndbeyond.com/sources/dnd/br-2024/dms-toolbox",
+      "coverage": "Official encounter and initiative guidance; relevant text inspected."
+    },
+    {
+      "id": "S08",
+      "title": "Wizards of the Coast: Creator FAQ",
+      "url": "https://www.dndbeyond.com/creator-faq",
+      "coverage": "Official distinction between open SRD material and freely readable Basic Rules."
+    },
+    {
+      "id": "S09",
+      "title": "MrRhexx: About Me",
+      "url": "https://mrrhexx.store/pages/about-me",
+      "coverage": "Creator’s own description of his focus; inspected."
+    },
+    {
+      "id": "S10",
+      "title": "MrRhexx: What They Don’t Tell You About Kobolds – D&D",
+      "url": "https://www.youtube.com/watch?v=eSUBtv9iS-E",
+      "coverage": "Video title and identity verified; full transcript NOT reviewed."
+    },
+    {
+      "id": "S11",
+      "title": "SteelySam: How to Run Kobolds in D&D",
+      "url": "https://www.youtube.com/watch?v=KjqvkZsvOcQ",
+      "coverage": "Video title and description verified; full transcript NOT reviewed."
+    },
+    {
+      "id": "S12",
+      "title": "SteelySam: Sessions with No Combat | DM Hotline",
+      "url": "https://www.youtube.com/watch?v=YQsTUHkLXWU",
+      "coverage": "Video title and description verified; full transcript NOT reviewed."
+    },
+    {
+      "id": "S13",
+      "title": "SteelySam: Making Encounters More Intersting | DM Hotline",
+      "url": "https://www.youtube.com/watch?v=JWG4tAFsSfk",
+      "coverage": "Title spelling follows the indexed video; full transcript NOT reviewed."
+    },
+    {
+      "id": "S14",
+      "title": "Justin Alexander: Don’t Prep Plots",
+      "url": "https://thealexandrian.net/wordpress/4147/roleplaying-games/dont-prep-plots",
+      "coverage": "Primary GM-craft essay; relevant text inspected. Advice, not official D&D rules."
+    },
+    {
+      "id": "S15",
+      "title": "Mike Shea: Secrets and Clues, the Secret Weapon of the Lazy Dungeon Master",
+      "url": "https://slyflourish.com/sharing_secrets.html",
+      "coverage": "Primary GM-craft article; inspected. Advice, not official D&D rules."
+    },
+    {
+      "id": "S16",
+      "title": "Wizards of the Coast: Systems Reference Document page",
+      "url": "https://www.dndbeyond.com/srd",
+      "coverage": "Official SRD availability/version reference; no full corpus audit performed."
+    }
+  ],
+  "cases": [
+    {
+      "id": "G01",
+      "area": "Setup",
+      "title": "Edition unresolved",
+      "given": "A campaign has no verified rules-family selection.",
+      "when": "Begin an action whose outcome differs between rules families.",
+      "then": "Do not silently choose an edition. Preserve the declared intent and request the contract decision.",
+      "evidence_type": "project_requirement",
+      "source_ids": [
+        "S03",
+        "S04"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G02",
+      "area": "Setup",
+      "title": "Corpus mismatch",
+      "given": "The campaign is pinned to one edition and retrieval returns another edition’s similarly named feature.",
+      "when": "Resolve that feature.",
+      "then": "Reject the mismatched record; identify the mismatch without substituting remembered text.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G03",
+      "area": "Setup",
+      "title": "Allowed specific exception",
+      "given": "A valid approved feature changes a general rule for this actor.",
+      "when": "Resolve an action covered by the exception.",
+      "then": "Apply the scoped exception and record both its reference and the general rule it modifies.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S02"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G04",
+      "area": "Input",
+      "title": "Question is not consent",
+      "given": "The player has not declared movement or resource use.",
+      "when": "Player asks: Can I reach the lever?",
+      "then": "Answer using the known geometry; do not move the character or spend an action.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G05",
+      "area": "Input",
+      "title": "Ordinary action",
+      "given": "An unlatched door has no relevant obstacle, risk, or special rule.",
+      "when": "Player opens it.",
+      "then": "Describe the new view without manufacturing a roll or trap. Update door state only as appropriate.",
+      "evidence_type": "project_requirement",
+      "source_ids": [
+        "S02"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G06",
+      "area": "Input",
+      "title": "Intent clarification",
+      "given": "Two visible targets are equally plausible referents for him.",
+      "when": "Player declares an attack on him.",
+      "then": "Clarify the referent before any roll, action cost, or HP update.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G07",
+      "area": "Information",
+      "title": "Known details",
+      "given": "An obvious lever is already in the character’s clear view.",
+      "when": "Player asks its visible color and location.",
+      "then": "Answer from scene state without charging an investigation action merely for clarification.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G08",
+      "area": "Information",
+      "title": "Hidden information",
+      "given": "A secret door is unknown to the character and not perceptible from their position.",
+      "when": "Generate the player scene summary.",
+      "then": "Exclude the secret from public narration and suggested options; retain it in private state.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G09",
+      "area": "Information",
+      "title": "Rumor stays uncertain",
+      "given": "An NPC believes a false rumor about the prisoner’s destination.",
+      "when": "The NPC shares it and the recap is generated.",
+      "then": "Store speaker, belief, and evidence; do not promote the rumor to objective world truth.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G10",
+      "area": "Exploration",
+      "title": "Search has scope",
+      "given": "A concealed item is in one location and the character searches elsewhere.",
+      "when": "Resolve the search.",
+      "then": "Respect search location and the active rule; a large total does not become omniscience.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S03"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G11",
+      "area": "Exploration",
+      "title": "Failed clue attempt",
+      "given": "One approach to a lead fails; other independently established leads remain.",
+      "when": "Continue the investigation.",
+      "then": "Apply the selected consequence without deleting the other leads or granting an invented clue.",
+      "evidence_type": "project_requirement",
+      "source_ids": [
+        "S14",
+        "S15"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G12",
+      "area": "Exploration",
+      "title": "Repeat attempts",
+      "given": "The party repeats the same failed method without changing circumstances.",
+      "when": "A second character requests the same roll.",
+      "then": "Apply the recorded retry/help/time policy; do not allow unlimited consequence-free retries by default.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G13",
+      "area": "Time",
+      "title": "Table talk versus world time",
+      "given": "The group pauses to clarify the map out of character.",
+      "when": "Generate an updated clock state.",
+      "then": "Do not advance danger clocks merely because messages or real minutes passed.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G14",
+      "area": "Time",
+      "title": "Concurrent tasks",
+      "given": "One PC searches while another watches the same doorway during an overlapping interval.",
+      "when": "Resolve their declared activities.",
+      "then": "Account for overlapping fictional time and spotlight; do not blindly add both durations serially.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G15",
+      "area": "Social",
+      "title": "Valid bypass",
+      "given": "The party satisfies an NPC’s established conditions for peaceful passage.",
+      "when": "Resolve the negotiation.",
+      "then": "Allow the bypass and its costs; do not spawn mandatory combat to restore a planned plot.",
+      "evidence_type": "project_requirement",
+      "source_ids": [
+        "S14"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G16",
+      "area": "Social",
+      "title": "NPC does not know",
+      "given": "An NPC has no knowledge or plausible inference about a hidden command chamber.",
+      "when": "Players ask for its exact location.",
+      "then": "Roleplay the NPC’s actual knowledge; do not answer from the omniscient campaign record.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G17",
+      "area": "Social",
+      "title": "Failed request is not automatic violence",
+      "given": "An NPC rejects a request but has no established intent to attack.",
+      "when": "Resolve a failed social check.",
+      "then": "Use a supported response such as refusal or changed terms, not automatic initiative.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G18",
+      "area": "Transition",
+      "title": "Declaration starts combat",
+      "given": "A player declares the first hostile act in a contested encounter.",
+      "when": "Resolve the transition.",
+      "then": "Establish initiative according to the chosen rules before resolving that attack; no free extra attack.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S07"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G19",
+      "area": "Transition",
+      "title": "Geometry persists",
+      "given": "Exploration state includes exact or agreed relative positions and obstacles.",
+      "when": "Enter combat.",
+      "then": "Preserve positions, lines of sight, ongoing effects, and prior discoveries; do not reset an arena.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G20",
+      "area": "Transition",
+      "title": "Surprise in 2014",
+      "given": "A verified 2014 fixture marks an actor surprised with no overriding feature.",
+      "when": "Resolve its opening turn and reaction availability.",
+      "then": "Match the 2014 surprise reference, including its distinct timing; do not import 2024 behavior.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S04"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G21",
+      "area": "Transition",
+      "title": "Surprise in 2024",
+      "given": "A verified 2024 fixture marks an actor surprised with no overriding feature.",
+      "when": "Calculate initiative.",
+      "then": "Match the 2024 surprise reference; do not apply the legacy lost-turn behavior.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S03"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G22",
+      "area": "Turn",
+      "title": "Remaining choices",
+      "given": "A character finishes one legal action and still has movement and an eligible bonus-action option.",
+      "when": "Narrate the result.",
+      "then": "Report remaining options and await their choice; do not automatically end the turn.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G23",
+      "area": "Turn",
+      "title": "No generic bonus action",
+      "given": "No ability permits the proposed activity as a bonus action.",
+      "when": "Player requests it as a free second action.",
+      "then": "Explain the applicable option limits and preserve the unexecuted proposal.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S04"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G24",
+      "area": "Turn",
+      "title": "Reaction timing",
+      "given": "A reaction was spent after the actor’s previous turn and a new global round begins before its next turn.",
+      "when": "Check reaction availability.",
+      "then": "Use the actor-specific recovery rule rather than resetting every reaction at the round boundary.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S04"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G25",
+      "area": "Resolution",
+      "title": "Attack versus save",
+      "given": "A retrieved effect calls for a saving throw, not an attack roll.",
+      "when": "Execute the effect.",
+      "then": "Use the specified saving throw and its result branches, not a generic attack routine.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S05"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G26",
+      "area": "Resolution",
+      "title": "Interrupted resolution",
+      "given": "A pending effect creates a legal optional reaction window.",
+      "when": "Resolve that trigger.",
+      "then": "Offer only the proper recipient the permitted window; finish it before finalizing the affected result.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G27",
+      "area": "Resolution",
+      "title": "Concentration dependency",
+      "given": "A concentrating actor takes damage in a source-verified fixture.",
+      "when": "Resolve the damage and downstream effects.",
+      "then": "Evaluate the active-edition concentration rule and update dependent effects before final narration.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S06"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G28",
+      "area": "Resolution",
+      "title": "Missing required record",
+      "given": "The engine cannot retrieve the selected ability’s required mechanics.",
+      "when": "Player declares that ability.",
+      "then": "Leave the unresolved action pending; do not invent damage, silently replace it, or spend resources for a lookup failure.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G29",
+      "area": "Resolution",
+      "title": "Actually cast at invalid target",
+      "given": "A 2024 caster executes a slot-funded spell against a secretly ineligible target with no relevant override.",
+      "when": "Resolve the completed casting.",
+      "then": "Use the official Invalid Targets behavior, including its resource and information treatment; do not auto-refund.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S05"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G30",
+      "area": "Resolution",
+      "title": "Blocked preflight differs from failure",
+      "given": "An action cannot yet be executed because its target reference is unresolved, not because an in-world casting has occurred.",
+      "when": "Run preflight.",
+      "then": "Do not treat it as a completed failed casting; no application-created cost from an incomplete request.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G31",
+      "area": "Resolution",
+      "title": "Damage narration agrees",
+      "given": "The committed result leaves the target alive, conscious, and not mechanically disabled.",
+      "when": "Generate colorful attack narration.",
+      "then": "Do not describe death, unconsciousness, severing, disarming, or a disabled limb as accomplished facts.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G32",
+      "area": "Resolution",
+      "title": "Sample arithmetic fixture",
+      "given": "Custom fixture: attack +5, AC 15, d20 sample 12, damage 1d8+3, d8 sample 4, HP 11, no modifiers.",
+      "when": "Evaluate this explicitly illustrative fixture.",
+      "then": "Expected arithmetic: attack 17, damage 7, HP 4. Label sample values, not live dice or official creature statistics.",
+      "evidence_type": "illustrative_fixture",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G33",
+      "area": "Creatures",
+      "title": "No telepathy from model context",
+      "given": "An NPC has not seen a hidden PC and has no applicable sense, communication, or inference.",
+      "when": "Select its next action.",
+      "then": "Do not target the hidden location solely because the global engine knows it.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G34",
+      "area": "Creatures",
+      "title": "Alarm needs a causal event",
+      "given": "An alarm has a recorded trigger and an NPC has not completed it.",
+      "when": "Resolve an unrelated exchange.",
+      "then": "Do not increment the alarm to force reinforcements; update it only from a valid trigger or clock event.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G35",
+      "area": "Aftermath",
+      "title": "Surrender branch",
+      "given": "Hostile actors surrender and opposing actors accept; no other time-critical danger remains.",
+      "when": "Resolve the ceasefire.",
+      "then": "Exit combat into the established social situation without forcing remaining HP to zero.",
+      "evidence_type": "rules_integration",
+      "source_ids": [
+        "S03"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G36",
+      "area": "Aftermath",
+      "title": "Time-critical danger remains",
+      "given": "The last enemy is neutralized but a PC is dying or an active timed hazard persists.",
+      "when": "Complete the enemy encounter.",
+      "then": "Preserve precise timing and pending procedures; do not jump immediately to loot or travel.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G37",
+      "area": "Aftermath",
+      "title": "Resources persist",
+      "given": "The party wins with spent resources and an ongoing condition.",
+      "when": "Produce the aftermath state.",
+      "then": "Preserve expenditures and conditions unless a specific effect or completed recovery process changes them.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G38",
+      "area": "Aftermath",
+      "title": "Loot is not assignment",
+      "given": "A recorded item is discovered and no player has chosen who takes it.",
+      "when": "Describe the find.",
+      "then": "Mark it discovered at its location; do not silently equip, identify, divide, or attune it.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G39",
+      "area": "Recovery",
+      "title": "Rest checks and world progress",
+      "given": "The party declares a rest while a recorded deadline may occur during the interval.",
+      "when": "Resolve the rest.",
+      "then": "Validate the chosen edition’s recovery procedure, update elapsed time and triggered events, and award only completed recovery.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G40",
+      "area": "Continuity",
+      "title": "Save at a pending choice",
+      "given": "Play pauses with initiative, concentration, and a pending optional response.",
+      "when": "Save and reload.",
+      "then": "Restore the same legal state and pending choice, not merely a prose recap.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G41",
+      "area": "Continuity",
+      "title": "Duplicate delivery",
+      "given": "The same executed action message arrives twice.",
+      "when": "Process the duplicate.",
+      "then": "Return or reference the prior result without rerolling or applying costs and damage twice.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G42",
+      "area": "Continuity",
+      "title": "State changed before resolution",
+      "given": "Two player requests refer to the same earlier state version.",
+      "when": "One commits before the other.",
+      "then": "Revalidate the stale request against the new state before applying effects.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G43",
+      "area": "Agency",
+      "title": "Absent player",
+      "given": "A player has not responded and no delegation agreement covers their PC.",
+      "when": "Another player proposes a dangerous plan for that PC.",
+      "then": "Do not invent that PC’s consent or execute the dangerous choice.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G44",
+      "area": "Audit",
+      "title": "Ruling correction",
+      "given": "A ruling is discovered to have used the wrong edition after a committed result.",
+      "when": "Correct the error.",
+      "then": "Record the correction, agree scope of repair, and update affected state without silently rewriting history.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G45",
+      "area": "Corpus",
+      "title": "Quarantined content",
+      "given": "A record is unapproved or outside the campaign’s allowed corpus.",
+      "when": "A semantically similar query retrieves it.",
+      "then": "Exclude it from authoritative resolution; do not treat similarity as permission or correctness.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G46",
+      "area": "Narrative",
+      "title": "No compulsory route",
+      "given": "The party chooses a plausible unprepared approach to an established objective.",
+      "when": "Generate the next situation.",
+      "then": "Use established world constraints and consistent improvisation, not a forced return to the planned route.",
+      "evidence_type": "project_requirement",
+      "source_ids": [
+        "S14"
+      ],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G47",
+      "area": "Information",
+      "title": "Helpful options preserve agency",
+      "given": "A player asks what they can do and several routes are perceptible.",
+      "when": "Offer guidance.",
+      "then": "Give a few concrete nonexclusive approaches with known costs; do not reveal hidden solutions or choose for the player.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    },
+    {
+      "id": "G48",
+      "area": "Encounter",
+      "title": "Different narrative voices same mechanics",
+      "given": "Two narrations are generated from the same resolved event.",
+      "when": "Compare their meaning.",
+      "then": "Both preserve entities, outcomes, knowledge boundaries, resources, and next decision despite stylistic differences.",
+      "evidence_type": "project_requirement",
+      "source_ids": [],
+      "execution_status": "not_run",
+      "observed_result": null,
+      "evidence_artifacts": []
+    }
+  ]
+}

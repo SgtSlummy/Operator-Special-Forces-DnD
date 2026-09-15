@@ -22,11 +22,14 @@ import importlib
 import json
 import os
 import socket
+import sqlite3
 from pathlib import Path
 import sys
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
+from urllib.parse import urlsplit
+from urllib.request import url2pathname
 import uuid
 
 CONTRACT = "raph-obus-game-runtime-v1"
@@ -38,7 +41,7 @@ CAMPAIGN = "synthetic_operator_contract"
 SESSION = "synthetic_scene"
 TRANSCRIPT = "Synthetic blue beacon transcript."
 FIXTURE_CLOCK_MS = 2_000_000_000_000
-agent = runtime = TestClient = None
+agent = runtime = providers = TestClient = None
 fixture_root: Path | None = None
 
 
@@ -62,9 +65,12 @@ class OperatorObusContract(unittest.TestCase):
         self.stack.enter_context(patch.object(agent, "ROOT", self.directory))
         self.stack.enter_context(patch.object(agent, "RUNTIME", self.authority))
         self.stack.enter_context(patch.object(agent, "token", return_value=SERVICE_TOKEN))
-        for name in ("catalogue", "complete_local", "execute_remote_provider", "_http_json"):
+        self.strict_local = agent.complete_game_local
+        for name in ("catalogue", "complete_local", "complete_game_local", "complete_free"):
             self.stack.enter_context(patch.object(agent, name, side_effect=forbidden))
-        self.stack.enter_context(patch.object(agent._NO_REDIRECT_OPENER, "open", side_effect=forbidden))
+        # Captured provider defaults still resolve this primitive at execution.
+        # Guard it too, so bypassing an agent-level mock cannot reach real HTTP.
+        self.http_boundary = self.stack.enter_context(patch.object(providers, "_request_json", side_effect=forbidden))
         self.fake_stt = self.stack.enter_context(patch.object(agent, "_transcribe_game_audio", return_value=(TRANSCRIPT, "synthetic-model")))
         self.fake_local = Mock(return_value="The synthetic blue beacon is lit.")
         original_run = agent.run_job
@@ -293,6 +299,32 @@ class OperatorObusContract(unittest.TestCase):
         self.assertNotIn(body["audio_base64"], saved)
         self.assertNotIn("result", json.loads(saved))
 
+    def test_sqlite_uri_boundary_allows_only_canonical_fixture_database(self):
+        path = self.directory / "synthetic uri # fixture.sqlite"
+        sqlite3.connect(path).close()
+        sqlite3.connect(path.resolve().as_uri() + "?mode=rw", uri=True).close()
+        outside = fixture_root.parent / "synthetic-outside-contract.sqlite"
+        for uri in (outside.resolve().as_uri() + "?mode=rw", path.resolve().as_uri() + "?mode=rwc",
+                    "file://untrusted.invalid" + urlsplit(path.resolve().as_uri()).path + "?mode=rw"):
+            with self.subTest(uri=uri), self.assertRaisesRegex(AssertionError, "SQLite outside fixture state"):
+                sqlite3.connect(uri, uri=True)
+
+    def test_captured_strict_local_provider_is_blocked_before_http(self):
+        key = {"id": "key-local-ollama", "provider": "ollama", "model": "campaign:fixture",
+               "base_url": "http://127.0.0.1:11434", "connected": True, "verified": True}
+        # Exercise the real function held before agent-level mocks were installed.
+        # The lower boundary must fail locally even for a captured live default.
+        with self.assertRaisesRegex(AssertionError, "Acceptance boundary"):
+            self.strict_local(key, "Authorized synthetic fixture.", 32)
+        self.http_boundary.assert_called_once()
+        endpoint, payload, headers, deadline = self.http_boundary.call_args.args
+        self.assertEqual(endpoint, "http://127.0.0.1:11434/api/show")
+        self.assertEqual(payload, {"model": "campaign:fixture", "verbose": False})
+        self.assertEqual(headers, {})
+        self.assertIsInstance(deadline, (int, float))
+        self.fake_local.assert_not_called()
+        self.fake_stt.assert_not_called()
+
     def test_text_route_uses_explicit_fake_provider_and_fixture_state(self):
         self.seed(child=True)
         job = {"contract": "raph-obus-game-v1", "scope": {"campaign": CAMPAIGN, "owner": "fixture_host", "role": "host"},
@@ -316,6 +348,20 @@ def install_boundary(root: Path):
         except (TypeError, ValueError, OSError):
             return False
 
+    def sqlite_inside(path):
+        try:
+            if isinstance(path, str) and path.startswith("file:"):
+                parsed = urlsplit(path)
+                if parsed.scheme != "file" or parsed.netloc or parsed.query != "mode=rw" or parsed.fragment:
+                    return False
+                decoded = Path(url2pathname(parsed.path))
+                if not decoded.is_absolute() or decoded.resolve().as_uri() + "?mode=rw" != path:
+                    return False
+                return inside(decoded)
+            return inside(path)
+        except (TypeError, ValueError, OSError):
+            return False
+
     socketpair_code = getattr(socket.socketpair, "__code__", None)
 
     def audit(event, args):
@@ -330,7 +376,7 @@ def install_boundary(root: Path):
             forbidden()
         if event in {"socket.getaddrinfo", "subprocess.Popen", "os.system", "os.posix_spawn"}:
             forbidden()
-        if event == "sqlite3.connect" and args[0] != ":memory:" and not inside(args[0]):
+        if event == "sqlite3.connect" and args[0] != ":memory:" and not sqlite_inside(args[0]):
             raise AssertionError("Acceptance boundary: SQLite outside fixture state is forbidden")
         if event == "open" and isinstance(args[0], (str, bytes, os.PathLike)):
             path = os.fsdecode(args[0])
@@ -354,10 +400,10 @@ def main():
     if not options.backend_root.is_absolute():
         parser.error("--backend-root must be an absolute checkout path")
     supplied = options.backend_root.resolve(strict=True)
-    expected = {name: (supplied / "backend" / f"{name}.py").resolve(strict=True) for name in ("game_agent", "game_runtime", "persistent_agents")}
+    expected = {name: (supplied / "backend" / f"{name}.py").resolve(strict=True) for name in ("game_agent", "game_runtime", "game_providers", "persistent_agents")}
     if any(not path.is_relative_to(supplied) for path in expected.values()):
         parser.error("Resolved backend modules must remain inside the supplied checkout")
-    global agent, runtime, TestClient, fixture_root
+    global agent, runtime, providers, TestClient, fixture_root
     sys.dont_write_bytecode = True
     with tempfile.TemporaryDirectory(prefix="operator-obus-contract-") as temporary:
         fixture_root = Path(temporary).resolve()
@@ -366,6 +412,7 @@ def main():
             sys.path.insert(0, str(supplied))
             agent = importlib.import_module("backend.game_agent")
             runtime = importlib.import_module("backend.game_runtime")
+            providers = importlib.import_module("backend.game_providers")
             for name, path in expected.items():
                 actual = Path(sys.modules[f"backend.{name}"].__file__).resolve(strict=True)
                 if actual != path:

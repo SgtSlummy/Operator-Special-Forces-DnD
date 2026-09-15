@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SceneImages from '../scene-images';
+import LocalStudio from './local-studio';
 
 export default function Illustrations() {
   return <main className="min-h-screen bg-[#0b0a13] p-6 text-[#f7f3e8] md:p-10">
@@ -8,6 +9,7 @@ export default function Illustrations() {
       <p className="mt-8 text-xs uppercase tracking-widest text-amber-300">Witnesslight</p>
       <h1 className="mt-2 font-serif text-4xl">Your view of the world</h1>
       <p className="my-5 max-w-xl leading-7 text-stone-300">Ask for what your character can see at any time. Use the private image access code from your host. If you are already connected to the tactical table, its image control uses that campaign connection.</p>
+      <LocalStudio />
       <SceneImages />
     </div>
   </main>;

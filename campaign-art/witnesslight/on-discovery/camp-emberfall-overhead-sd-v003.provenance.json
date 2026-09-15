@@ -1,0 +1,13 @@
+{
+  "prompt": "straight-down aerial illustration of a believable fantasy campsite called Camp Emberfall, three triangular canvas tents with visible tent roofs and guy ropes, central stone fire ring with warm amber glow, two wooden supply wagons, stacks of crates, bedrolls, muddy footpaths, a low wooden palisade on the east edge, dark forest border, clear readable composition for tabletop RPG scene art, classic hand-painted D&D book illustration, muted mineral colors, no people, no writing, no labels, no grid, no map symbols, no user interface, no border, no perspective, no horizon, no isometric",
+  "negative_prompt": "abstract noise, dungeon rooms, stone corridors, dungeon map, square grid, hex grid, floor plan, side view, scenic landscape, horizon, perspective, tilted camera, isometric, text, labels, legend, UI, watermark, tokens, characters, blurry, oversaturated",
+  "model": "v1-5-pruned-emaonly",
+  "sampler": "DPM++ 2M Karras",
+  "steps": 32,
+  "cfg_scale": 7,
+  "width": 512,
+  "height": 512,
+  "seed": 2503,
+  "generated_at": "2026-09-09T14:56:57.9429253Z",
+  "generator": "AUTOMATIC1111 local API http://127.0.0.1:7860"
+}

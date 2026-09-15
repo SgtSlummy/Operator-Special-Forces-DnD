@@ -1,0 +1,67 @@
+{
+  "review": "Pending visual inspection",
+  "request": {
+    "prompt": "(fantasy oil painting:1.4), portrait of a rugged medieval human watchman, waist up, weathered face, wearing dark brown leather armor and a hooded navy cloak, iron mace visible at his side, standing in a stone coastal watchtower, amber lantern light, sea mist, painterly brush strokes, strong simple silhouette, muted brass and charcoal color palette, classic role playing game character illustration, dramatic chiaroscuro",
+    "batch_size": 1,
+    "seed": 7302471,
+    "height": 640,
+    "do_not_save_samples": true,
+    "width": 512,
+    "do_not_save_grid": true,
+    "negative_prompt": "robot, android, golem, futuristic, gun, firearms, plate armor, glowing eyes, photograph, anime, text, lettering, watermark, signature, extra limbs, extra fingers, bad anatomy, blurry",
+    "n_iter": 1,
+    "send_images": true,
+    "sampler_name": "DPM++ 2M",
+    "cfg_scale": 6.5,
+    "save_images": false,
+    "scheduler": "Karras",
+    "steps": 32
+  },
+  "provider": "local-stable-diffusion",
+  "info": {
+    "prompt": "(fantasy oil painting:1.4), portrait of a rugged medieval human watchman, waist up, weathered face, wearing dark brown leather armor and a hooded navy cloak, iron mace visible at his side, standing in a stone coastal watchtower, amber lantern light, sea mist, painterly brush strokes, strong simple silhouette, muted brass and charcoal color palette, classic role playing game character illustration, dramatic chiaroscuro",
+    "all_prompts": [
+      "(fantasy oil painting:1.4), portrait of a rugged medieval human watchman, waist up, weathered face, wearing dark brown leather armor and a hooded navy cloak, iron mace visible at his side, standing in a stone coastal watchtower, amber lantern light, sea mist, painterly brush strokes, strong simple silhouette, muted brass and charcoal color palette, classic role playing game character illustration, dramatic chiaroscuro"
+    ],
+    "negative_prompt": "robot, android, golem, futuristic, gun, firearms, plate armor, glowing eyes, photograph, anime, text, lettering, watermark, signature, extra limbs, extra fingers, bad anatomy, blurry",
+    "all_negative_prompts": [
+      "robot, android, golem, futuristic, gun, firearms, plate armor, glowing eyes, photograph, anime, text, lettering, watermark, signature, extra limbs, extra fingers, bad anatomy, blurry"
+    ],
+    "seed": 7302471,
+    "all_seeds": [
+      7302471
+    ],
+    "subseed": 630759994,
+    "all_subseeds": [
+      630759994
+    ],
+    "subseed_strength": 0,
+    "width": 512,
+    "height": 640,
+    "sampler_name": "DPM++ 2M",
+    "cfg_scale": 6.5,
+    "steps": 32,
+    "batch_size": 1,
+    "restore_faces": false,
+    "face_restoration_model": null,
+    "sd_model_name": "v1-5-pruned-emaonly",
+    "sd_model_hash": "6ce0161689",
+    "sd_vae_name": null,
+    "sd_vae_hash": null,
+    "seed_resize_from_w": -1,
+    "seed_resize_from_h": -1,
+    "denoising_strength": null,
+    "extra_generation_params": {
+      "Schedule type": "Karras"
+    },
+    "index_of_first_image": 0,
+    "infotexts": [
+      "(fantasy oil painting:1.4), portrait of a rugged medieval human watchman, waist up, weathered face, wearing dark brown leather armor and a hooded navy cloak, iron mace visible at his side, standing in a stone coastal watchtower, amber lantern light, sea mist, painterly brush strokes, strong simple silhouette, muted brass and charcoal color palette, classic role playing game character illustration, dramatic chiaroscuro\nNegative prompt: robot, android, golem, futuristic, gun, firearms, plate armor, glowing eyes, photograph, anime, text, lettering, watermark, signature, extra limbs, extra fingers, bad anatomy, blurry\nSteps: 32, Sampler: DPM++ 2M, Schedule type: Karras, CFG scale: 6.5, Seed: 7302471, Size: 512x640, Model hash: 6ce0161689, Model: v1-5-pruned-emaonly, Version: v1.10.1"
+    ],
+    "styles": [],
+    "job_timestamp": "20260909135321",
+    "clip_skip": 1,
+    "is_using_inpainting_conditioning": false,
+    "version": "v1.10.1"
+  }
+}

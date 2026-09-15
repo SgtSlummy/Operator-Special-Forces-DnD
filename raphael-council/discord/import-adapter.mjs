@@ -6,7 +6,8 @@ import { emptyDraft, addEvidence, correctDraft, finishDraft } from '../character
 export function authenticateInteraction(interaction, config) {
   const member = interaction.member;
   const owner = member?.user?.id;
-  if (interaction.guild_id !== config.guildId || interaction.channel_id !== config.channelId || !owner || member.user.bot ||
+  const allowedChannel = interaction.channel_id === config.channelId || config.characterThreadIds?.has(interaction.channel_id);
+  if (interaction.guild_id !== config.guildId || !allowedChannel || !owner || member.user.bot ||
     !Array.isArray(member.roles) || !(config.playerIds.includes(owner) || (config.playerRoleId && member.roles.includes(config.playerRoleId)))) {
     throw new ImportError('This character desk is only available to this campaign’s current players. Ask the host to add you to its roster.');
   }
@@ -18,7 +19,7 @@ function parseRoute(customId) {
   return { viewId: match[1], action: match[2], page: Number(match[3]) };
 }
 const HOME = { type: 2, custom_id: 'rpi:home', label: 'My Hero', style: 2 };
-export function createImportHandler({ store, service, config, transport, log = () => {} }) {
+export function createImportHandler({ store, service, config, transport, onCharacterApproved = null, log = () => {} }) {
   return async function handle(interaction) {
     const customId = interaction.data?.custom_id;
     if (typeof customId !== 'string' || !(customId.startsWith('rpi:') || customId.startsWith('rph:'))) return false;
@@ -69,7 +70,7 @@ export function createImportHandler({ store, service, config, transport, log = (
         }
         if (!job || view.kind !== 'job') throw new ImportError('Invalid import action. Open My Hero again.');
         if (['page', 'refresh'].includes(route.action)) { await reply(jobScreen(store, scope, job.id, route.page)); return true; }
-        if (route.action === 'approve') { await defer(); await service.approve(job.id, scope, view.revision); await edit(jobScreen(store, scope, job.id)); return true; }
+        if (route.action === 'approve') { await defer(); const character = await service.approve(job.id, scope, view.revision); await onCharacterApproved?.(character, scope); await edit(jobScreen(store, scope, job.id)); return true; }
         if (route.action === 'cancel') { await defer(); await service.cancel(job.id, scope, view.revision); await edit(jobScreen(store, scope, job.id)); return true; }
       } else if (route.action === 'submit') {
         if (!['importpdf', 'importcorrect', 'hero'].includes(view.kind)) throw new ImportError('Invalid form binding.');

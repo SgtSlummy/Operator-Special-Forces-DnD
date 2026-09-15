@@ -1,0 +1,37 @@
+# Local Citadel v1.3.5 MCP path correction for this repository.
+# The native plugin manifest uses script paths relative to the project cwd.
+# Removal evidence: C:/Users/Hermes/LocalFiles/citadel-hook-diagnostics-2026-09-09/
+
+[mcp_servers.citadel-state]
+command = 'node'
+args = ['C:/Users/Hermes/.codex/plugins/cache/citadel-local/citadel/1.3.5/mcp-servers/citadel-state/index.js']
+cwd = 'C:/Users/Hermes/Projects/Operator Special Forces Dungeon and Dragons'
+
+[mcp_servers.codebase-memory]
+command = 'node'
+args = ['C:/Users/Hermes/.codex/plugins/cache/citadel-local/citadel/1.3.5/mcp-servers/codebase-memory/index.js']
+cwd = 'C:/Users/Hermes/Projects/Operator Special Forces Dungeon and Dragons'
+
+[mcp_servers.gortex]
+enabled = false
+
+[mcp_servers.gortex_davy]
+enabled = false
+
+[plugins."gortex@personal"]
+enabled = false
+
+[hooks.state."C:\\Users\\Hermes\\.codex\\config.toml:post_tool_use:0:0"]
+enabled = false
+
+[hooks.state."C:\\Users\\Hermes\\.codex\\config.toml:pre_tool_use:0:0"]
+enabled = false
+
+[hooks.state."C:\\Users\\Hermes\\.codex\\config.toml:session_start:0:0"]
+enabled = false
+
+[hooks.state."C:\\Users\\Hermes\\.codex\\config.toml:stop:0:0"]
+enabled = false
+
+[hooks.state."C:\\Users\\Hermes\\.codex\\config.toml:user_prompt_submit:0:0"]
+enabled = false

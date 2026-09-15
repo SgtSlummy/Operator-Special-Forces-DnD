@@ -1,0 +1,50 @@
+{
+  "created": "2026-09-08",
+  "generator": "OpenAI image-generation tool (hosted), not a local inference run",
+  "reference": "party/saltglass-party.png",
+  "portraits": [
+    {
+      "id": "branna",
+      "prompt": "Use case: identity-preserve. Create a professional fantasy RPG portrait token source image, square 1024x1024. Reference image is the existing three-character campaign illustration. Subject: ONLY the human fighter on the LEFT of the reference, Branna Stonewake. Preserve the exact illustrated face, tousled short dark-brown hair, stubble, weathered skin, blue-grey scarf and armored leather/chain collar. Tight head-and-shoulders crop, face fills 65% of frame, centered, whole head and hair visible. Painterly digital concept art with clear planes, expressive eyes, confident brushwork, natural proportions, restrained details that read at 64 pixels. Deep muted warm umber backdrop. Clear soft directional key light. No circle frame, no border, no UI, no text, no other characters, no letter initials, no symbols, no toy or flat cartoon."
+    },
+    {
+      "id": "pip",
+      "prompt": "Use case: identity-preserve. Create a professional fantasy RPG portrait token source image, square 1024x1024. Reference image is the existing three-character campaign illustration. Subject: ONLY the halfling wizard in the CENTER of the reference, Pip Underbough. Preserve the exact illustrated face, short curly brown hair, broad bright brown eyes, slightly pointed ears, cheerful curious adult halfling expression, blue cloak with weathered gold piping. Tight head-and-shoulders crop, face fills 65% of frame, centered, whole head and hair visible. Painterly digital concept art with clear planes, expressive eyes, confident brushwork, natural proportions, restrained details readable at 64 pixels. Deep muted blue-teal backdrop. Clear soft directional key light. No circle frame, no border, no UI, no text, no other characters, no letter initials, no symbols, no toy or flat cartoon."
+    },
+    {
+      "id": "kael",
+      "prompt": "Use case: identity-preserve. Create a professional fantasy RPG portrait token source image, square 1024x1024. Reference image is the existing three-character campaign illustration. Subject: ONLY the half-orc rogue on the RIGHT of the reference, Kael Ashstep. Preserve the exact illustrated olive green face, small lower tusks, pointed ears, tied-back black hair, shrewd expression, dark cloak and leather collar. Tight head-and-shoulders crop, face fills 65% of frame, centered, whole head and hair visible. Painterly digital concept art with clear planes, expressive eyes, confident brushwork, natural proportions, restrained details readable at 64 pixels. Deep muted moss backdrop. Clear soft directional key light. No circle frame, no border, no UI, no text, no other characters, no letter initials, no symbols, no toy or flat cartoon."
+    }
+  ],
+  "additional": [
+    {
+      "id": "map-shore",
+      "prompt": "Use case: game-asset. Create an original premium tabletop fantasy RPG battlemap illustration. Landscape aspect ratio 8:7. STRICT ORTHOGRAPHIC TOP DOWN, camera exactly vertical at 90 degrees, looking straight down at ground, every vertical object seen ONLY from above; no horizon, no sky, no distant buildings, no angled or isometric view. No grid, no text, no compass, no characters, no creatures, no tokens, no interface. Saltglass Shore, moody coastal fantasy. Actual walkable damp grey-beige shingle beach occupies LEFT 75% of the entire image; RIGHT 25% is deep desaturated blue-green sea with thin white foam edge along x=75%. Entire left beach is almost flat and traversable with sparse tiny pebbles. Two solitary impassable broad dark granite boulders precisely centered at x43.75%,y35.71% and x43.75%,y64.29% of the image, each entirely within a footprint of 10% image width by11% image height; these are the only big obstacles on the beach. Three subtle loose-shell shingle patches centered at x31.25%,y21.43%, at x31.25%,y50%, and at x31.25%,y78.57%; each footprint10%width by11%height. No other large rocks, no walls, no bushes, no extra objects, no dock, no staircase, no coast on the left. Ground texture: wet compact sand, wind-swept silt, tiny seashells, subtle retreating tide lines. Restrained hand-painted cartographic realism, crisp tactile material textures, soft low directional light, natural legible separation of stone, sand and seawater, high detail without busy clutter. This is a functional physical game board not a landscape painting. Keep composition completely planar."
+    },
+    {
+      "id": "portrait-brine",
+      "prompt": "Use case: game-asset. Square fantasy tabletop RPG enemy portrait source. Single original drowned revenant, brine wight, head and shoulders tight crop, wholehead visible face65%ofcanvas. Gaunt ancient salt-weathered grey green face, barnacle encrusted cracked leather collar, wisps of soaked black hair, milky amber eyes, clearly inhuman undead but non-graphic, solemn menacing expression. Sophisticated painterly digital fantasy concept art, confident visible brushwork and clear planes, natural anatomical proportions, legible at64pixels. Deep muted slate-blue background, diffuse cold key light, restrained warm reflectedlight. No text, no border, no circle, no UI, no symbols, no cartoon, no flat shapes."
+    }
+  ],
+  "registration": {
+    "mapId": "saltglass-party-shore",
+    "columns": 8,
+    "rows": 7,
+    "blocked": [
+      "D3",
+      "D5"
+    ],
+    "difficult": [
+      "C2",
+      "C4",
+      "C6"
+    ],
+    "artFile": "../on-discovery/saltglass-shore-overhead-v2.png"
+  },
+  "limitations": [
+    "Artwork is illustrative; GameStore remains authoritative for movement.",
+    "The replay's Abbey transition does not change the map; the UI must show a mismatch warning.",
+    "Player maps require an actual visibility-scoped snapshot; no host-map fallback is permitted.",
+    "Cover, concealment and stair metadata need engine validation; no automatic cover bonus is claimed by this renderer."
+  ]
+}

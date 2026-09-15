@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "campaign": "The Unwritten Coast",
+  "assetRoot": "../../../campaign-art/unwritten-coast",
+  "viewer": "http://127.0.0.1:51931/",
+  "audience": "GM preparation; full overviews reveal other floors",
+  "positionMode": "manual; initial markers are previews",
+  "discordThread": "https://discord.com/channels/1463393482306486387/1546676505780944979/threads/1548204446838689882",
+  "discordDelivery": "Introduction posted; map uploads pending extension file access",
+  "generator": "OpenAI built-in image_gen.imagegen",
+  "prompts": "PROMPTS.md",
+  "assets": [
+    {"path":"v1/gm/05-undertow-entry-schematic.png","reveal":"GM only","bytes":2634048,"sha256":"cd9e1a71c9752ce6bc2aed0b6ba0024565097ca56272db518d8fd042131316ee"},
+    {"path":"v1/on-discovery/04-brass-vestibule.png","reveal":"on discovery","bytes":2682718,"sha256":"9003f6851c635431160ba5b53feb26496153b09a421954fbb921f18c1d654630"},
+    {"path":"v1/on-discovery/06-storm-lens-cavern.png","reveal":"on discovery","bytes":3118527,"sha256":"1f285cf4d9ba1fc87f6ef214ac32a96564585629b5b482426e635445d0d15674"},
+    {"path":"v1/on-discovery/07-beacon-heart-cutaway.png","reveal":"on discovery; all floors visible","bytes":3587530,"sha256":"c4df7d13e409387724349ccd141828e6350b96c0c31500d5b1a5edb469479826"},
+    {"path":"v1/opening/01-coast-region.png","reveal":"opening","bytes":3795312,"sha256":"60307d4ff4ef3ba8ad9a8749fe630507b2c5aba2369a2087866f593386162042"},
+    {"path":"v1/opening/02-brinewatch-town.png","reveal":"opening","bytes":3907614,"sha256":"32ac95d4ee897825847172da4d5c5291817ac35b00fbf098f5c60af8a098a10a"},
+    {"path":"v1/opening/03-ferry-landing.png","reveal":"opening","bytes":3331998,"sha256":"eb7608dfa96a075874afd949f11666a10a0d604c51018a3725d223f3a97d63ae"},
+    {"path":"v2-layers/beacon-00.png","reveal":"on discovery","bytes":3342254,"sha256":"5b5418df8c52c4604a3589a2c94a0833488379f7ac628181ea06713a64361748"},
+    {"path":"v2-layers/beacon-100.png","reveal":"on discovery","bytes":3234751,"sha256":"f1cc835906797c726dab1fb1979404ee0cf9dea84b7c23bd543cb567fe580cb1"},
+    {"path":"v2-layers/beacon-200.png","reveal":"on discovery","bytes":3242090,"sha256":"10d1e98f85e80f50cb12aaf51de78126a7c1639cdbef0b79d4bc850bedbb9625"},
+    {"path":"v2-layers/beacon-275.png","reveal":"on discovery","bytes":3295047,"sha256":"0b6043eb92e582da5b4093ae71b3cfe0a9026fd77fa705d947e266983df2ea29"},
+    {"path":"v2-layers/ferry-hold.png","reveal":"interior on discovery","bytes":2803849,"sha256":"11aa709bcda00381b714cf23234e21214c58e2593b9910f1dcbaf94feda3a39d"},
+    {"path":"v2-layers/ferry-main.png","reveal":"interiors on discovery","bytes":3492720,"sha256":"c5fa73fa8d364bdf726fc5012ece55ba358b55df606023724e2709b3e9003a81"},
+    {"path":"v2-layers/ferry-overview.png","reveal":"interior on discovery; both decks visible","bytes":3700670,"sha256":"6687c82aef602ddac7aa99fddf62c0db3456d81ac50a3ea2c1e7d7a295fa6acf"}
+  ]
+}

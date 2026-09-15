@@ -34,6 +34,7 @@ export default function Play({ embedded = false }: { embedded?: boolean }) {
   const [view, setView] = useState<View | null>(null), [receipts, setReceipts] = useState<Receipt[]>([]);
   const [connected, setConnected] = useState(false), [token, setToken] = useState(''), [busy, setBusy] = useState(false), [error, setError] = useState('');
   const [destination, setDestination] = useState(''), [target, setTarget] = useState(''), [selectedActor, setSelectedActor] = useState('');
+  const [draggingActor, setDraggingActor] = useState<string | null>(null);
   const [pending, setPending] = useState<Command | null>(null);
   const pendingRef = useRef<Command | null>(null);
   const sessionEpoch = useRef(0);
@@ -88,6 +89,21 @@ export default function Play({ embedded = false }: { embedded?: boolean }) {
   const active = controls.active as Actor | undefined;
   const actor = controls.actor as Actor | undefined;
   const preview = useMemo(() => movementPreview(view, tacticalControls(view, selectedActor).actor, destination), [view, selectedActor, destination]);
+  const beginDrag = useCallback((event: React.PointerEvent<SVGGElement>, next: Actor) => {
+    if (busy || pending || interrupted || !next.controlled || !(controls.canMove || controls.exploration)) return;
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    setSelectedActor(next.id);
+    setDraggingActor(next.id);
+    setDestination(coordinate(next.x, next.y));
+  }, [busy, controls.canMove, controls.exploration, interrupted, pending]);
+  const previewDrag = useCallback((point: Point) => {
+    if (draggingActor) setDestination(coordinate(point.x, point.y));
+  }, [draggingActor]);
+  const finishDrag = useCallback((point: Point) => {
+    if (!draggingActor) return;
+    setDestination(coordinate(point.x, point.y));
+    setDraggingActor(null);
+  }, [draggingActor]);
   async function connect(event: React.FormEvent) {
     event.preventDefault(); setBusy(true); setError('');
     sessionEpoch.current++; setView(null); setReceipts([]); setHistory([]); revisionCursor.current = null; pendingRef.current = null; setPending(null);
@@ -118,29 +134,29 @@ export default function Play({ embedded = false }: { embedded?: boolean }) {
     if (type === 'attack') command.targetId = target;
     void send(command);
   }
-  const visible = new Set(view?.map.cells.map(cellKey)), blocked = new Set(view?.map.blocked.map(cellKey));
+  const visible = new Set(view?.map.cells.map(cellKey)), blocked = new Set(view?.map.blocked.map(cellKey)), difficult = new Set(view?.map.difficult.map(cellKey));
   const pathKeys = new Set(preview?.path.map(cellKey));
   async function disconnect() {
     sessionEpoch.current++; pendingRef.current = null; setPending(null); setConnected(false); setView(null); setReceipts([]); setHistory([]); revisionCursor.current = null;
     try { await api('/access', { method: 'DELETE' }); await fetch('/api/auth/logout', { method: 'POST' }); } catch (reason) { report(reason); }
   }
   return <main className="min-h-screen bg-[#0b0a13] p-4 text-[#f7f3e8] md:p-8">
-    <header className="mb-6 flex flex-wrap items-center justify-between gap-4"><div><p className="text-sm tracking-widest text-amber-300">{embedded ? 'DAVY JONES · RAPHAEL' : 'RAPHAEL'}</p><h1 className="font-serif text-3xl">{view?.map.title || 'Tactical table'}</h1></div><nav className="flex flex-wrap items-center gap-3">{!embedded && <Link href="/" className={button}>Campaign council</Link>}<SceneImages key={connected ? view?.campaign || 'joining' : 'disconnected'} apiBase="/api/game/scene-images" sharedSession reachApiBase="/api/game" reachSessionKey={`${connected}:${view?.campaign || ''}`} />{connected && <button className={button} disabled={busy} onClick={() => void disconnect()}>Disconnect</button>}</nav></header>
+    <header className="mb-6 flex flex-wrap items-center justify-between gap-4"><div><p className="text-sm tracking-widest text-amber-300">{embedded ? 'DAVY JONES · RAPHAEL' : 'RAPHAEL'}</p><h1 className="font-serif text-3xl">{view?.map.title || 'Tactical table'}</h1></div><nav className="flex flex-wrap items-center gap-3">{!embedded && <Link href="/" className={button}>Campaign council</Link>}{!embedded && <Link href="/layout-lab" className={button}>Combat layout lab</Link>}<SceneImages key={connected ? view?.campaign || 'joining' : 'disconnected'} apiBase="/api/game/scene-images" sharedSession reachApiBase="/api/game" reachSessionKey={`${connected}:${view?.campaign || ''}`} autoRevision={view?.revision ?? null} />{connected && <button className={button} disabled={busy} onClick={() => void disconnect()}>Disconnect</button>}</nav></header>
     {!connected && !embedded && <p className="mb-4 text-center"><a href="/api/auth/discord/start" className={button}>Sign in with Discord</a></p>}
     {!connected && <form onSubmit={connect} className="mx-auto max-w-lg rounded-xl border border-amber-100/20 bg-[#24212a] p-6"><h2 className="mb-3 text-xl">Join your campaign</h2><p className="mb-5 text-base text-stone-300">Use the private player access code from your host. Your character, current turn and visible map will load from the saved campaign.</p><label htmlFor="access" className="mb-2 block">Player access code</label><input id="access" type="password" autoComplete="off" value={token} onChange={e => setToken(e.target.value)} className="mb-4 w-full rounded border border-white/30 bg-black/30 p-3" required /><button className={button} disabled={busy}>Connect to the table</button></form>}
     {error && <div role="alert" className="my-4 rounded border border-amber-400/30 p-4 text-amber-100">{error}{pending && <button className={`${button} ml-4`} disabled={busy} onClick={() => void send(pending)}>Retry saved action</button>}</div>}
     {connected && view && <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_22rem]">
       <section className="min-w-0 rounded-xl border border-amber-100/20 bg-[#17131d] p-4" aria-label="Visible scene map">
         <div className="mb-3 flex flex-wrap justify-between gap-3 text-sm"><span>{controls.status}</span><span>Revision {view.revision}{view.phase === 'combat' ? ` · ${active?.name || 'Another actor'} acting` : ''}</span></div>
-        <div className="max-h-[72vh] overflow-auto"><svg viewBox={`0 0 ${view.map.width * 64} ${view.map.height * 64}`} className="w-full min-w-[480px]" role="img" aria-label="Octagonal map. Use the destination field for keyboard movement.">
+        <div className="max-h-[72vh] overflow-auto"><svg viewBox={`0 0 ${view.map.width * 64} ${view.map.height * 64}`} className="w-full min-w-[480px] touch-none" role="img" aria-label="Octagonal map. Drag a controlled character to preview movement, then confirm below.">
           {Array.from({ length: view.map.width * view.map.height }, (_, i) => {
             const x = i % view.map.width, y = Math.floor(i / view.map.width), k = `${x},${y}`, seen = visible.has(k);
-            return <g key={k} onClick={() => seen && setDestination(coordinate(x, y))} style={{ cursor: seen ? 'pointer' : 'default' }}><polygon points={octagonPoints(x, y, 64).map((p: number[]) => p.join(',')).join(' ')} fill={!seen ? '#111019' : pathKeys.has(k) ? '#49626b' : blocked.has(k) ? '#534957' : '#24212a'} stroke={seen ? '#776653' : '#24212a'} /><text x={x * 64 + 10} y={y * 64 + 15} fontSize="11" fill="#d0b8a3">{seen ? coordinate(x, y) : ''}</text></g>;
+            return <g key={k} onClick={() => seen && setDestination(coordinate(x, y))} onPointerEnter={() => seen && previewDrag({ x, y })} onPointerUp={() => seen && finishDrag({ x, y })} style={{ cursor: seen ? 'pointer' : 'default' }}><polygon points={octagonPoints(x, y, 64).map((p: number[]) => p.join(',')).join(' ')} fill={!seen ? '#111019' : pathKeys.has(k) ? '#49626b' : blocked.has(k) ? '#534957' : difficult.has(k) ? '#6b5c3a' : '#24212a'} stroke={seen ? '#776653' : '#24212a'} /><text x={x * 64 + 10} y={y * 64 + 15} fontSize="11" fill="#d0b8a3">{seen ? coordinate(x, y) : ''}</text></g>;
           })}
           {view.effects.flatMap(effect => effect.cells.map(p => <g key={`${effect.id}-${cellKey(p)}`} pointerEvents="none"><polygon points={octagonPoints(p.x, p.y, 64).map((v: number[]) => v.join(',')).join(' ')} fill="#ee9b3a44" stroke="#ee9b3a" strokeDasharray="4 3" /><text x={p.x * 64 + 25} y={p.y * 64 + 43} fill="#fff3cf" fontSize="22">!</text></g>))}
-          {view.actors.map(actor => <g key={actor.id} onClick={() => controls.exploration && actor.controlled && !actor.defeated ? setSelectedActor(actor.id) : setTarget(actor.id)}><circle cx={(actor.x + actor.size / 2) * 64} cy={(actor.y + actor.size / 2) * 64} r={19 * actor.size} fill={actor.defeated ? '#57505a' : actor.controlled ? '#5c8da1' : '#945550'} stroke={actor.id === view.activeActorId ? '#ee9b3a' : '#e7d1b1'} strokeWidth={actor.id === view.activeActorId ? 4 : 1} /><text x={(actor.x + actor.size / 2) * 64} y={(actor.y + actor.size / 2) * 64 + 5} textAnchor="middle" fontSize="14" fill="white">{actor.name.slice(0, 2).toUpperCase()}</text><title>{actor.name} · {coordinate(actor.x, actor.y)}</title></g>)}
+          {view.actors.map(actor => <g key={actor.id} onPointerDown={event => beginDrag(event, actor)} onPointerCancel={() => setDraggingActor(null)} onClick={() => controls.exploration && actor.controlled && !actor.defeated ? setSelectedActor(actor.id) : setTarget(actor.id)} style={{ cursor: actor.controlled && (controls.canMove || controls.exploration) ? 'grab' : 'pointer' }}><circle cx={(actor.x + actor.size / 2) * 64} cy={(actor.y + actor.size / 2) * 64} r={19 * actor.size} fill={actor.defeated ? '#57505a' : actor.controlled ? '#5c8da1' : '#945550'} stroke={actor.id === view.activeActorId ? '#ee9b3a' : '#e7d1b1'} strokeWidth={actor.id === view.activeActorId ? 4 : 1} /><text x={(actor.x + actor.size / 2) * 64} y={(actor.y + actor.size / 2) * 64 + 5} textAnchor="middle" fontSize="14" fill="white">{actor.name.slice(0, 2).toUpperCase()}</text><title>{actor.name} · {coordinate(actor.x, actor.y)}</title></g>)}
         </svg></div>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-stone-300">5 feet per octagon, including diagonals. Marked cells have lingering effects.</p><div className="flex gap-2"><button className={button} onClick={() => void refresh()}>Refresh map</button><a href={apiPath(`/api/game/map?revision=${view.revision}`)} target="_blank" rel="noreferrer" className={button}>Map image</a></div></div>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-stone-300">Drag a controlled token to preview a legal route. Blue cells are the preview; brown cells are difficult terrain. 5 feet per octagon, including diagonals.</p><div className="flex gap-2"><button className={button} onClick={() => void refresh()}>Refresh map</button><a href={apiPath(`/api/game/map?revision=${view.revision}`)} target="_blank" rel="noreferrer" className={button}>Map image</a></div></div>
       </section>
       <aside className="space-y-5"><section className="rounded-xl border border-amber-100/20 p-5">
         <h2 className="mb-3 text-xl">{controls.exploration ? 'Explore the scene' : view.phase === 'complete' ? 'Scene complete' : 'Your turn'}</h2>

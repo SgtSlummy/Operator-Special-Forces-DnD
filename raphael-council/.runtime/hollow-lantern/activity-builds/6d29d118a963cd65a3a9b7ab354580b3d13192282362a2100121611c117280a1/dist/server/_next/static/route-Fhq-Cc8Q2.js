@@ -1,0 +1,1 @@
+import{a as e,t}from"./runtime-DRFbgUQC.js";var n=`nodejs`,r=e(t).history;export{r as GET,n as runtime};

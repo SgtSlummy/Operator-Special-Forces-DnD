@@ -1,0 +1,50 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {createRequire} from 'node:module';
+import {startTable} from './table-server.mjs';
+import {createCoastWeb} from './table-web.mjs';
+const {chromium}=createRequire(import.meta.url)('C:/Users/Hermes/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+test('visible Coast browser uses authenticated action envelope and shared store',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'coast-browser-auth-'));let table,browser,runtime;
+ try{
+  table=await startTable({gmPort:0,playerPort:0,stateFile:join(dir,'state.json')});
+  const origin='http://127.0.0.1:'+table.player.address().port,owner='555555555555555555';
+  const config={guildId:'111111111111111111',applicationId:'333333333333333333',gmUserId:'444444444444444444',members:[{ownerId:owner,actorId:'mara'}]};
+  const client={user:{id:config.applicationId},guilds:{fetch:async()=>({members:{fetch:async({user})=>({id:user,user:{bot:false}})}})}};
+  runtime=createCoastWeb({store:table.store,client,config,auth:{config:{publicOrigin:origin,campaign:'the-unwritten-coast',guild:config.guildId,clientId:config.applicationId},authenticate:async request=>request.headers.get('cookie')==='coast_test=1'?{owner,role:'player',campaign:'the-unwritten-coast'}:null}});
+  browser=await chromium.launch({channel:'chrome',headless:true});const context=await browser.newContext({viewport:{width:1365,height:900}});
+  await context.addCookies([{name:'coast_test',value:'1',url:origin}]);const page=await context.newPage(),actions=[],errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.route('**/api/**',async route=>{
+   const source=route.request(),headers=await source.allHeaders(),body=source.postData();
+   if(source.url().includes('/api/action'))actions.push(JSON.parse(body));
+   const response=await runtime.handle(new Request(source.url(),{method:source.method(),headers,...(body?{body}:{})}));
+   await route.fulfill({status:response.status,headers:Object.fromEntries(response.headers),body:Buffer.from(await response.arrayBuffer())});
+  });
+  await page.goto(origin);await page.waitForSelector('#stage img');
+  await page.locator('#stage img').evaluate(image=>image.decode());
+  assert.ok((await page.locator('#stage img').getAttribute('src')).startsWith('/api/art/'));
+  await page.getByRole('button',{name:'Shop',exact:true}).click();
+  await page.getByRole('button',{name:'Buy',exact:true}).nth(1).click();
+  await page.waitForFunction(()=>document.getElementById('notice').textContent==='Recorded in your campaign.');
+  assert.equal(actions.length,1);assert.match(actions[0].commandId,/^[a-f0-9-]{36}$/);assert.ok(actions[0].viewToken);
+  assert.equal(table.store.view({role:'player',actorId:'mara'}).personal.coins,19);
+  await page.reload();await page.waitForSelector('#stage img');
+  await page.getByRole('button',{name:'Inventory',exact:true}).click();
+  await page.getByText('50 feet of hemp rope',{exact:false}).waitFor({state:'visible'});
+  await page.getByRole('button',{name:'Raphael',exact:true}).click();
+  await page.waitForTimeout(100);
+  assert.doesNotMatch(await page.locator('#notice').textContent(),/Refresh your campaign view|could not/);
+  await table.store.execute({role:'gm'},{type:'visitRoom',roomId:'R01',override:true,reason:'Isolated architectural browser check',revision:table.store.view().state.revision});
+  await page.reload();await page.waitForSelector('#stage img');
+  const architectureRequest=page.waitForRequest(request=>request.url().includes('/api/architecture'));
+  await page.getByRole('button',{name:'Tactical',exact:true}).click();
+  assert.ok(new URL((await architectureRequest).url()).searchParams.get('viewToken'));
+  await page.waitForSelector('[data-architecture-map] svg',{timeout:10000});
+  assert.ok(await page.locator('[data-architecture-map] svg image').count());
+  assert.deepEqual(errors,[]);
+ }finally{runtime?.close();await browser?.close();await table?.close();await rm(dir,{recursive:true,force:true});}
+});

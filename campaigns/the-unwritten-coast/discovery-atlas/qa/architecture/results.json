@@ -1,0 +1,25 @@
+{
+  "kind": "Isolated table browser fixture; no live state changed",
+  "results": [
+    {
+      "layer": "r01-cutaway",
+      "portraits": 4,
+      "undiscoveredNotes": 0,
+      "imagesDecoded": true
+    },
+    {
+      "layer": "r01-floor-slice",
+      "portraits": 4,
+      "undiscoveredNotes": 0,
+      "imagesDecoded": true
+    },
+    {
+      "layer": "r01-low-cutaway",
+      "portraits": 4,
+      "undiscoveredNotes": 0,
+      "imagesDecoded": true
+    }
+  ],
+  "mobileOverflow": false,
+  "pageErrors": []
+}

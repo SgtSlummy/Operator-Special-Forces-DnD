@@ -1,0 +1,61 @@
+{
+  "provider": "local Stable Diffusion WebUI",
+  "model": "v1-5-pruned-emaonly",
+  "request": {
+    "prompt": "Highly detailed hand painted fantasy role playing game character illustration, an androgynous adult angelic traveling companion with flowing pale hair, ivory gold embroidered robes, softly feathered wings, compassionate face, holding a small open book. One character only, waist up three quarter portrait, clear readable silhouette, expressive face, meticulously painted fabric folds and weathered metal details. Restrained rich jewel colors, dramatic warm lantern key light and cool blue rim light, painterly brushwork, classical fantasy book illustration, dark muted sea green background, centered composition, complete head within frame, polished character concept art.",
+    "negative_prompt": "photograph, modern clothing, text, lettering, watermark, logo, signature, blurry, low quality, duplicate person, multiple faces, extra arms, extra fingers, deformed hands, cropped head, anime, childish, flat icon",
+    "seed": 821435,
+    "steps": 28,
+    "cfg_scale": 7,
+    "width": 512,
+    "height": 640,
+    "sampler_name": "DPM++ 2M",
+    "batch_size": 1
+  },
+  "generation_info": {
+    "prompt": "Highly detailed hand painted fantasy role playing game character illustration, an androgynous adult angelic traveling companion with flowing pale hair, ivory gold embroidered robes, softly feathered wings, compassionate face, holding a small open book. One character only, waist up three quarter portrait, clear readable silhouette, expressive face, meticulously painted fabric folds and weathered metal details. Restrained rich jewel colors, dramatic warm lantern key light and cool blue rim light, painterly brushwork, classical fantasy book illustration, dark muted sea green background, centered composition, complete head within frame, polished character concept art.",
+    "all_prompts": [
+      "Highly detailed hand painted fantasy role playing game character illustration, an androgynous adult angelic traveling companion with flowing pale hair, ivory gold embroidered robes, softly feathered wings, compassionate face, holding a small open book. One character only, waist up three quarter portrait, clear readable silhouette, expressive face, meticulously painted fabric folds and weathered metal details. Restrained rich jewel colors, dramatic warm lantern key light and cool blue rim light, painterly brushwork, classical fantasy book illustration, dark muted sea green background, centered composition, complete head within frame, polished character concept art."
+    ],
+    "negative_prompt": "photograph, modern clothing, text, lettering, watermark, logo, signature, blurry, low quality, duplicate person, multiple faces, extra arms, extra fingers, deformed hands, cropped head, anime, childish, flat icon",
+    "all_negative_prompts": [
+      "photograph, modern clothing, text, lettering, watermark, logo, signature, blurry, low quality, duplicate person, multiple faces, extra arms, extra fingers, deformed hands, cropped head, anime, childish, flat icon"
+    ],
+    "seed": 821435,
+    "all_seeds": [
+      821435
+    ],
+    "subseed": 467306803,
+    "all_subseeds": [
+      467306803
+    ],
+    "subseed_strength": 0,
+    "width": 512,
+    "height": 640,
+    "sampler_name": "DPM++ 2M",
+    "cfg_scale": 7.0,
+    "steps": 28,
+    "batch_size": 1,
+    "restore_faces": false,
+    "face_restoration_model": null,
+    "sd_model_name": "v1-5-pruned-emaonly",
+    "sd_model_hash": "6ce0161689",
+    "sd_vae_name": null,
+    "sd_vae_hash": null,
+    "seed_resize_from_w": -1,
+    "seed_resize_from_h": -1,
+    "denoising_strength": null,
+    "extra_generation_params": {
+      "Schedule type": "Karras"
+    },
+    "index_of_first_image": 0,
+    "infotexts": [
+      "Highly detailed hand painted fantasy role playing game character illustration, an androgynous adult angelic traveling companion with flowing pale hair, ivory gold embroidered robes, softly feathered wings, compassionate face, holding a small open book. One character only, waist up three quarter portrait, clear readable silhouette, expressive face, meticulously painted fabric folds and weathered metal details. Restrained rich jewel colors, dramatic warm lantern key light and cool blue rim light, painterly brushwork, classical fantasy book illustration, dark muted sea green background, centered composition, complete head within frame, polished character concept art.\nNegative prompt: photograph, modern clothing, text, lettering, watermark, logo, signature, blurry, low quality, duplicate person, multiple faces, extra arms, extra fingers, deformed hands, cropped head, anime, childish, flat icon\nSteps: 28, Sampler: DPM++ 2M, Schedule type: Karras, CFG scale: 7.0, Seed: 821435, Size: 512x640, Model hash: 6ce0161689, Model: v1-5-pruned-emaonly, Version: v1.10.1"
+    ],
+    "styles": [],
+    "job_timestamp": "20260912170932",
+    "clip_skip": 1,
+    "is_using_inpainting_conditioning": false,
+    "version": "v1.10.1"
+  }
+}

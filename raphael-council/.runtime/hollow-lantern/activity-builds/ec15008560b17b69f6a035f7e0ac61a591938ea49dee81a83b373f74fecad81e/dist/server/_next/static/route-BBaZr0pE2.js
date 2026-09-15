@@ -1,0 +1,1 @@
+import{t as e}from"./http-Cb-xqxn5.js";import{t}from"./runtime-D_iig4Ft.js";var n=`nodejs`,r=e(t).imageHistory;export{r as GET,n as runtime};

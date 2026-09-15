@@ -222,6 +222,7 @@ export function createGameHttp(getServices, { render = renderTacticalMap, getCha
     }),
     imageScene: images.scene,
     imageRequest: images.requestImage,
+    imageHistory: images.history,
     imageJob: images.job,
     imageContent: images.image,
     updates: route(async request => {

@@ -1,0 +1,1 @@
+import{i as e}from"./obus-CJI6TTF2.js";import{r as t}from"./activity-runtime-Bv8QazD4.js";import{t as n}from"./runtime-BL-s0WMo.js";import{t as r}from"./runtime-DRFbgUQC.js";function i(){if(t())throw Object.assign(Error(`Open the Hollow Lantern Unity table for this campaign.`),{status:409});return{game:e(),access:r(),...n()}}export{i as t};

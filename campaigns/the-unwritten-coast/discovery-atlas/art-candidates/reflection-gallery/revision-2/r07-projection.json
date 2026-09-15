@@ -1,0 +1,94 @@
+{
+  "roomId": "R07",
+  "name": "Reflection Gallery",
+  "dimensionsFeet": {
+    "width": 80,
+    "depth": 20,
+    "height": 12
+  },
+  "horizontalSectionFeet": 4,
+  "views": {
+    "r07-cutaway": {
+      "width": 2048,
+      "height": 1024,
+      "origin": [
+        277.9075,
+        445.3698
+      ],
+      "xAxis": [
+        1597.3132,
+        869.1234
+      ],
+      "yAxis": [
+        450.6869,
+        243.1238
+      ],
+      "zAxis": [
+        277.9075,
+        268.8756
+      ]
+    },
+    "r07-floor-slice": {
+      "width": 2048,
+      "height": 1024,
+      "origin": [
+        113.7777,
+        739.5556
+      ],
+      "xAxis": [
+        1934.2223,
+        739.5556
+      ],
+      "yAxis": [
+        113.7777,
+        284.4445
+      ],
+      "zAxis": [
+        113.7777,
+        739.5556
+      ]
+    },
+    "r07-low-cutaway": {
+      "width": 2048,
+      "height": 1024,
+      "origin": [
+        150.9128,
+        397.7281
+      ],
+      "xAxis": [
+        1694.8983,
+        900.2555
+      ],
+      "yAxis": [
+        353.1013,
+        157.8857
+      ],
+      "zAxis": [
+        150.9128,
+        192.8779
+      ]
+    }
+  },
+  "features": [
+    {
+      "id": "R07-a",
+      "name": "Viewpoint diagrams",
+      "x": 0.3,
+      "y": 0.4,
+      "z": 0.26666666666666666
+    },
+    {
+      "id": "R07-b",
+      "name": "Linked plate and paper copy",
+      "x": 0.73,
+      "y": 0.65,
+      "z": 0.26666666666666666
+    }
+  ],
+  "generator": "Blender 4.5.9 Cycles using existing local Stable Diffusion limestone and oak",
+  "limits": [
+    "Candidate architectural interpretation; rectangular bounding floor, optical fixtures vary in angle.",
+    "Ceiling mirrors retained in model but hidden for cutaway views.",
+    "No occupants, secret room layout, or legible puzzle solution rendered."
+  ]
+}

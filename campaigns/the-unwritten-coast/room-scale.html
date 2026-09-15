@@ -1,0 +1,89 @@
+<div id="undertow-room-scale">
+  <h3>The Undertow Works · room scale</h3>
+  <div class="viz-controls">
+    <label class="form-label" for="undertow-room-choice">GM layout preview
+      <select class="form-select" id="undertow-room-choice">
+        <option value="0">R01 · Brass Vestibule</option>
+        <option value="1">R02 · Valve Throat</option>
+        <option value="2">R03 · Counterweight Well</option>
+        <option value="3">R04 · Choir of Pipes</option>
+        <option value="4">R05 · Caretaker's Flat</option>
+        <option value="5">R06 · Sleeping Drydock</option>
+        <option value="6">R07 · Reflection Gallery</option>
+        <option value="7">R08 · Insulated Catwalk</option>
+        <option value="8">R09 · Room of Almost-Rain</option>
+        <option value="9">R10 · Giant's Teacup</option>
+        <option value="10">R11 · Pocket Refuge</option>
+        <option value="11">R12 · Map-Press Hall</option>
+        <option value="12">R13 · Dead-Letter Room</option>
+        <option value="13">R14 · Crown Control Gallery</option>
+        <option value="14">R15 · Storm-Lens Cavern</option>
+        <option value="15">R16 · Exit Tower</option>
+        <option value="16">R17 · Unmarked Blue Door</option>
+        <option value="17">R18 · Beacon Heart</option>
+      </select>
+    </label>
+  </div>
+  <div id="undertow-room-detail" class="tabular-nums" aria-live="polite">18 × 12 ft · 10 ft high</div>
+  <svg id="undertow-floor" role="img" aria-label="Selected room footprint with a five-foot square for scale"></svg>
+  <div class="text-small text-muted">Authored floor envelope · irregular outlines are schematic · vertical extent is listed separately</div>
+</div>
+<style>
+#undertow-room-scale #undertow-floor{display:block;width:100%;height:auto;overflow:visible}
+#undertow-room-scale .floor-label{fill:var(--foreground);font-size:12px;font-weight:400}
+#undertow-room-scale .floor-outline{fill:var(--viz-series-1);fill-opacity:.13;stroke:var(--foreground);stroke-width:1.3}
+#undertow-room-scale .floor-grid{stroke:var(--border);stroke-width:1}
+#undertow-room-scale .floor-dimension{stroke:var(--foreground);stroke-width:1}
+#undertow-room-scale .floor-reference{fill:var(--viz-series-2)}
+</style>
+<script>
+(function(){
+  const root=document.getElementById('undertow-room-scale');
+  const select=root.querySelector('#undertow-room-choice');
+  const detail=root.querySelector('#undertow-room-detail');
+  const svg=root.querySelector('#undertow-floor');
+  const ns='http://www.w3.org/2000/svg';
+  const rooms=[
+    [18,12,10,'rect','high'],[4,6,5,'slot','high'],[12,12,160,'rect','deep'],
+    [240,90,60,'rect','high'],[11,17,8,'ell','high'],[1200,420,160,'dock','high'],
+    [80,20,12,'bent','high'],[180,15,70,'rect','above channel'],[60,60,40,'circle','high'],
+    [140,140,70,'circle','deep'],[9,9,7,'rect','high'],[300,180,45,'saw','high'],
+    [20,25,9,'pentagon','high'],[90,40,25,'rect','high'],[1600,900,220,'cavern','high'],
+    [24,27.713,180,'hex','high'],[8,13,10,'rect','high'],[180,180,300,'circle','high']
+  ];
+  function node(tag,attrs,text){const el=document.createElementNS(ns,tag);Object.entries(attrs||{}).forEach(([k,v])=>el.setAttribute(k,String(v)));if(text!==undefined)el.textContent=text;return el;}
+  function draw(){
+    const i=Number(select.value),r=rooms[i],w=Math.max(280,Math.round(root.getBoundingClientRect().width||640)),h=350;
+    const padX=48,padTop=35,spaceH=205,scale=Math.min((w-padX*2)/r[0],spaceH/r[1]);
+    const fw=r[0]*scale,fh=r[1]*scale,x=(w-fw)/2,y=padTop+(spaceH-fh)/2;
+    const title=select.options[i].textContent;
+    const footprint=r[3]==='circle'?r[0]+' ft diameter':r[3]==='hex'?'24 ft across flats':r[0].toLocaleString()+' × '+r[1].toLocaleString()+' ft';
+    detail.textContent=footprint+' · '+r[2]+' ft '+r[4];
+    svg.setAttribute('viewBox','0 0 '+w+' '+h);
+    svg.replaceChildren(node('title',{},title),node('desc',{},detail.textContent+'. The separate filled square is a true five-foot floor reference at the same scale.'));
+    let outline;
+    if(r[3]==='circle')outline=node('ellipse',{cx:x+fw/2,cy:y+fh/2,rx:fw/2,ry:fh/2});
+    else if(r[3]==='cavern')outline=node('path',{d:`M ${x} ${y+fh*.4} C ${x} ${y} ${x+fw*.38} ${y} ${x+fw*.5} ${y+fh*.2} C ${x+fw*.68} ${y+fh*.4} ${x+fw*.85} ${y-fh*.02} ${x+fw} ${y+fh*.4} C ${x+fw} ${y+fh} ${x+fw*.65} ${y+fh} ${x+fw*.42} ${y+fh*.8} C ${x+fw*.2} ${y+fh} ${x} ${y+fh*.8} ${x} ${y+fh*.4} Z`});
+    else if(['ell','bent','pentagon','hex','slot','saw'].includes(r[3])){
+      const shapes={ell:[[0,0],[1,0],[1,.4],[.6,.4],[.6,1],[0,1]],bent:[[0,0],[.45,0],[.55,.3],[1,.3],[1,1],[.45,1],[.35,.7],[0,.7]],pentagon:[[.3,0],[1,0],[1,1],[0,1],[0,.3]],hex:[[.5,0],[1,.25],[1,.75],[.5,1],[0,.75],[0,.25]],slot:[[0,0],[.7,0],[.7,.4],[1,.4],[1,1],[.3,1],[.3,.6],[0,.6]],saw:[[0,0],[.2,.13],[.2,0],[.4,.13],[.4,0],[.6,.13],[.6,0],[.8,.13],[.8,0],[1,.13],[1,1],[0,1]]};
+      outline=node('polygon',{points:shapes[r[3]].map(p=>(x+p[0]*fw)+','+(y+p[1]*fh)).join(' ')});
+    }else outline=node('rect',{x,y,width:fw,height:fh});
+    outline.setAttribute('class','floor-outline');
+    const clipId='undertow-selected-room-clip';const defs=node('defs');const clip=node('clipPath',{id:clipId});clip.appendChild(outline.cloneNode(true));defs.appendChild(clip);svg.appendChild(defs);svg.appendChild(outline);
+    const step=Math.max(r[0],r[1])>800?100:Math.max(r[0],r[1])>100?20:5;
+    const grid=node('g',{'clip-path':'url(#'+clipId+')'});
+    for(let xx=step;xx<r[0];xx+=step)grid.appendChild(node('line',{x1:x+xx*scale,y1:y,x2:x+xx*scale,y2:y+fh,class:'floor-grid'}));
+    for(let yy=step;yy<r[1];yy+=step)grid.appendChild(node('line',{x1:x,y1:y+yy*scale,x2:x+fw,y2:y+yy*scale,class:'floor-grid'}));
+    svg.appendChild(grid);
+    const lineY=y+fh+15;svg.appendChild(node('line',{x1:x,y1:lineY,x2:x+fw,y2:lineY,class:'floor-dimension'}));
+    svg.appendChild(node('text',{x:w/2,y:lineY+18,'text-anchor':'middle',class:'floor-label'},r[0].toLocaleString()+' ft wide'));
+    const refSize=5*scale,refY=285;svg.appendChild(node('rect',{x:48,y:refY,width:refSize,height:refSize,class:'floor-reference'}));
+    svg.appendChild(node('text',{x:48,y:refY+refSize+20,class:'floor-label'},'5 × 5 ft reference'));
+    svg.appendChild(node('text',{x:48,y:refY+refSize+42,class:'floor-label'},'Grid spacing: '+step+' ft'));
+    const height=Math.max(350,refY+refSize+62);svg.setAttribute('viewBox','0 0 '+w+' '+height);
+  }
+  select.addEventListener('change',draw);
+  new ResizeObserver(draw).observe(root);
+  draw();
+})();
+</script>

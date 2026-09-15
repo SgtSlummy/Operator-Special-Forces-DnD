@@ -1,0 +1,1 @@
+import{t as e}from"./http-DJbeg2Rz.js";import{t}from"./runtime-TLqsVJZa.js";var n=`nodejs`,r=e(t),i=r.connect,a=r.disconnect;export{a as DELETE,i as POST,n as runtime};

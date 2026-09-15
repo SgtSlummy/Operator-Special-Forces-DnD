@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-09-10T16:35:49.147Z",
+  "kind": "offline-public-scene-art-preparation",
+  "provider": "AUTOMATIC1111 loopback",
+  "model": "v1-5-pruned-emaonly.safetensors [6ce0161689]",
+  "sceneId": "harbor-shop",
+  "request": {
+    "seed": 29091006,
+    "prompt": "Hand painted fantasy adventure background, wide cinematic composition, tidy medieval harbor outfitter shop interior, rough oak counter and wooden shelves with folded cloth and coils of rope, brass oil lantern, warm welcoming amber light, arched doorway opens onto cool blue grey harbor, restrained teal and antique gold palette, elegant painterly environment concept art, believable medieval craft materials, empty shop, no people",
+    "negative_prompt": "photograph, photorealistic, modern furniture, computer, screen, electricity, neon, science fiction, futuristic, guns, people, face, text, letters, labels, watermark, signature, logo, grid, blurry, low quality, distorted architecture, oversaturated",
+    "steps": 28,
+    "width": 768,
+    "height": 448,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "batch_size": 1,
+    "n_iter": 1,
+    "send_images": true,
+    "save_images": false
+  },
+  "elapsedMs": 6380,
+  "sha256": "f0232570923ae42ea3e623924aa69b52d712657bee589027e1963544e25434b0",
+  "path": "C:\\Users\\Hermes\\LocalFiles\\hollow-lantern\\scene-design-20260910\\harbor-shop-candidate.png",
+  "gameplayCommands": 0,
+  "approved": true,
+  "campaignSceneId": "harbor-shop",
+  "visualReview": "Reviewed as public atmospheric scene art. Does not specify geometry, stock, resources, discoveries or mission outcome."
+}

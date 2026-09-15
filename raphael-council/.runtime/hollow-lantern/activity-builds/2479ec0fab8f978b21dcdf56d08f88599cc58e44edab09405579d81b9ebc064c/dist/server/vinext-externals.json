@@ -1,0 +1,6 @@
+[
+  "@napi-rs/canvas",
+  "react",
+  "react-dom",
+  "ipaddr.js"
+]

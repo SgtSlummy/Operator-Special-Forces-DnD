@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light"><title>The Unwritten Coast — Layered Atlas</title>
+  <link rel="stylesheet" href="style.css"><script type="module" src="app.mjs"></script>
+</head>
+<body>
+  <header class="masthead"><div><h1>The Unwritten Coast</h1><p>A layered atlas for the company</p></div><span id="modeBadge" class="stamp">GM table · Preview positions</span></header>
+  <main>
+    <div class="area-bar"><label>Explore an area<select id="areaSelect"></select></label><div><h2 id="areaTitle"></h2><p id="areaEnvelope"></p></div><button id="follow">Find selected marker</button></div>
+    <nav id="layers" class="layers" aria-label="Architectural floors"></nav>
+    <div class="table-tools"><p id="floorNote"></p><div><label class="check"><input type="checkbox" id="grid"> Reference grid</label><label class="check"><input type="checkbox" id="placing"> Place selected marker</label></div></div>
+    <section class="atlas" aria-label="Linked maps">
+      <figure class="overview"><figcaption><h3>3D overview</h3><span>All mapped floors</span></figcaption><div class="map-window"><div class="map-stage" id="overviewStage"><img id="overviewImage" src="/art/v1/on-discovery/07-beacon-heart-cutaway.png" alt="Beacon Heart architectural cutaway"><svg class="registration" aria-hidden="true" viewBox="0 0 1000 1000" preserveAspectRatio="none"></svg><div id="overviewMarkers" class="markers"></div></div></div><p class="map-foot">Select any marker to open its floor. Overview positions are approximate.</p></figure>
+      <figure class="slice"><figcaption><h3 id="sliceTitle">Architectural slice</h3><span id="elevation"></span></figcaption><div class="map-window"><div class="map-stage" id="sliceStage" tabindex="0" role="group" aria-label="Architectural floor map. Enable Place selected marker, then click the map or use arrow keys to move. Shift and arrow keys move farther."><img id="sliceImage" src="/art/v2-layers/beacon-00.png" alt="Beacon Heart foundation floor map"><svg id="sliceGrid" class="reference-grid" aria-hidden="true" viewBox="0 0 1000 1000" preserveAspectRatio="none"></svg><div id="sliceMarkers" class="markers"></div></div></div><p class="map-foot" id="sliceFoot"></p></figure>
+    </section>
+    <section class="party-panel" aria-labelledby="partyTitle"><div class="party-heading"><h2 id="partyTitle">The company</h2><p id="partySummary"></p><button id="addPlayer">Add marker</button></div><div id="roster" class="roster"></div>
+      <div class="marker-controls"><label>Marker name<input id="playerName" maxlength="32" autocomplete="off"></label><label>Marker color<select id="playerColor"></select></label><button id="moveHere">Move to this floor’s landing</button><button id="down">Go down</button><button id="up">Go up</button><button id="removePlayer">Remove selected</button></div>
+      <p class="helper">Use the landing button after the table agrees a move. Floor tabs only change your view. Enable placement to click a location; arrow keys move the selected marker when the floor map has focus. These controls do not check walls, doors or movement rules.</p>
+    </section>
+    <div class="sharing"><div><h2>Take the map to Discord</h2><p>Export the current slice, or the overview and slice together. Images keep marker names and floor labels.</p></div><button id="exportSlice">Download slice PNG</button><button id="exportPair">Download paired PNG</button></div>
+    <p id="status" class="status" role="status" aria-live="polite">Loading the map table…</p>
+    <details class="table-settings"><summary>Table notes & saved positions</summary><p id="areaNote"></p><p>This is a local GM table. Full cutaways reveal other floors. Share only what the party has discovered. The app does not connect to Discord or track players automatically.</p><label class="check"><input type="checkbox" id="manual"> These are manually entered character positions, not previews</label><div class="save-controls"><button id="saveState">Save positions file</button><label class="file-button">Load positions file<input id="loadState" type="file" accept="application/json,.json"></label><button id="reset">Restore preview markers</button><a href="README.md" target="_blank">Map guide</a></div><p>Positions are also saved in this browser. A positions file lets you carry them to another browser.</p></details>
+  </main>
+  <footer>The Unwritten Coast · Original map art · Proposed architectural layers · GM preparation</footer>
+</body>
+</html>

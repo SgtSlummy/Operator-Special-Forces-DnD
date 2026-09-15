@@ -1,0 +1,33 @@
+{
+  "name": "@operator/chronicle",
+  "version": "0.1.2",
+  "filename": "operator-chronicle-0.1.2.tgz",
+  "sha256": "219d808c0acc448016b7489bf8beed62538a3323113e6594021bebec7170405d",
+  "npmIntegrity": "sha512-ApWdjE++M/DqUudIwnLMeB2Otn1kHu9uJzGwOuez5xChggXZ92zaOV80cCWUes0b8Tv/BT6UU7vaehnlq4fM2g==",
+  "bytes": 44439,
+  "unpackedBytes": 173246,
+  "bundleSha256": "77a8e9dc2cf144eed9eb314dbd9dbbe542fce9a1e11cf613a44665143635755d",
+  "node": ">=22.16.0",
+  "dependencies": {
+    "@napi-rs/canvas": "1.0.8",
+    "@discordjs/voice": "0.19.2",
+    "prism-media": "1.3.5"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "size": 12758,
+      "mode": 420
+    },
+    {
+      "path": "dist/index.mjs",
+      "size": 159794,
+      "mode": 420
+    },
+    {
+      "path": "package.json",
+      "size": 694,
+      "mode": 420
+    }
+  ]
+}

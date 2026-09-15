@@ -1,0 +1,67 @@
+{
+  "createdAt": "2026-09-13T01:49:54.374Z",
+  "generator": "Local AUTOMATIC1111 Stable Diffusion WebUI",
+  "endpoint": "http://127.0.0.1:7860",
+  "request": {
+    "prompt": "Seamless tileable physically believable material texture for an exquisitely detailed miniature coastal fantasy dungeon, orthographic flat scan of ancient pale gray and warm ivory limestone, weathered cut stone surface, subtle tiny fossil inclusions, salt crystallization at the edges of faint hairline cracks, scattered minute slate-colored pores, delicate mineral veining, very restrained olive patina, finely granular tactile surface, natural irregular variations in stone color, aged but carefully maintained harbor engineering architecture, evenly distributed neutral diffuse illumination without directional shadows, consistent scale throughout, flat continuous stone material filling the entire square edge to edge, no perspective, no objects, no inscriptions, no gridded floor, texture atlas quality, detailed architectural conservation photograph, low contrast, natural material realism",
+    "negative_prompt": "text, letters, watermark, logo, objects, furniture, characters, figures, room, walls, landscape, perspective, harsh shadow, frame, border, blurry, low resolution, oversaturated, plastic, cartoon",
+    "seed": 419031,
+    "width": 512,
+    "height": 512,
+    "steps": 32,
+    "cfg_scale": 7,
+    "sampler_name": "DPM++ 2M",
+    "batch_size": 1,
+    "n_iter": 1,
+    "tiling": true,
+    "save_images": false
+  },
+  "responseInfo": {
+    "prompt": "Seamless tileable physically believable material texture for an exquisitely detailed miniature coastal fantasy dungeon, orthographic flat scan of ancient pale gray and warm ivory limestone, weathered cut stone surface, subtle tiny fossil inclusions, salt crystallization at the edges of faint hairline cracks, scattered minute slate-colored pores, delicate mineral veining, very restrained olive patina, finely granular tactile surface, natural irregular variations in stone color, aged but carefully maintained harbor engineering architecture, evenly distributed neutral diffuse illumination without directional shadows, consistent scale throughout, flat continuous stone material filling the entire square edge to edge, no perspective, no objects, no inscriptions, no gridded floor, texture atlas quality, detailed architectural conservation photograph, low contrast, natural material realism",
+    "all_prompts": [
+      "Seamless tileable physically believable material texture for an exquisitely detailed miniature coastal fantasy dungeon, orthographic flat scan of ancient pale gray and warm ivory limestone, weathered cut stone surface, subtle tiny fossil inclusions, salt crystallization at the edges of faint hairline cracks, scattered minute slate-colored pores, delicate mineral veining, very restrained olive patina, finely granular tactile surface, natural irregular variations in stone color, aged but carefully maintained harbor engineering architecture, evenly distributed neutral diffuse illumination without directional shadows, consistent scale throughout, flat continuous stone material filling the entire square edge to edge, no perspective, no objects, no inscriptions, no gridded floor, texture atlas quality, detailed architectural conservation photograph, low contrast, natural material realism"
+    ],
+    "negative_prompt": "text, letters, watermark, logo, objects, furniture, characters, figures, room, walls, landscape, perspective, harsh shadow, frame, border, blurry, low resolution, oversaturated, plastic, cartoon",
+    "all_negative_prompts": [
+      "text, letters, watermark, logo, objects, furniture, characters, figures, room, walls, landscape, perspective, harsh shadow, frame, border, blurry, low resolution, oversaturated, plastic, cartoon"
+    ],
+    "seed": 419031,
+    "all_seeds": [
+      419031
+    ],
+    "subseed": 3922177905,
+    "all_subseeds": [
+      3922177905
+    ],
+    "subseed_strength": 0,
+    "width": 512,
+    "height": 512,
+    "sampler_name": "DPM++ 2M",
+    "cfg_scale": 7,
+    "steps": 32,
+    "batch_size": 1,
+    "restore_faces": false,
+    "face_restoration_model": null,
+    "sd_model_name": "v1-5-pruned-emaonly",
+    "sd_model_hash": "6ce0161689",
+    "sd_vae_name": null,
+    "sd_vae_hash": null,
+    "seed_resize_from_w": -1,
+    "seed_resize_from_h": -1,
+    "denoising_strength": null,
+    "extra_generation_params": {
+      "Schedule type": "Karras"
+    },
+    "index_of_first_image": 0,
+    "infotexts": [
+      "Seamless tileable physically believable material texture for an exquisitely detailed miniature coastal fantasy dungeon, orthographic flat scan of ancient pale gray and warm ivory limestone, weathered cut stone surface, subtle tiny fossil inclusions, salt crystallization at the edges of faint hairline cracks, scattered minute slate-colored pores, delicate mineral veining, very restrained olive patina, finely granular tactile surface, natural irregular variations in stone color, aged but carefully maintained harbor engineering architecture, evenly distributed neutral diffuse illumination without directional shadows, consistent scale throughout, flat continuous stone material filling the entire square edge to edge, no perspective, no objects, no inscriptions, no gridded floor, texture atlas quality, detailed architectural conservation photograph, low contrast, natural material realism\nNegative prompt: text, letters, watermark, logo, objects, furniture, characters, figures, room, walls, landscape, perspective, harsh shadow, frame, border, blurry, low resolution, oversaturated, plastic, cartoon\nSteps: 32, Sampler: DPM++ 2M, Schedule type: Karras, CFG scale: 7.0, Seed: 419031, Size: 512x512, Model hash: 6ce0161689, Model: v1-5-pruned-emaonly, Tiling: True, Version: v1.10.1"
+    ],
+    "styles": [],
+    "job_timestamp": "20260912184946",
+    "clip_skip": 1,
+    "is_using_inpainting_conditioning": false,
+    "version": "v1.10.1"
+  },
+  "sha256": "930efa4c9413d6ed261cd31cd4464041f5599e7bea4d2cbd8dc74051e974970d",
+  "purpose": "Surface artwork only; measured geometry, doors, markers and discoveries remain deterministic."
+}

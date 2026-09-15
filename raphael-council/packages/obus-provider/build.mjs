@@ -6,7 +6,7 @@ import { resolve, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('.', import.meta.url)), appDir = resolve(root, '../..');
-const expected = ['packages/obus-provider/index.mjs', 'ai/obus.mjs', 'chronicle/obus-provider.mjs'].sort();
+const expected = ['packages/obus-provider/index.mjs', 'ai/obus.mjs', 'ai/host-control.mjs', 'ai/evidence-selection.mjs', 'ai/evidence-upload.mjs', 'chronicle/obus-provider.mjs', 'chronicle/obus-evidence.mjs'].sort();
 const allowed = new Set(expected.map(path => resolve(appDir, path)));
 const hash = value => createHash('sha256').update(value).digest('hex');
 const manifest = JSON.parse(await readFile(join(root, 'package.json'), 'utf8'));

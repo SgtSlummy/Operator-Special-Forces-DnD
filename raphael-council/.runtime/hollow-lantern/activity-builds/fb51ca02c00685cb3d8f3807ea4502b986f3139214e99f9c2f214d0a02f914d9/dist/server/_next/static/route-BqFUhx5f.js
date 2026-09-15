@@ -1,0 +1,1 @@
+import{t as e}from"./http-CUVhf6J-.js";var t=`nodejs`,n=e(`callback`);export{n as GET,t as runtime};

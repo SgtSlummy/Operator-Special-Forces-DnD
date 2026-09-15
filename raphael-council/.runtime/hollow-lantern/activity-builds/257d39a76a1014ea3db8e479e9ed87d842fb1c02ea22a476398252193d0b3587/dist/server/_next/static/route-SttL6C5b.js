@@ -1,0 +1,1 @@
+import{t as e}from"./http-LKvrWijA.js";import{t}from"./runtime-CW9bUONS.js";var n=`nodejs`,r=e(t).characterOptions;export{r as GET,n as runtime};

@@ -65,7 +65,7 @@ function cookie(request, token = '') {
 function publicScene(scene) {
   if (!scene) throw new HttpError(409, 'Your host has not shared a current view yet.');
   return {
-    id: scene.id, revision: scene.revision, title: scene.title, description: scene.description,
+    id: scene.id, revision: scene.revision, gameRevision: scene.gameRevision ?? null, title: scene.title, description: scene.description,
     subjects: (scene.subjects ?? []).map(subject => ({ id: subject.id, label: subject.label })),
     sourceEventId: scene.sourceEventId,
   };
@@ -162,6 +162,12 @@ export function createSceneImageHttp(getService, { getGame, authenticate } = {})
       const service = await getService();
       const scope = await accessScope(request, service);
       return json({ scene: publicScene(await service.scene(scope)) });
+    }),
+    history: route(async request => {
+      const service = await getService();
+      const scope = await accessScope(request, service);
+      if (new URL(request.url).search) throw new HttpError(400, 'Open image history without extra fields.');
+      return json({ images: service.history(scope) });
     }),
     requestImage: route(async request => {
       sameOrigin(request);

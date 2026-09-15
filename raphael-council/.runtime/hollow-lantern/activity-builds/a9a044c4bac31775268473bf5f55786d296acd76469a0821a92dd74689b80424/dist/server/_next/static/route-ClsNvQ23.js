@@ -1,0 +1,1 @@
+import{t as e}from"./http-DYExiENf.js";var t=`nodejs`,n=e(`activity`);export{n as POST,t as runtime};

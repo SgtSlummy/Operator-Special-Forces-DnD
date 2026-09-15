@@ -1,0 +1,25 @@
+{
+  "provider": "local-stable-diffusion",
+  "modelHash": "6ce0161689",
+  "payload": {
+    "prompt": "empty rustic medieval supply shop interior, wooden shelves with rope and folded blankets, timber ceiling and stone walls, wooden counter, copper oil lantern, warm light, detailed fantasy environment, clean composition",
+    "negative_prompt": "(text:1.5), (watermark:1.5), (signature:1.5), logo, letters, people, person, creature, modern, supermarket, plastic, electrical, television, computer, map, grid",
+    "width": 512,
+    "height": 512,
+    "steps": 24,
+    "batch_size": 1,
+    "n_iter": 1,
+    "seed": 7302528,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "send_images": true,
+    "save_images": false,
+    "do_not_save_samples": true,
+    "do_not_save_grid": true
+  },
+  "sha256": "7bb739b346e093eab6837583dba1edf8a7b614719446ef986b9a4dbc8fabafcc",
+  "status": "development-pixel-reviewed",
+  "cloud": false,
+  "review": "Empty rustic storeroom with timber, stone, lanterns and supplies; suitable broad outfitter atmosphere. Sparse stock, not a catalogue or inventory claim. No visible watermark in accepted retry.",
+  "requiresHostSelection": true
+}

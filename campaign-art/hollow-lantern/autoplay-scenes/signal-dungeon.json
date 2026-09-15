@@ -1,0 +1,25 @@
+{
+  "provider": "local-stable-diffusion",
+  "modelHash": "6ce0161689",
+  "payload": {
+    "prompt": "medieval fantasy interior painting, empty ancient coastal signal tower chamber, spacious vaulted stone ceiling, salt worn limestone walls, broad stone floor, a single brass lantern on a wooden table, warm amber lantern light and cool blue shadows, atmospheric dungeon environment illustration",
+    "negative_prompt": "people, person, creature, modern, electric light, television, computer, machinery, text, letters, watermark, hidden door, secret passage, map, grid",
+    "width": 512,
+    "height": 512,
+    "steps": 24,
+    "batch_size": 1,
+    "n_iter": 1,
+    "seed": 7302512,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "send_images": true,
+    "save_images": false,
+    "do_not_save_samples": true,
+    "do_not_save_grid": true
+  },
+  "sha256": "6b58fcd7daffd932b9ed22b5e7c616892588be9a480758c28447b03e9d65710e",
+  "status": "development-pixel-reviewed",
+  "cloud": false,
+  "review": "Empty vaulted stone chamber, ordinary opening and exterior masonry; suitable broad signal-station illustration. Omitted requested lantern, no hidden occupants or facts. Not tactical geometry.",
+  "requiresHostSelection": true
+}

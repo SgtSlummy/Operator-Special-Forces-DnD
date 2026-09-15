@@ -1,0 +1,44 @@
+# Discord engine integration — private AI runtime checkpoint
+
+Date: 2026-09-12. Parent task: 01a093b5-34c6-7643-b0e2-ab54b8df52a2.
+
+This supplements CHECKPOINT-2026-09-12.md. The full approved plan remains active; this is an implementation checkpoint, not a release certification.
+
+## Connected behavior
+
+The engine now persists human_gm / ai_dm mode and a changing authority epoch. A paused, human-owned handoff delegates a restricted AI principal while retaining the human GM identity. Old authority cannot make new changes. Recorded commands can still recover their original receipts after a handoff or restart.
+
+The real createCampaignAI path now schedules a delegated narrative director in AI mode. It handles pending describe, talk, and interact intentions through the existing gm_resolve engine command. It does not implement arbitrary mechanical rulings, full NPC planning, or the entire AI-DM design. Existing AI player companions and human approval of generated scene art remain in place.
+
+EngineClient now preserves an explicitly supplied authorityEpoch while retaining the original shape of legacy requests. The director captures its principal, epoch, and revision; validates authority around inference; sends only selected scene/intention context; and recovers the original receipt after an ambiguous network outcome without issuing a second command.
+
+## Private-service contract
+
+The on-disk Obus game service accepts scope.role host, not gm, for this request. The adapter uses task intent with local-only, nonexportable routing and Codex disabled. Inline evidence omits top-level contract and question: contract would trigger signed-reference validation, and question would enable automatic retrieval. The adapter must whitelist evidence because inline content is serialized into the model prompt.
+
+The private game endpoint defaults to loopback port 38175. This machine's recovery documentation identifies port 38178. A current listener check found neither port listening, and the default authenticated capability request failed to connect. The general Obus dashboard remains a separate service and must not substitute for the private game route.
+
+No live model inference, Discord campaign mutation, or private-service restart has been performed in this continuation. A supported clean-start path is being investigated. Live runtime lease, session policy, and route validation remain necessary before an end-to-end test.
+
+## Verification
+
+The previous checkpoint records the passing C# engine suite, including 45 authority/mode checks and audience projection checks.
+
+Root independently ran:
+
+    node --test hollow-lantern/ai-director-runtime.test.mjs hollow-lantern/ai-runtime.test.mjs hollow-lantern/engine-client.test.mjs
+
+Result: 24 tests passed, zero failed, exit 0. Coverage included human-mode inactivity, delegated local-only ruling, stale inference after handoff, revoked membership, route-trace rejection, receipt recovery, epoch serialization, existing companion startup, and artwork approval behavior. The implementer subsequently passed an expanded 48-test run including malformed-output and pending-roll checks plus visual-party and party tests. No live inference was involved.
+
+For the runtime change, Gortex test mapping covered 2/2 selected symbols, guards reported no configured rules, and contract analysis allowed the behavioral change. Change detection refused pending index receipts 155/156. Documentation receipt 157 was likewise committed to disk while indexing was pending. Slow or unavailable graph analysis is not a passing check.
+
+## Remaining delivery work
+
+- Finish and verify the AI runtime integration, including live private-service connectivity.
+- Expose and verify the complete player/GM mode controls and campaign walkthrough behavior.
+- Implement remaining gameplay, voice, memory, export/recovery, and all approved design states.
+- Complete the Figma design connection; the exact connector plan key was rejected and the browser route requires sign-in.
+- Complete Unity 6.3 LTS installation/migration; the installer failed for Windows permissions. The original Unity install location was restored.
+- Verify the requested tool updates/integrations and public beta acceptance criteria.
+
+Citadel's configured marketplace update succeeded at version 1.3.5. Existing Chronos supervision remains configured; its status does not establish game health. No additional recurring task, paid service, or external inference route has been created.

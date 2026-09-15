@@ -523,3 +523,366 @@ pm.cmd forwarding issues. Fresh launcher run detected the existing canonical ser
 - Production loopback repair (2026-09-06): inext start --hostname localhost --port 38178 binds to IPv6 loopback ::1:38178; the earlier --host flag was invalid and caused the broader default bind. Added Start-CanonicalRaphaelProduction.cmd with the supported hostname flag and local-host mode. No production listener is left running after the isolated check.
 
 - Production launcher foreground acceptance (2026-09-06): foreground inext start --hostname localhost --port 38178 reached Production server running at http://localhost:38178; curl http://localhost:38178/play returned 200 OK. The single test session was terminated cleanly afterward.
+
+- Scope correction and Davy bootstrap (2026-09-07): campaign/player records, live GM/two-player testing, and Davy audio validation are now classified as post-setup acceptance tests, not build blockers. Canonical C:\Users\Hermes\Projects\Davy Jones was missing deployment\\.env; copied .env.example locally and ran pnpm setup:local-secrets, generating five internal secrets without printing them. Discord credential variables remain absent from the local file and were not invented.
+
+- Davy foundation check (2026-09-07): pnpm check:foundation passed source, contract, secret-scan, and deployment-evidence checks. It reports only the intentionally open credential-dependent gates dminPrivateAccessAccepted and liveTestGuildAcceptance; Node engine warning remains (Davy requires >=24.17.0, host has 22.23.2).
+
+- Davy full test suite (2026-09-07): pnpm test passed 457/458 with 1 intentionally skipped,   failures,   errors. This validates the local Davy implementation independent of live Discord credentials.
+
+- Davy local integration wiring (2026-09-07): updated canonical deployment\\.env to target OBUS_BASE_URL=http://127.0.0.1:38176, the canonical local Obus game-agent. No Discord or Obus secret value was fabricated; Discord deck acceptance remains a runtime credential check.
+
+- Davy full project check (2026-09-07): pnpm check passed foundation checks, all 457/458 tests with one intentional skip, release foundation (49 artifacts, 5 Compose entrypoints), and scored 9.95/10. Release claim remains ineligible only because the live credential-dependent gates liveTestGuildAcceptance and dminPrivateAccessAcceptance are not executed.
+
+- Windows deployment gate (2026-09-07): installed the required .NET SDK 10.0.302 because Davy global.json pins that SDK; reran pnpm check:windows with C:\Program Files\dotnet on PATH. Restore/build succeeded with   warnings and   errors; Windows deployment validation passed.
+
+- Node runtime alignment (2026-09-07): installed Node.js LTS 24.19.0 and reran pnpm check:release-candidate with C:\Program Files\nodejs first on PATH. Engine warning cleared; all 457/458 tests passed, release foundation passed, and the command exited 2 solely because --require-ready correctly enforces the still-open live gates liveTestGuildAcceptance and dminPrivateAccessAcceptance.
+
+- Davy Node 24 release baseline (2026-09-07): with C:\Program Files\nodejs first on PATH, pnpm check passed under Node 24.19.0: 457/458 tests, one intentional skip, release foundation, and 9.95/10 readiness. Only the explicitly live-gated release claim remains ineligible.
+
+- Windows heartbeat packaging (2026-09-07): persisted C:\Program Files\dotnet in the user PATH so nested PowerShell packaging can resolve the pinned SDK. pnpm package:windows passed restore/build with   warnings and   errors and created C:\Users\Hermes\Projects\Davy Jones\dist\windows-heartbeat.
+
+- Davy runtime drills (2026-09-07): audio-container smoke passed with Discord voice ready, FFmpeg ready, libopus ready, and 320ms playback. Backup/restore drill passed after starting installed Docker Desktop Linux engine: PostgreSQL 16-alpine, 12 migrations, archive 80101 bytes.
+
+- Davy Compose setup (2026-09-07): compose config validated and canonical local stack startup was attempted with generated local secrets and Docker Desktop Linux engine. Container build output was substantial; current service state is being captured separately before claiming health.
+
+## 2026-09-07 - Local Davy deployment recovery
+
+- Resolved the stale local Docker port owners by stopping the older davy-jones-live-* runtime containers without deleting them.
+- Imported the existing local Davy Discord bot credential set into the canonical local deployment environment without printing secrets.
+- Generated a local internal OBUS_API_KEY for the canonical deployment; secret value was not logged.
+- Left Discord OAuth disabled because the local credential source does not provide the OAuth client secret/redirect configuration; this does not block bot/runtime setup.
+- Started the canonical local Compose stack successfully: Postgres/Redis healthy; admin API healthy; admin web, bot gateway, jobs worker, and voice worker started.
+
+
+## 2026-09-07 - Local runtime continuity
+
+- Confirmed the canonical Davy Compose stack remains live with all seven services healthy/running on localhost ports 3000-3012.
+- Confirmed the canonical Raphael development host serves /play with HTTP 200 on localhost:38177.
+- Production Raphael port 38178 is intentionally not persistent; its foreground production smoke run previously passed and the process exited cleanly.
+- Canonical Obus remains live on 127.0.0.1:38176; unauthenticated capability probing is correctly rejected. The existing game-service auth contract remains the next integration evidence slice.
+
+
+## 2026-09-07 - Authenticated Obus capability contract
+
+- Resolved the canonical Obus game-agent authentication header as X-Obus-Game-Token; no token value was emitted.
+- Authenticated capability response returned contract aph-obus-game-v1 with campaign RAG, audience filtering, provider allowlist, Codex gate, no-tools, no-personal-memory, no-auto-memory, and no generic remote/fallback routes enabled.
+- Local faster-whisper STT dependency and bundled model are available and ready; route readiness remains correctly gated until a private game-host runtime lease is active.
+- This is positive contract evidence, not a claim of live campaign acceptance.
+
+
+## 2026-09-07 - Private game-host lease activated
+
+- Added only a minimal local default campaign shell and local-host membership record; no encounters, characters, or campaign content were fabricated.
+- Added local host scope configuration to .env.local and replaced the direct Vinext launch with the lifecycle-aware host/cli.mjs dev process.
+- Host lifecycle status reached unning with an active generation and private campaign lease.
+- Authenticated Obus runtime state confirmed ffectivePolicy.enabled=true, mode=local, codex=false, 	ools=false, personalMemory=false, utoMemory=false, and a current lease.
+- Campaign/player live acceptance and scoped speech-session testing remain post-setup evidence tasks.
+
+
+## 2026-09-07 - Scoped route exercise
+
+- Exercised the real ObusTransport.generate path with the active private runtime fence, campaign default, host scope local-host, local-only policy, and no campaign/player data.
+- Corrected the request contract evidence: policy.namespace must equal the campaign id.
+- Obus accepted the scoped envelope and returned 503 No eligible Obus game provider completed the request; no remote, Codex, fallback, or unverified provider was used.
+- Ollama is installed locally and has available models, but the Obus provider catalogue does not currently expose a verified eligible local provider. Provider registration/verification is the next integration slice.
+
+
+## 2026-09-07 - Local provider registration evidence
+
+- Started a clean canonical Obus core service on 127.0.0.1:39282.
+- Core dashboard reports Ollama connected and key-local-ollama verified/ready with model obus-qwen3.8-27b:65k; no remote provider was enabled.
+- Confirmed Ollama API responds locally and a local model produced a response.
+- Updated Start-CanonicalObusGameAgent.cmd with OBUS_GAME_CORE_URL=http://127.0.0.1:39282 and restarted the canonical local game-agent process.
+- The end-to-end game route still returned 503 after restart; this is now narrowed to game-agent/core catalogue wiring or provider dispatch diagnostics, not missing Ollama installation, lease, or contract configuration.
+
+
+## 2026-09-07 - Ollama endpoint correction
+
+- Core provider state had a malformed stored loopback URL; updating key-local-ollama to http://localhost:11434 made the game-agent catalogue pass approved-endpoint validation.
+- Direct canonical game-agent complete_local invocation returned READY from the installed Ollama model.
+- Restarted the game-agent with explicit OBUS_GAME_CORE_URL=http://127.0.0.1:39282 and restarted Raphael host lifecycle against the new Obus boot epoch.
+- The live HTTP game route still returns 503 despite the direct provider path succeeding; remaining fault is isolated to the running route process/request path and requires one more diagnostic pass.
+
+
+## 2026-09-07 - Route process isolation
+
+- Direct Obus complete_local succeeds with the full route prompt and verified local Ollama provider.
+- Started a fresh game-agent on 38180 with explicit OBUS_GAME_CORE_URL=39282 and a fresh Raphael host lifecycle against it; the scoped HTTP route still returns 503.
+- This isolates the remaining defect to the game-agent HTTP route execution path (not stale launcher state, provider URL validation, Ollama availability, or host lease authorization).
+
+
+## 2026-09-07 - End-to-end local game route passes
+
+- Ran Obus provider verification after correcting the loopback URL; key-local-ollama is connected, verified, and ready.
+- Fresh canonical game-agent instance on port 38180 and fresh Raphael host lease completed a real scoped game route.
+- Acceptance result: provider key-local-ollama, model obus-qwen3.8-27b:65k, destination local, attempt 1, status eady, response READY..
+- No remote, Codex, fallback, personal-memory, auto-memory, or tool route was used.
+- The canonical launcher still targets port 38176; its next restart can now reuse the verified core catalogue state.
+
+
+## 2026-09-07 - Canonical route acceptance
+
+- Restarted the canonical Raphael host on 38177 against the canonical game agent on 38176 after the provider verification state stabilized.
+- Standard canonical route acceptance passed: provider key-local-ollama, model obus-qwen3.8-27b:65k, destination local, attempt 1, response READY..
+- The isolated and canonical local paths now agree; no remote, Codex, fallback, tool, or memory route was used.
+
+
+## 2026-09-07 - Reproducible Obus core launcher
+
+- Added Start-CanonicalObusCore.cmd for the canonical local Obus core on 127.0.0.1:39282.
+- The launcher uses the canonical local checkout and does not reference OneDrive.
+- The verified local Ollama catalogue and canonical game-agent launcher now have reproducible local startup paths.
+
+
+## 2026-09-07 - Davy runtime continuity
+
+- Canonical local Davy Compose remains healthy after the Obus/provider work.
+- Healthy services: admin web 3000, admin API 3001, bot gateway 3010, jobs worker 3011, voice worker 3012, Postgres, and Redis.
+- This confirms the local Davy integration substrate is stable; Discord live acceptance remains a post-setup test.
+
+
+## 2026-09-07 - OneDrive retirement audit
+
+- Canonical launchers and runtime configuration were audited for OneDrive references.
+- No OneDrive dependency was found in the active canonical launchers; the only hit is the historical Finish-ProjectMove.ps1 archive-name list, which intentionally preserves migration provenance.
+- No OneDrive files or mirrors were deleted; local backups and retirement evidence remain preserved.
+
+
+## 2026-09-07 - Coordinated canonical startup
+
+- Added Start-CanonicalStack.cmd to start the canonical Obus core, game agent, and Raphael host in order.
+- Updated Start-CanonicalRaphael.cmd to use the lifecycle-aware host/cli.mjs instead of direct Vinext, preserving the private Obus lease contract.
+- All startup paths target local non-OneDrive checkouts; Davy Compose remains a separate local deployment.
+
+
+## 2026-09-07 - Coordinated stack smoke acceptance
+
+- Canonical ports are occupied by the intended local services: Obus core 39282, game agent 38176, Raphael host 38177.
+- Coordinated-stack smoke route passed with local Ollama provider key-local-ollama and response READY..
+- No duplicate processes were started because the canonical stack was already live.
+
+
+## 2026-09-07 - Full local stack launcher
+
+- Added Start-CanonicalDavy.cmd for the canonical local Davy Compose deployment.
+- Extended Start-CanonicalStack.cmd to start Davy alongside Obus core, game agent, and Raphael.
+- The complete recovery startup path now references only local canonical checkouts and preserves the OneDrive mirrors as non-active backups.
+
+
+## 2026-09-07 - Campaign-scoped RAG acceptance
+
+- Ingested one synthetic host-visible source under campaign default, queried it through the real scoped Obus route, and confirmed source reference cceptance-rag-20260907 revision 1 was cited.
+- Local provider key-local-ollama generated the answer from the approved source.
+- Obus retention receipt confirmed no request-evidence persistence, no general-memory writes, no route-journal writes, and only the scoped game receipt.
+- Tombstoned the synthetic source at revision 2 after the acceptance exercise.
+
+
+## 2026-09-07 - Media deliverable inventory
+
+- Canonical local tree contains mockups/full-game-storyboard/storyboard.html and ecap.html, plus the storyboard test and chronicle music runtime/module tests.
+- No standalone rendered music assets were found by the targeted media inventory; adaptive music remains represented by runtime/code artifacts and requires final rendered/provenance acceptance evidence.
+- No replacement media was generated; existing storyboard and recap artifacts were preserved.
+
+
+## 2026-09-07 - Adaptive music rendering
+
+- Ran the existing deterministic local composer at mockups/full-game-storyboard/music/compose.py.
+- Rendered WAV and MP3 assets for 	heme, xploration, drama, 	ension, attle, sanctuary, and ftermath, plus manifest.json.
+- Outputs remain in the canonical local project; no borrowed samples or external provider was used.
+
+
+## 2026-09-07 - Campaign imagery inventory
+
+- Canonical local campaign art is present across Witnesslight opening, discovery, conditional, lore, people, and world collections.
+- Storyboard assets include full-size and smaller recap images for shore, island, hearth, abbey, counsel, and Mara.
+- Discord walkthrough mockups and player-choice imagery are present; no external image provider was required for this acceptance slice.
+
+
+## 2026-09-07 - Tactical/world/council inventory
+
+- Canonical local tree contains RAPH_TACTICAL_IMPLEMENTATION_PLAN.md, PROJECT_ACCEPTANCE_MATRIX.md, Greyharbor pack/content, Behind the Veil GM/player briefs, persistent-world plans, world-time UI, tactical controls, and council adapters.
+- Both browser and Discord world/council surfaces are present with focused test artifacts.
+- A separately named mechanics support matrix was not found in the targeted inventory; its coverage remains an acceptance-documentation gap to reconcile against the acceptance matrix.
+
+
+## 2026-09-07 - Mechanics support matrix
+
+- Added MECHANICS_SUPPORT_MATRIX.md covering character data, 2024 rules, checks, attacks, initiative, concentration, octagonal movement, reactions, persistent effects, maps, world consequences, and unsupported-action rejection.
+- The matrix explicitly separates local implementation evidence from still-open live Discord/Web acceptance.
+
+
+## 2026-09-07 - Acceptance evidence index update
+
+- Linked MECHANICS_SUPPORT_MATRIX.md from PROJECT_ACCEPTANCE_MATRIX.md.
+- Gortex committed and disk-verified the acceptance-matrix edit with a physical SHA-256 receipt.
+
+
+## 2026-09-07 - STT acceptance tooling audit
+
+- Canonical Python environment has no offline pyttsx3 or speech_recognition package, and Davy contains no reusable WAV/MP3/OGG fixture.
+- FFmpeg is installed and the local faster-whisper model is ready; only a real spoken WAV fixture is still needed for the receipt-only transcription gate.
+
+
+## 2026-09-07 - Storyboard music integration
+
+- Added an accessible adaptive-music preview control to mockups/full-game-storyboard/storyboard.html.
+- The walkthrough now selects and previews the rendered local 	heme, xploration, drama, 	ension, attle, sanctuary, and ftermath MP3 cues.
+- Gortex committed and disk-verified the HTML edit with a physical SHA-256 receipt.
+
+
+## 2026-09-07 - Recap music integration
+
+- Added the same accessible local adaptive-cue preview to mockups/full-game-storyboard/recap.html, defaulting to ftermath.
+- Recap audio paths point to the rendered local MP3 manifest; no external playback service is required.
+- Gortex committed and disk-verified the recap edit.
+
+
+## 2026-09-07 - Recap music path correction
+
+- Corrected the recap audio source from ../music/... to the sibling music/... directory.
+- Gortex committed and disk-verified the path correction.
+
+
+## 2026-09-07 - Public music asset wiring
+
+- Live Raphael check confirmed /play returns HTTP 200 but the storyboard source directory was not a served asset path.
+- Copied the seven rendered MP3 cues and manifest.json into aphael-council/public/music.
+- Live host now serves /music/theme.mp3 with HTTP 200 and the expected nonzero asset size.
+
+
+## 2026-09-07 - Browser surface continuity
+
+- Raphael /play served HTTP 200 on localhost:38177.
+- Davy admin web served HTTP 200 on localhost:3000.
+- Davy admin API root is not a browser page; its container health remains healthy from Compose evidence.
+- Combined local browser surface evidence is recorded; live Discord mixed-player acceptance remains open.
+
+
+## 2026-09-07 - Real local STT acceptance
+
+- Generated a disposable local spoken WAV fixture with Windows offline speech synthesis.
+- Authenticated scoped STT request returned HTTP 200 with transcript Behind the Veil Readiness Check..
+- Engine: game-local-faster-whisper; model: aster-whisper-tiny-bundled; trace destination: local, status: eady.
+- Receipt confirmed raw audio persistence false, request evidence persistence false, general-memory writes false, route-journal writes false, and transcript persistence in the game receipt false.
+
+
+## 2026-09-07 - Discord bot acceptance
+
+- Davy pnpm acceptance:discord passed without starting the deferred live player session.
+- Bot identity verified, test guild reachable, guild install configured, and recovery commands deck, setup, and status available.
+- Administrator permission is false; two member roles were observed. This remains a permissions/configuration fact, not a failed bot integration.
+
+
+## 2026-09-07 - Discord deck acceptance
+
+- Davy pnpm acceptance:discord-deck passed.
+- Scanned 11 channels and 576 messages; found five current launchers, zero pinned current launchers, zero legacy launchers, and five inaccessible channels.
+- Visual contract passed: launcher titles present, pinning disabled, and legacy launchers clean.
+
+
+## 2026-09-07 - Acceptance matrix refresh
+
+- Refreshed PROJECT_ACCEPTANCE_MATRIX.md with current evidence: Obus local lease/inference/STT pass; Discord bot/deck audits pass; mixed-interface live session remains open.
+- Each matrix edit was committed and disk-verified by Gortex with physical receipts.
+
+
+## 2026-09-07 Simulation-first acceptance slice
+
+Implemented `raphael-council/recovery/simulation-acceptance.test.mjs` and registered `test:simulation`. The deterministic fixture covers:
+
+- two synthetic players switching between Discord and browser interfaces;
+- campaign-scoped lore retrieval with cross-campaign/private data exclusion;
+- octagonal movement action acceptance and unsupported-action rejection before resource use;
+- consented transcription followed by consent withdrawal enforcement;
+- AI-unavailable manual fallback;
+- five-role equal-weight council evidence recording;
+- checkpoint, host restart, generation fencing, and restore.
+
+Fresh evidence: `node --test recovery/simulation-acceptance.test.mjs` passed 1/1. This is simulation evidence only; it does not claim a live Discord session, public HTTPS deployment, or authored campaign acceptance.
+
+## 2026-09-07 Simulation receipt runner
+
+Added `raphael-council/recovery/simulation-report.mjs` and `acceptance:simulation`. Fresh execution passed and wrote:
+
+`raphael-council/.runtime/acceptance/simulation-receipt.json`
+
+Receipt format: `raphael-simulation-acceptance-v1`; 11 receipts; final host generation 2. The artifact is explicitly synthetic acceptance evidence and does not replace final live integration checks.
+
+## 2026-09-07 Active-path migration audit
+
+Added `Audit-LocalProjectReferences.ps1` and generated `local-reference-audit.json` from nine active local launch/config files. Fresh result: `filesScanned=9`, `activeMatches=0`, `retirementAction=none`. This is bounded runtime-reference evidence; historical reports and OneDrive mirrors remain preserved and are not treated as active dependencies.
+
+## 2026-09-07 Fresh game/map/recovery contract run
+
+Fresh command: `node --test game/*.test.mjs maps/*.test.mjs recovery/*.test.mjs` from `raphael-council`. Result: 625 tests passed, 0 failed, 0 skipped. This validates the current tactical/map mechanics, world/council/recovery persistence contracts, coordinated checkpoint/restore, and simulation acceptance test. It does not certify live Discord, public HTTPS, or final authored-campaign acceptance.
+
+## 2026-09-07 Fresh imagery and Discord contract run
+
+Fresh command: `node --test images/*.test.mjs discord/*.test.mjs` from `raphael-council`. Result: 194 tests passed, 0 failed, 0 skipped. This covers private map/image delivery, authenticated Discord controls, membership/channel/revision fencing, idempotent retries, image provenance, Obus-only routing, and campaign-scoped viewpoints.
+
+## 2026-09-07 Fresh character and training contract run
+
+Fresh command: `node --test characters/*.test.mjs training/*.test.mjs` from `raphael-council`. Result: 26 tests passed, 0 failed, 0 skipped. This covers campaign/owner isolation, approval and revision fencing, offline PDF/OCR boundaries, credential rejection, cancellation/restart cleanup, source licensing/review gates, and training dataset privacy/shape checks.
+
+## 2026-09-07 Fresh AI/bridge/chronicle contract run
+
+Fresh command: `node --test ai/*.test.mjs bridge/*.test.mjs chronicle/*.test.mjs` from `raphael-council`. Result: 238 tests passed, 0 failed, 0 skipped. This covers Obus policy and host-generation fencing, manual fallback, provider/request boundaries, campaign-scoped chronicle capture, consent/corrections, voice lifecycle fixtures, Discord/Web bridge authority, and durable receipts.
+
+## 2026-09-07 Fresh auth/app/client contract run
+
+Fresh command over all `auth`, `app`, and `client` test files. Result: 43 tests passed, 0 failed, 0 skipped. This covers Activity/browser identity sharing, OAuth/session fencing, origin and cookie boundaries, shared API paths, interchangeable two-player actions, client retry/receipt behavior, scribe controls, and tactical client previews.
+
+## 2026-09-07 Chronicle package correction
+
+The consolidated suite exposed a stale chronicle package allowlist. `packages/chronicle/build.mjs` now explicitly includes the already-exported `chronicle/music.mjs` source, and package fixture expectations now include the public `createAdaptiveMusic` export and source hash. Fresh `npm run build --prefix packages/chronicle` succeeded; fresh `npm test --prefix packages/chronicle` passed 3/3, including the isolated 11-fixture artifact install. Membership-client and Obus-provider package tests also passed 3/3 each.
+
+## 2026-09-07 Clean aggregate local acceptance
+
+After the chronicle package correction, the repository corpus excluding package-specific tests passed `1,188/1,188`. Package-specific acceptance then passed chronicle `3/3`, membership-client `3/3`, and Obus-provider `3/3`. No failures or skips were reported in the final run.
+
+## 2026-09-07 Local runtime reachability
+
+Fresh process check found listeners on canonical local ports: Davy `3000`, `3001`, `3010`, `3011`, `3012`; Obus game agent `38176`; Raphael host `38177`; Obus core `39282`. HTTP checks: Davy web root `200`, Obus core `/health` `200`; Davy API and game-agent `/health` are not public health routes and returned no unauthenticated health response, so they are not marked failed. This proves local process reachability only, not public HTTPS or live Discord acceptance.
+
+## 2026-09-07 Davy Windows check repair
+
+Fresh Davy checks: `pnpm check:foundation` passed; `pnpm test:audio-container` passed with Discord voice, ffmpeg, and libopus ready. `pnpm check:windows` initially failed because the installed .NET SDK was not on PATH. Updated `scripts/Test-WindowsDeployment.ps1` to resolve `dotnet` from PATH or the standard `C:\Program Files\dotnet\dotnet.exe` location, then reran successfully: restore up to date, Release build succeeded with 0 warnings and 0 errors, Windows deployment validation passed.
+
+## 2026-09-07 Davy full readiness refresh
+
+Fresh `pnpm check` from canonical Davy: foundation checks passed, `458` test cases reported `457` passed, `0` failed, `1` intentional skip, release foundation passed with 49 artifacts and 5 Compose entrypoints. Readiness scored `9.95/10`; release claim remains ineligible only for the explicit live credential-dependent gates `liveTestGuildAcceptance` and `adminPrivateAccessAcceptance`.
+
+## 2026-09-07 Fresh Davy Discord acceptance
+
+Fresh `pnpm acceptance:discord` passed: bot identity verified, guild reachable, install configured, recovery commands `deck/setup/status` present, two member roles found, no administrator permission assumed. Fresh `pnpm acceptance:discord-deck` passed: 11 channels and 576 messages scanned, 5 current launchers, zero pinned current launchers, zero legacy launchers, visual contract passed; 5 channels were inaccessible and remain explicitly reported.
+
+## 2026-09-07 Fresh Davy backup/restore drill
+
+Fresh `pnpm test:backup-restore` passed: PostgreSQL `16-alpine`, 12 migrations, archive size 80,105 bytes, backup/restore status `passed`.
+
+## 2026-09-07 Davy Windows packaging repair
+
+`pnpm package:windows` initially hit the same missing-PATH `dotnet` assumption in `scripts/Package-WindowsHeartbeat.ps1`. Added standard SDK-path resolution, then reran successfully: locked restore/build passed with 0 warnings and 0 errors; package created at `C:\Users\Hermes\Projects\Davy Jones\dist\windows-heartbeat` with checksums and launcher/config files.
+
+## 2026-09-07 OneDrive retirement-readiness receipt
+
+Generated `retirement-readiness.json` non-destructively. Local canonical project exists; OneDrive mirror remains preserved; local backups exist with 85,867 files; active reference audit is recorded; `deletionPerformed=false`; `cloudDeletionVerified=false`; status is `ready-for-bounded-retirement-review`. No cloud or OneDrive deletion was claimed.
+
+## 2026-09-07 Acceptance ledger consolidation
+
+Created PROJECT_ACCEPTANCE_LEDGER.md with requirement-level status, evidence, simulation scope, and remaining live/retirement gates. The ledger explicitly separates local PASS, SIMULATED, and outstanding live/retirement evidence.
+
+## 2026-09-07 Local resume launcher repair
+
+Updated `Open-LocalOperator.cmd` to recognize the `continue` argument, announce canonical-local continuation, set the process working directory to `C:\Users\Hermes\Projects\Operator Special Forces Dungeon and Dragons`, and launch Codex against that local project path. It never targets the OneDrive mirror. Codex task-history resumption remains an app-level operation; this launcher now reliably opens the correct local project for continuation.
+
+## 2026-09-07 Codex registry audit
+
+Supported Codex project listing was inspected. The legacy Operator project record still points to `C:\Users\Hermes\OneDrive\Documents\ChatGPT\Operator Special Forces Dungeon and Dragons`; no supported project-rebind operation is exposed by the available Codex app tools. The canonical local project remains operational through the local launcher; global Codex registry state was not edited.
+
+## 2026-09-07 Final migration manifest staged
+
+Generated hash-backed manifest `C:\Users\Hermes\LocalFiles\MigrationReports\20260907T002707Z\retirement-manifest-20260907T162822Z.json`. Scanned 522 eligible files after excluding caches/generated/runtime/secrets; 18 differing files were copied into rollback archive `C:\Users\Hermes\LocalBackups\Operator-OneDrive-Retirement-20260907T162822Z`.
+
+Deletion was not performed because the active Codex task currently has worker processes rooted in the OneDrive workspace. Terminating them would terminate the current task. The bounded deletion step must run after this task is closed/reopened from the canonical local project; no unrelated OneDrive content is affected.

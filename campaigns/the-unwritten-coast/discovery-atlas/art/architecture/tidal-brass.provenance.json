@@ -1,0 +1,67 @@
+{
+  "createdAt": "2026-09-13T01:50:02.104Z",
+  "generator": "Local AUTOMATIC1111 Stable Diffusion WebUI",
+  "endpoint": "http://127.0.0.1:7860",
+  "request": {
+    "prompt": "Seamless tileable physically believable material texture for exceptionally detailed coastal fantasy machinery, orthographic flat scan of antique hammered brass plate, rich desaturated golden bronze metal, very fine irregular hammer marks, tiny shallow scratches and burnished wear, restrained blue green verdigris deposits inside minute surface pits, warm muted copper undertones, delicate centuries-old mottling, well maintained maritime instrument material, completely flat continuous metal surface filling the entire square edge to edge, homogeneous small scale detail, neutral diffuse studio illumination, no directional reflections, no directional shadows, no edges or border, no rivets, no screws, no symbols or letters, no objects, no perspective, sophisticated miniature architecture material atlas, high material detail, low contrast physically plausible surface",
+    "negative_prompt": "text, letters, watermark, logo, objects, furniture, characters, figures, room, walls, landscape, perspective, harsh shadow, frame, border, blurry, low resolution, oversaturated, plastic, cartoon",
+    "seed": 419032,
+    "width": 512,
+    "height": 512,
+    "steps": 32,
+    "cfg_scale": 7,
+    "sampler_name": "DPM++ 2M",
+    "batch_size": 1,
+    "n_iter": 1,
+    "tiling": true,
+    "save_images": false
+  },
+  "responseInfo": {
+    "prompt": "Seamless tileable physically believable material texture for exceptionally detailed coastal fantasy machinery, orthographic flat scan of antique hammered brass plate, rich desaturated golden bronze metal, very fine irregular hammer marks, tiny shallow scratches and burnished wear, restrained blue green verdigris deposits inside minute surface pits, warm muted copper undertones, delicate centuries-old mottling, well maintained maritime instrument material, completely flat continuous metal surface filling the entire square edge to edge, homogeneous small scale detail, neutral diffuse studio illumination, no directional reflections, no directional shadows, no edges or border, no rivets, no screws, no symbols or letters, no objects, no perspective, sophisticated miniature architecture material atlas, high material detail, low contrast physically plausible surface",
+    "all_prompts": [
+      "Seamless tileable physically believable material texture for exceptionally detailed coastal fantasy machinery, orthographic flat scan of antique hammered brass plate, rich desaturated golden bronze metal, very fine irregular hammer marks, tiny shallow scratches and burnished wear, restrained blue green verdigris deposits inside minute surface pits, warm muted copper undertones, delicate centuries-old mottling, well maintained maritime instrument material, completely flat continuous metal surface filling the entire square edge to edge, homogeneous small scale detail, neutral diffuse studio illumination, no directional reflections, no directional shadows, no edges or border, no rivets, no screws, no symbols or letters, no objects, no perspective, sophisticated miniature architecture material atlas, high material detail, low contrast physically plausible surface"
+    ],
+    "negative_prompt": "text, letters, watermark, logo, objects, furniture, characters, figures, room, walls, landscape, perspective, harsh shadow, frame, border, blurry, low resolution, oversaturated, plastic, cartoon",
+    "all_negative_prompts": [
+      "text, letters, watermark, logo, objects, furniture, characters, figures, room, walls, landscape, perspective, harsh shadow, frame, border, blurry, low resolution, oversaturated, plastic, cartoon"
+    ],
+    "seed": 419032,
+    "all_seeds": [
+      419032
+    ],
+    "subseed": 2624156931,
+    "all_subseeds": [
+      2624156931
+    ],
+    "subseed_strength": 0,
+    "width": 512,
+    "height": 512,
+    "sampler_name": "DPM++ 2M",
+    "cfg_scale": 7,
+    "steps": 32,
+    "batch_size": 1,
+    "restore_faces": false,
+    "face_restoration_model": null,
+    "sd_model_name": "v1-5-pruned-emaonly",
+    "sd_model_hash": "6ce0161689",
+    "sd_vae_name": null,
+    "sd_vae_hash": null,
+    "seed_resize_from_w": -1,
+    "seed_resize_from_h": -1,
+    "denoising_strength": null,
+    "extra_generation_params": {
+      "Schedule type": "Karras"
+    },
+    "index_of_first_image": 0,
+    "infotexts": [
+      "Seamless tileable physically believable material texture for exceptionally detailed coastal fantasy machinery, orthographic flat scan of antique hammered brass plate, rich desaturated golden bronze metal, very fine irregular hammer marks, tiny shallow scratches and burnished wear, restrained blue green verdigris deposits inside minute surface pits, warm muted copper undertones, delicate centuries-old mottling, well maintained maritime instrument material, completely flat continuous metal surface filling the entire square edge to edge, homogeneous small scale detail, neutral diffuse studio illumination, no directional reflections, no directional shadows, no edges or border, no rivets, no screws, no symbols or letters, no objects, no perspective, sophisticated miniature architecture material atlas, high material detail, low contrast physically plausible surface\nNegative prompt: text, letters, watermark, logo, objects, furniture, characters, figures, room, walls, landscape, perspective, harsh shadow, frame, border, blurry, low resolution, oversaturated, plastic, cartoon\nSteps: 32, Sampler: DPM++ 2M, Schedule type: Karras, CFG scale: 7.0, Seed: 419032, Size: 512x512, Model hash: 6ce0161689, Model: v1-5-pruned-emaonly, Tiling: True, Version: v1.10.1"
+    ],
+    "styles": [],
+    "job_timestamp": "20260912184954",
+    "clip_skip": 1,
+    "is_using_inpainting_conditioning": false,
+    "version": "v1.10.1"
+  },
+  "sha256": "bc721194fb9495d924738632de6eb4a61e6a98c2a631d80f11af895b354706d7",
+  "purpose": "Surface artwork only; measured geometry, doors, markers and discoveries remain deterministic."
+}

@@ -1,0 +1,1 @@
+import{t as e}from"./http-BG6RyyIJ.js";import{t}from"./runtime-D0l_BFvj.js";var n=`nodejs`,r=e(t),i=r.imageScene,a=r.imageRequest;export{i as GET,a as POST,n as runtime};

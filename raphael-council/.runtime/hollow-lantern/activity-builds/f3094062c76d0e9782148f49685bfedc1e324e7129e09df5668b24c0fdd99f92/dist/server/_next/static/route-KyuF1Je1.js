@@ -1,0 +1,1 @@
+import{t as e}from"./http-JuDCWS4o.js";import{t}from"./runtime-CdpUsvV6.js";var n=`nodejs`,r=e(t),i=r.checks,a=r.resolveCheck;export{i as GET,a as POST,n as runtime};

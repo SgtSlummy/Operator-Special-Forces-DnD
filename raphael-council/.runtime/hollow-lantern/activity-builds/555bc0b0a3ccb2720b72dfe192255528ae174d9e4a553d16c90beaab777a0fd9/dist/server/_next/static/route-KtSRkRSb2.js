@@ -1,0 +1,1 @@
+import{i as e}from"./obus-CJI6TTF2.js";import{a as t,t as n}from"./runtime-DRFbgUQC.js";import"./runtime-TLqsVJZa.js";var r=`nodejs`,i=t(n,{getGame:e}),a=i.reachOptions,o=i.reach;export{a as GET,o as POST,r as runtime};

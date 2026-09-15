@@ -1,0 +1,67 @@
+{
+  "info": {
+    "prompt": "(close up portrait of a medieval town guard:1.5), (head and shoulders:1.4), man with short dark beard, stern weathered face, brown leather chest armor, dark navy hooded cloak, iron helmet, facing viewer, medieval stone wall background, fantasy character concept art, detailed digital painting, warm lantern light, rich dark colors",
+    "all_prompts": [
+      "(close up portrait of a medieval town guard:1.5), (head and shoulders:1.4), man with short dark beard, stern weathered face, brown leather chest armor, dark navy hooded cloak, iron helmet, facing viewer, medieval stone wall background, fantasy character concept art, detailed digital painting, warm lantern light, rich dark colors"
+    ],
+    "negative_prompt": "full body, distant figure, landscape, sea, boat, ship, large sky, painting frame, photograph, robot, golem, futuristic, gun, text, watermark, signature, blurry, low quality",
+    "all_negative_prompts": [
+      "full body, distant figure, landscape, sea, boat, ship, large sky, painting frame, photograph, robot, golem, futuristic, gun, text, watermark, signature, blurry, low quality"
+    ],
+    "seed": 7302479,
+    "all_seeds": [
+      7302479
+    ],
+    "subseed": 1634298385,
+    "all_subseeds": [
+      1634298385
+    ],
+    "subseed_strength": 0,
+    "width": 512,
+    "height": 512,
+    "sampler_name": "DPM++ 2M",
+    "cfg_scale": 7.0,
+    "steps": 32,
+    "batch_size": 1,
+    "restore_faces": false,
+    "face_restoration_model": null,
+    "sd_model_name": "v1-5-pruned-emaonly",
+    "sd_model_hash": "6ce0161689",
+    "sd_vae_name": null,
+    "sd_vae_hash": null,
+    "seed_resize_from_w": -1,
+    "seed_resize_from_h": -1,
+    "denoising_strength": null,
+    "extra_generation_params": {
+      "Schedule type": "Karras"
+    },
+    "index_of_first_image": 0,
+    "infotexts": [
+      "(close up portrait of a medieval town guard:1.5), (head and shoulders:1.4), man with short dark beard, stern weathered face, brown leather chest armor, dark navy hooded cloak, iron helmet, facing viewer, medieval stone wall background, fantasy character concept art, detailed digital painting, warm lantern light, rich dark colors\nNegative prompt: full body, distant figure, landscape, sea, boat, ship, large sky, painting frame, photograph, robot, golem, futuristic, gun, text, watermark, signature, blurry, low quality\nSteps: 32, Sampler: DPM++ 2M, Schedule type: Karras, CFG scale: 7.0, Seed: 7302479, Size: 512x512, Model hash: 6ce0161689, Model: v1-5-pruned-emaonly, Version: v1.10.1"
+    ],
+    "styles": [],
+    "job_timestamp": "20260909135430",
+    "clip_skip": 1,
+    "is_using_inpainting_conditioning": false,
+    "version": "v1.10.1"
+  },
+  "review": "Accepted during preparation after visual inspection: human signal-house guard in simple protective helmet and cloak. Portrait only; engine equipment and statistics remain authoritative.",
+  "provider": "local-stable-diffusion",
+  "request": {
+    "sampler_name": "DPM++ 2M",
+    "send_images": true,
+    "cfg_scale": 7,
+    "height": 512,
+    "do_not_save_samples": true,
+    "seed": 7302479,
+    "save_images": false,
+    "prompt": "(close up portrait of a medieval town guard:1.5), (head and shoulders:1.4), man with short dark beard, stern weathered face, brown leather chest armor, dark navy hooded cloak, iron helmet, facing viewer, medieval stone wall background, fantasy character concept art, detailed digital painting, warm lantern light, rich dark colors",
+    "n_iter": 1,
+    "scheduler": "Karras",
+    "negative_prompt": "full body, distant figure, landscape, sea, boat, ship, large sky, painting frame, photograph, robot, golem, futuristic, gun, text, watermark, signature, blurry, low quality",
+    "steps": 32,
+    "width": 512,
+    "do_not_save_grid": true,
+    "batch_size": 1
+  }
+}

@@ -5,11 +5,11 @@ Portable session chronicle for Davy Jones's existing Discord gateway. The packag
 ## Requirements and installation
 
 - Node.js 22.16.0 or later, including `node:sqlite`. Chronicle transactions use `DatabaseSync.isTransaction`, introduced in Node22.16.0; see the [Node SQLite API history](https://nodejs.org/download/release/latest-jod/docs/api/sqlite.html#databaseistransaction).
-- Runtime dependency: `@napi-rs/canvas` exactly 1.0.8. Its platform-specific native binary remains an npm dependency; it is not embedded in the JavaScript bundle. Install dependencies for the machine running Davy Jones.
+- Pinned runtime dependencies: `@napi-rs/canvas` 1.0.8, `@discordjs/voice` 0.19.2 and `prism-media` 1.3.5. They remain external npm dependencies; the canvas native binary is not embedded in the JavaScript bundle. Install dependencies for the machine running Davy Jones.
 - Build dependency in the source workspace: `esbuild` exactly 0.27.3.
 - An existing authenticated Discord client, an Obus-backed provider, and a voice adapter owned by the existing Davy gateway.
 
-Install the local tarball in the Davy project with `npm install /absolute/path/operator-chronicle-0.1.1.tgz`. This package is private and is not published to a registry. Installing it does not start any process or connect to Discord.
+Install the local tarball in the Davy project with `npm install /absolute/path/operator-chronicle-0.1.2.tgz`. This package is private and is not published to a registry. Installing it does not start any process or connect to Discord.
 
 ## Integration
 
@@ -41,13 +41,13 @@ Compose this inside the existing bot. Do not import Operator's standalone `disco
 
 `config` supplies `campaignId`, `guildId`, `channelId`, `journalChannelId`, `dmIds`, `dmRoleId`, `playerIds`, `playerRoleId`, and the absolute `chronicleDir`. The dedicated database path and campaign must match the game web/API configuration. Keep live data outside synced source folders. The runtime takes ownership of its injected chronicle connection and closes it during shutdown; do not pass a shared game database connection or use that connection after `close()`. Concurrent `close()` calls join the same drain. Handle a rejected close before tearing down the host transport: if capture detachment could not be confirmed, the dedicated store remains open and a later close can retry cleanup while new work stays blocked.
 
-The package exports `createChronicleRuntimeCore` and its alias `createChronicleRuntime`, `ChronicleStore`, `ChronicleError`, `ChronicleCommands`, `ChronicleCommandError`, and `SESSION_COMMAND`.
+The package exports `createChronicleRuntimeCore` and its alias `createChronicleRuntime`, `ChronicleStore`, `ChronicleError`, `ChronicleCommands`, `ChronicleCommandError`, `SESSION_COMMAND`, `createDavyChronicleHost`, `discordCampaignBindings`, `createVoiceReceiver`, and `createAdaptiveMusic`.
 
 ### Required adapters
 
 `provider.write(kind, evidence, context)` returns generated text through Obus. Speech requires `provider.authorizeParticipant(scope)`, returning exactly `true` only for current campaign membership; `provider.captureRuntime(hostScope, sessionId)`, returning the five capture fields below after checking current GM authority; and `provider.transcribe(wavBytes, context)`, returning transcript text or throwing. The service clears its audio buffer after processing. Do not retain raw audio, forward it to an external provider, or retry a receipt-only completion as a new inference. The provider must enforce the original runtime fence before and after upload and fail closed when Obus authority is missing, expired, replaced or disabled. Local-only routing is a destination restriction, never a substitute for host authority.
 
-Use `@operator/obus-chronicle-provider@0.1.0` with the distinct host/participant callbacks from `@operator/membership-client@0.1.1`. These are injected adapters, not package runtime dependencies. The participant callback never grants recording consent. The voice receiver and service independently require the saved session's capture grant and epoch. Full chronicles remain local-only even when optional Codex is enabled for eligible tasks elsewhere.
+Use `@operator/obus-chronicle-provider@0.1.1` with the distinct host/participant callbacks from `@operator/membership-client@0.1.1`. These are injected adapters, not package runtime dependencies. The participant callback never grants recording consent. The voice receiver and service independently require the saved session's capture grant and epoch. Full chronicles remain local-only even when optional Codex is enabled for eligible tasks elsewhere.
 
 `makeVoice({client, config, store, service})` returns synchronously:
 
@@ -56,7 +56,7 @@ Use `@operator/obus-chronicle-provider@0.1.0` with the distinct host/participant
 - `revoke(userId)`: discard that user's in-flight capture immediately.
 - `status()`: return a safe human-readable status.
 
-Davy's adapter owns the existing voice connection. Chronicle stop, disconnect, and shutdown must not destroy the music player, shared voice connection, or Discord client. The package deliberately has no dependency on `discord.js`, `@discordjs/voice`, or a decoder implementation, so Davy retains one voice implementation and connection owner.
+Davy's adapter owns the existing voice connection. Chronicle stop, disconnect, and shutdown must not destroy the music player, shared voice connection, or Discord client. The package has no `discord.js` dependency. Its exported `createVoiceReceiver` uses the pinned voice and decoder dependencies with an injected connection lease; Davy retains connection ownership. A host may also inject its own compatible voice adapter.
 
 At the first accepted audio byte, freeze the authorized campaign/session/speaker, one stable segment request ID, the then-current consent epoch and an already verified unexpired Obus runtime snapshot. Never resolve whichever session or generation happens to be current later. Feed a bounded WAV buffer through this exact service call:
 
@@ -88,6 +88,14 @@ If Davy already acknowledged an interaction, pass `{acknowledged:true}` so the c
 
 `authorizeCommand(scope)` checks current game membership when durable browser commands execute. The default denies queued host work. Discord membership and GM permissions are also checked by the dispatcher. Optional `images` may provide an existing approved image service; omitting it preserves text/manual operation. Safe `log` events contain outcomes rather than credentials or transcript contents.
 
+## Summary continuity in 0.1.2
+
+With the private store-backed Obus evidence bridge and provider 0.1.1, bounded interval summaries use `raph-obus-game-evidence-refs-v2`. Each selection binds its campaign, session, exact source versions, derived-source dependencies and current contributor consent before the first asynchronous authorization check. Obus must explicitly advertise that contract; an older backend causes a deferred/failed summary instead of a silent downgrade.
+
+New messages can arrive while a summary runs. They remain in the next summary window. Corrections, deletion, visibility changes or relevant consent withdrawal invalidate the affected work. For multi-part summaries, the service captures every part's guard before generation and checks them all inside the final database transaction. Failure commits no summary and advances no watermark. Authorization and host runtime checks still apply separately.
+
+The evidence worker can acknowledge a successfully synchronized unchanged prefix while newer messages remain due. It never labels an older receipt as the latest revision. Source hashes establish consistency, not permission; Obus still checks current access and external-processing consent. Full transcript and final-recap processing remain local-only. Preserve the 0.1.0 and 0.1.1 archives when installing 0.1.2.
+
 ## Durability boundaries
 
 The queue uses leases, bounded retries and stored receipts. Committed start/pause/end effects are reconciled after restart without replaying global voice actions against a newer session. Voice attachment and provider calls can still be attempted again if a process stops before saving their receipt. The injected adapters must tolerate repeated attempts. Uncertain Discord sends remain paused for review to avoid duplicating a message accepted before a connection failed.
@@ -105,8 +113,8 @@ npm test
 npm run pack:artifact
 ```
 
-The build emits one ESM bundle and local audit manifests. Its esbuild metafile is checked against an explicit eight-file source allowlist. External imports must be Node built-ins or `@napi-rs/canvas`; accidental imports of the Operator platform, bot, default voice, web application or additional dependencies fail the build before output is written.
+The build emits one ESM bundle and local audit manifests. Its esbuild metafile is checked against an explicit 17-file source allowlist, including the scoped evidence selection helper, Davy composition and injected voice receiver. External imports must be Node built-ins or the three pinned runtime dependencies. Accidental imports of the Operator platform, standalone bot, web application or additional dependencies fail the build before output is written.
 
 Tests check source and bundle hashes, the package payload, and installation into an isolated temporary consumer outside the Operator checkout. The installed package is exercised with controlled Obus/Discord/voice adapters, including pre-acknowledged private replies, consent, corrections, queue authorization, saved state and shutdown. These are fixture tests; live Discord audio, model inference, and mixed-account acceptance still require the configured host.
 
-The tarball contains only `package.json`, this README, and `dist/index.mjs`. Local `dist/build-manifest.json`, `dist/metafile.json`, and `artifacts/manifest-0.1.1.json` retain build inputs, hashes and the exact package payload for review; they are not runtime dependencies. No database, audio, tokens, environment files or other project source is packed.
+The tarball contains only `package.json`, this README, and `dist/index.mjs`. Local `dist/build-manifest.json`, `dist/metafile.json`, and `artifacts/manifest-0.1.2.json` retain build inputs, hashes and the exact package payload for review; they are not runtime dependencies. No database, audio, tokens, environment files or other project source is packed.

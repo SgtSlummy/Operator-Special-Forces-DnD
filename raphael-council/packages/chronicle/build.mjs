@@ -10,6 +10,14 @@ const appDir = resolve(packageDir, '../..');
 const output = join(packageDir, 'dist/index.mjs');
 const allowedSources = new Set([
   'packages/chronicle/index.mjs',
+  'packages/chronicle/davy-host.mjs',
+  'auth/discord-policy.mjs',
+  'ai/host-control.mjs',
+  'ai/evidence-upload.mjs',
+  'ai/evidence-selection.mjs',
+  'chronicle/obus-provider.mjs',
+  'chronicle/obus-evidence.mjs',
+  'chronicle/voice-receiver.mjs',
   'discord/chronicle-core.mjs',
   'discord/chronicle-adapter.mjs',
   'chronicle/store.mjs',
@@ -17,10 +25,12 @@ const allowedSources = new Set([
   'chronicle/report.mjs',
   'chronicle/commands.mjs',
   'chronicle/dispatch.mjs',
+  'chronicle/music.mjs',
 ]);
 const slash = path => path.replaceAll('\\', '/');
 const digest = value => createHash('sha256').update(value).digest('hex');
 const knownBuiltin = path => isBuiltin(path);
+const dependencies = { '@napi-rs/canvas': '1.0.8', '@discordjs/voice': '0.19.2', 'prism-media': '1.3.5' };
 
 // Fail closed on imports before writing a distributable artifact. In particular,
 // importing the wrapper would pull in Operator platform and its voice defaults.
@@ -47,15 +57,15 @@ if (unexpected.length) throw new Error(`Forbidden chronicle bundle inputs: ${une
 for (const required of allowedSources) if (!sources.includes(required)) throw new Error(`Missing required package input: ${required}`);
 const imports = [...Object.values(result.metafile.inputs), ...Object.values(result.metafile.outputs)].flatMap(value => value.imports);
 const externals = [...new Set(imports.filter(value => value.external).map(value => value.path))].sort();
-const rejectedExternals = externals.filter(path => path !== '@napi-rs/canvas' && !knownBuiltin(path));
+const rejectedExternals = externals.filter(path => !Object.hasOwn(dependencies, path) && !knownBuiltin(path));
 if (rejectedExternals.length) throw new Error(`Forbidden chronicle external dependencies: ${rejectedExternals.join(', ')}. All externals: ${externals.join(', ')}`);
 const binary = result.outputFiles.find(file => resolve(file.path) === output);
 if (!binary || result.outputFiles.length !== 1) throw new Error('Expected exactly one portable ESM bundle.');
 const sourceHashes = {};
 for (const path of sources) sourceHashes[path] = digest(await readFile(join(appDir, path)));
 const manifest = {
-  name: '@operator/chronicle', version: '0.1.1',
-  esbuild: esbuildVersion, node: '>=22.16.0', dependencies: { '@napi-rs/canvas': '1.0.8' },
+  name: '@operator/chronicle', version: '0.1.2',
+  esbuild: esbuildVersion, node: '>=22.16.0', dependencies,
   entry: 'dist/index.mjs', sha256: digest(binary.contents), bytes: binary.contents.length,
   sources: sourceHashes, externals,
   exports: [...new Set(Object.values(result.metafile.outputs).flatMap(value => value.exports))].sort(),

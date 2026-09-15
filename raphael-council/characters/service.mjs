@@ -68,8 +68,8 @@ export function runWorker(path, { onProgress = () => {}, signal, timeoutMs = LIM
   });
 }
 export class ImportService {
-  constructor(store, directory, { worker = runWorker, fetcher = fetch, log = () => {} } = {}) {
-    this.store = store; this.directory = resolve(directory); this.worker = worker; this.fetcher = fetcher; this.log = log;
+  constructor(store, directory, { worker = runWorker, fetcher = fetch, log = () => {}, portraitService = null } = {}) {
+    this.store = store; this.directory = resolve(directory); this.worker = worker; this.fetcher = fetcher; this.log = log; this.portraitService = portraitService;
     this.queue = []; this.processing = false; this.tasks = new Map(); this.controllers = new Map(); this.closed = false;
   }
   path(jobId) {
@@ -155,6 +155,10 @@ export class ImportService {
   async approve(jobId, scope, revision) {
     const character = this.store.approve(jobId, scope, revision);
     await this.cleanup(jobId);
+    if (this.portraitService && !character.alreadySaved) {
+      try { await this.portraitService.generate(scope, character.revision); }
+      catch (error) { this.log({ jobId, outcome: 'portrait_generation_failed', code: error.code ?? 'PORTRAIT_FAILED' }); }
+    }
     return character;
   }
   async expire() {

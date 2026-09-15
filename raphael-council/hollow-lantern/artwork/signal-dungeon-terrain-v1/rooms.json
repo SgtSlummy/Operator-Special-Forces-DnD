@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "kind": "dungeon-room-terrain",
+  "coordinateSystem": "signal-dungeon-25-v1",
+  "materialSha256": "8b2e9456c8c5050dffc621532e9e4f97c6190f5747c025e123b51a7633d4a3e1",
+  "layoutSha256": "724e6e8c82a175e4b56cf225f11cbb1cb1ab9954f0d56e80ca3959515ca26188",
+  "entries": [
+    {
+      "sceneId": "signal-dungeon",
+      "roomId": "intake-hall",
+      "approved": true,
+      "purpose": "terrain-only",
+      "file": "intake-hall.png",
+      "sha256": "6093b12310a43ff55f70c6e0b9bd02904d9dc70e8c0c64272824d1f1f7ab9193"
+    },
+    {
+      "sceneId": "signal-dungeon",
+      "roomId": "turbine-gallery",
+      "approved": true,
+      "purpose": "terrain-only",
+      "file": "turbine-gallery.png",
+      "sha256": "24ae7eb447ef7cfd607ab6adaff03644110cb0db1d7a9f4afff07f16c406789b"
+    },
+    {
+      "sceneId": "signal-dungeon",
+      "roomId": "archive",
+      "approved": true,
+      "purpose": "terrain-only",
+      "file": "archive.png",
+      "sha256": "d00f93e6768cc74b1ed721b7dbc5e291aab00f1934c928d74902022705e84ca7"
+    },
+    {
+      "sceneId": "signal-dungeon",
+      "roomId": "lantern-chamber",
+      "approved": true,
+      "purpose": "terrain-only",
+      "file": "lantern-chamber.png",
+      "sha256": "3c979c1d5a12d802208b4a7e7b7a72fc44fda4e1c31fb01d6e41b7b0b4a600c3"
+    }
+  ]
+}

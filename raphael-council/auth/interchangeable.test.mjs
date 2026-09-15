@@ -15,13 +15,20 @@ function setup(t) {
   const actor = (id, owner, x, initiative) => ({ id, name: id, owner, team: 'party', x, y: 1, size: 1, hp: 20, maxHp: 20, ac: 14, speed: 30, vision: 6, initiative, characterVersion: 'fixture-v1', weapon: { name: 'Sword', abilityScore: 16, proficient: true, proficiencyBonus: 2, equipmentBonus: 0, damageDice: 1, damageDie: 8, addAbilityToDamage: true, rangeFeet: 5 } });
   game.createCampaign({ campaign: 'shared', title: 'Shared mission', members: [{ owner: host, role: 'host' }, { owner: alice, role: 'player' }, { owner: bob, role: 'player' }], map: { id: 'harbor', title: 'Harbor', width: 12, height: 12, blocked: [], difficult: [] }, actors: [actor('alice-actor', alice, 1, 20), actor('bob-actor', bob, 3, 10)], effects: [] });
   const revoked = new Set();
-  const config = { clientId, secret: 'fixture', token: 'fixture', guild, campaign: 'shared', publicOrigin: origin, activityOrigin, playerIds: [alice, bob], dmIds: [host] };
+  const gmRole = '400000000000000001';
+  let hostAuthorized = true;
+  // Removing the GM role must revoke authority even while ordinary Discord
+  // membership and the persisted campaign host role remain valid.
+  const config = { clientId, secret: 'fixture', token: 'fixture', guild, campaign: 'shared', publicOrigin: origin, activityOrigin, playerIds: [alice, bob, host], dmIds: [], dmRole: gmRole };
   const auth = new DiscordAuth({ db, game, config, fetchImpl: async (url, init) => {
     if (url.endsWith('/oauth2/token')) return Response.json({ access_token: init.body.get('code'), scope: 'identify' });
     if (url.endsWith('/users/@me')) return Response.json({ id: init.headers.Authorization.slice('Bearer '.length) });
-    if (url.includes('/members/')) { const id = url.split('/').at(-1); return revoked.has(id) ? new Response('', { status: 404 }) : Response.json({ user: { id }, roles: [] }); }
-    if (url.endsWith('/roles')) return Response.json([]);
-    return Response.json({ owner_id: host });
+    if (url.includes('/members/')) {
+      const id = url.split('/').at(-1);
+      return revoked.has(id) ? new Response('', { status: 404 }) : Response.json({ user: { id }, roles: id === host && hostAuthorized ? [gmRole] : [] });
+    }
+    if (url.endsWith('/roles')) return Response.json([{ id: guild, permissions: '0' }, { id: gmRole, permissions: '0' }]);
+    return Response.json({ owner_id: '100000000000000004' });
   } });
   const services = () => ({ game, auth, access: { authenticateAccess: () => null } });
   const handlers = createGameHttp(services);
@@ -47,7 +54,7 @@ function setup(t) {
     const upstreamPath = localPath.startsWith('/.proxy/') ? localPath.slice('/.proxy'.length) : localPath;
     return new Request(`${origin}${upstreamPath}`, { method: body ? 'POST' : 'GET', headers: { cookie: session.cookie, origin: session.embedded ? activityOrigin : origin, ...(body ? { 'content-type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
   }
-  return { game, services, handlers, revoked, login, request };
+  return { game, services, handlers, revoked, login, request, revokeHostAuthority: () => { hostAuthorized = false; } };
 }
 
 test('real auth and game handlers share actions across two players and interchangeable sessions', async t => {
@@ -75,6 +82,76 @@ test('real auth and game handlers share actions across two players and interchan
   assert.equal((await f.handlers.state(f.request(browserAlice))).status, 401);
   assert.equal((await f.handlers.state(f.request(activityAlice))).status, 401);
   assert.equal((await f.handlers.state(f.request(activityBob))).status, 200);
+});
+
+test('both GM interfaces resume shared play and lose authority when the Discord GM role is removed', async t => {
+  const f = setup(t);
+  const hostSessions = [await f.login(host, false), await f.login(host, true)];
+  const playerSessions = [await f.login(alice, false), await f.login(alice, true)];
+  const hostScope = { campaign: 'shared', owner: host };
+  async function state(session) {
+    const response = await f.handlers.state(f.request(session));
+    assert.equal(response.status, 200);
+    return response.json();
+  }
+  const transition = (session, type, expectedRevision, requestId) => f.handlers.command(f.request(session, '/api/game', {
+    type, actorId: 'alice-actor', expectedRevision, requestId,
+  }));
+
+  for (const [index, gm] of hostSessions.entries()) {
+    const before = await state(playerSessions[0]);
+    assert.equal(before.view.phase, 'combat');
+    const pause = await transition(playerSessions[index], 'pause', before.view.revision, `party-pause-${index}`);
+    assert.equal(pause.status, 200);
+    const paused = await state(playerSessions[0]);
+    assert.equal(paused.view.phase, 'paused');
+    const savedCampaign = f.game.load('shared');
+    const savedHostReceipts = (await state(gm)).receipts;
+
+    // Both cookie types identify an ordinary player; neither can resume play.
+    for (const [playerIndex, player] of playerSessions.entries()) {
+      const denied = await transition(player, 'resume', paused.view.revision, `player-resume-${index}-${playerIndex}`);
+      assert.equal(denied.status, 403);
+      assert.deepEqual(await state(playerSessions[0]), paused);
+      assert.deepEqual(f.game.load('shared'), savedCampaign);
+      assert.deepEqual(f.game.receipts(hostScope), savedHostReceipts);
+    }
+
+    const resumed = await transition(gm, 'resume', paused.view.revision, `gm-resume-${index}`);
+    assert.equal(resumed.status, 200);
+    const saved = await resumed.json();
+    assert.equal(saved.receipt.result.type, 'resume');
+    assert.equal(saved.view.phase, 'combat');
+    assert.ok(saved.view.revision > paused.view.revision);
+    for (const peer of [...hostSessions, ...playerSessions]) {
+      const shared = await state(peer);
+      assert.equal(shared.view.phase, 'combat');
+      assert.equal(shared.view.revision, saved.view.revision);
+    }
+    for (const peer of hostSessions) {
+      assert.deepEqual((await state(peer)).receipts.find(receipt => receipt.requestId === saved.receipt.requestId), saved.receipt);
+    }
+  }
+
+  const current = await state(playerSessions[0]);
+  const pause = await transition(playerSessions[0], 'pause', current.view.revision, 'party-pause-before-revocation');
+  assert.equal(pause.status, 200);
+  const paused = await state(playerSessions[0]);
+  const savedCampaign = f.game.load('shared');
+  const savedHostReceipts = (await state(hostSessions[0])).receipts;
+  assert.equal(paused.view.phase, 'paused');
+  assert.equal(f.game.member(hostScope), 'host');
+
+  f.revokeHostAuthority();
+  assert.equal(f.game.member(hostScope), 'host', 'Persisted role remains; current Discord authority must still be checked.');
+  for (const [index, gm] of hostSessions.entries()) {
+    assert.equal((await f.handlers.state(f.request(gm))).status, 403);
+    const denied = await transition(gm, 'resume', paused.view.revision, `revoked-gm-resume-${index}`);
+    assert.equal(denied.status, 403);
+    assert.deepEqual(f.game.load('shared'), savedCampaign);
+    assert.deepEqual(f.game.receipts(hostScope), savedHostReceipts);
+  }
+  for (const player of playerSessions) assert.deepEqual(await state(player), paused);
 });
 
 test('Activity authorization rejects malformed and oversized bodies before token exchange', async t => {

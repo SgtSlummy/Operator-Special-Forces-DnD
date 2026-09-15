@@ -1,0 +1,1 @@
+import{t as e}from"./activity-runtime-DrvY9Y8m.js";var t=`nodejs`,n=e(`action`);export{n as POST,t as runtime};

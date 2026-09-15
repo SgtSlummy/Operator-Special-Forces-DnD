@@ -1,0 +1,27 @@
+name: dnd-image-stack
+
+services:
+  comfyui:
+    image: docker.io/yanwk/comfyui-boot:cu126-slim
+    container_name: dnd-comfyui
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8188:8188"
+    environment:
+      UV_CACHE_DIR: /tmp/uv-cache
+      CLI_ARGS: --listen 0.0.0.0 --disable-api-nodes
+    volumes:
+      - comfyui-root:/root
+      - ./storage-models/models:/root/ComfyUI/models
+      - ./storage-models/hf-hub:/root/.cache/huggingface/hub
+      - ./storage-models/torch-hub:/root/.cache/torch/hub
+      - ./storage-user/input:/root/ComfyUI/input
+      - ./storage-user/output:/root/ComfyUI/output
+      - ./storage-user/workflows:/root/ComfyUI/user/default/workflows
+    devices:
+      - nvidia.com/gpu=all
+    security_opt:
+      - label=disable
+
+volumes:
+  comfyui-root:

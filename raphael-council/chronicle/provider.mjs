@@ -3,8 +3,12 @@ import { ChronicleError } from './store.mjs';
 import { ObusTransport } from '../ai/obus.mjs';
 import { getPlatform } from '../auth/runtime.mjs';
 import { getGameStore } from '../game/storage.mjs';
+import { createLocalObusHostControl } from '../ai/host-config.mjs';
+import { createObusEvidenceBridge } from './obus-evidence.mjs';
+import { createObusChronicleProvider } from './obus-provider.mjs';
 
-export function createStoryProvider({ ai, transport = new ObusTransport(), authorizeParticipant, authorizeCommand } = {}) {
+export function createStoryProvider({ ai, transport = new ObusTransport(), authorizeParticipant, authorizeCommand,
+  store, campaigns, hostControl, authorizeEvidence } = {}) {
   const participant = async scope => {
     try {
       if (!scope || !['host', 'player'].includes(scope.role)) return false;
@@ -18,6 +22,27 @@ export function createStoryProvider({ ai, transport = new ObusTransport(), autho
       return authorizeCommand ? await authorizeCommand(scope) === true : getGameStore().member({ campaign: scope.campaign, owner: scope.owner }) === 'host';
     } catch { return false; }
   };
+  if (store) {
+    // Allocate private credentials lazily: unavailable AI must not prevent the
+    // bot from accepting manual commands or retaining campaign evidence.
+    let control = hostControl;
+    const selectedControl = () => control ??= createLocalObusHostControl();
+    const bridge = createObusEvidenceBridge({ store, campaigns, allowStoreSync: true,
+      hostControl: {
+        getRuntime: input => selectedControl().getRuntime(input),
+        syncEvidence: input => selectedControl().syncEvidence(input),
+      },
+      authorizeCommand: authorizeEvidence ?? (scope => {
+        try {
+          // Custom async authorization needs its own explicit synchronous
+          // evidence authorizer; it cannot silently inherit platform access.
+          return !authorizeCommand && getGameStore().member({ campaign: scope.campaign, owner: scope.owner }) === 'host';
+        } catch { return false; }
+      }),
+    });
+    return createObusChronicleProvider({ transport, campaigns, evidenceBridge: bridge,
+      authorizeCommand: host, authorizeParticipant: participant });
+  }
   return {
     authorizeParticipant: participant,
     async captureRuntime(scope, session) {

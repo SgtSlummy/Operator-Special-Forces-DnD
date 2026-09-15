@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "revision": 1,
+  "currentRoomId": "t-tavern",
+  "currentPlaceId": "brinewatch",
+  "roomIds": {
+    "f-deck": {
+      "learned": true,
+      "visited": true,
+      "source": "session start",
+      "at": "2026-09-12T18:59:58.896Z"
+    },
+    "t-tavern": {
+      "learned": true,
+      "visited": true,
+      "source": "entered from adjacent room",
+      "at": "2026-09-12T19:01:00.580Z"
+    }
+  },
+  "poiIds": {},
+  "placeIds": {
+    "brinewatch": {
+      "learned": true,
+      "visited": true,
+      "source": "session start",
+      "at": "2026-09-12T18:59:58.896Z"
+    }
+  },
+  "roadIds": {},
+  "party": [
+    {
+      "id": "mara",
+      "name": "Mara Venn",
+      "color": "#df9b69",
+      "roomId": "f-deck",
+      "x": 0.35,
+      "y": 0.55
+    },
+    {
+      "id": "ivo",
+      "name": "Ivo Quill",
+      "color": "#84b5cf",
+      "roomId": "f-deck",
+      "x": 0.45,
+      "y": 0.4
+    },
+    {
+      "id": "sable",
+      "name": "Sable Reed",
+      "color": "#b69cd5",
+      "roomId": "f-deck",
+      "x": 0.58,
+      "y": 0.55
+    },
+    {
+      "id": "tern",
+      "name": "Brother Tern",
+      "color": "#a8c58d",
+      "roomId": "f-deck",
+      "x": 0.68,
+      "y": 0.4
+    }
+  ],
+  "history": [
+    {
+      "id": 1,
+      "at": "2026-09-12T19:01:00.580Z",
+      "type": "visitRoom",
+      "summary": "Entered The Salt Lantern.",
+      "gm": {}
+    }
+  ]
+}

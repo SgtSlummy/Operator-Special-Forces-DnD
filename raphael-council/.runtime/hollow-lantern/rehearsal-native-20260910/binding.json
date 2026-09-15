@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "kind": "hollow-lantern-rehearsal-binding",
+  "campaignId": "hollow-lantern-rehearsal-20260910",
+  "engineUrl": "http://127.0.0.1:18810",
+  "guildId": "1463393482306486387",
+  "channelId": "1546676505780944979",
+  "gmUserId": "1230264975533281312",
+  "applicationId": "1540006061099188274",
+  "draftFile": "C:\\Users\\Hermes\\Projects\\Operator Special Forces Dungeon and Dragons\\raphael-council\\.runtime\\hollow-lantern\\rehearsal-native-20260910\\investigation-drafts.json",
+  "rpcSecretFile": "C:\\Users\\Hermes\\Projects\\Operator Special Forces Dungeon and Dragons\\raphael-council\\.runtime\\hollow-lantern\\rehearsal-native-20260910\\draft-rpc-secret",
+  "webPort": 18812,
+  "activityDataDir": "C:/Users/Hermes/Projects/Operator Special Forces Dungeon and Dragons/raphael-council/.runtime/hollow-lantern/rehearsal-activity-20260910",
+  "campaignStore": "C:/Users/Hermes/LocalFiles/hollow-lantern/live-discord-rehearsal-20260910/campaign.json"
+}

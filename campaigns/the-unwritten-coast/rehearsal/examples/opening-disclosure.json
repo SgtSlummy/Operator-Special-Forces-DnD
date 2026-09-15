@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "packId": "unwritten-coast-undertow",
+  "sourceRevision": "cc3c2b4401479f40ccdfd7be0daaed77b2207950bb95643f025960f50ca23e1b",
+  "currentRoomId": "R01",
+  "rooms": [
+    { "roomId": "R01", "name": true, "arrival": true }
+  ],
+  "routes": []
+}

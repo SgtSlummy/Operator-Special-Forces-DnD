@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "checks": [
+    "Private shop purchase updates inventory and coins",
+    "Scene dock closes drawer and updates active view",
+    "Unfocused DM draft survives background revision",
+    "Resolved discovery creates hover note",
+    "Scene, tactical and combat PNG exports render",
+    "Round refresh reveals HP only after DM authorizes it",
+    "Raphael recap includes recorded discovery, excludes other owner reward",
+    "Shared location follows company travel",
+    "Desktop and mobile: no horizontal document overflow"
+  ],
+  "consoleErrors": [],
+  "at": "2026-09-13T04:08:30.041Z"
+}

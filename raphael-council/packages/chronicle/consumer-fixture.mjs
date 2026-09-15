@@ -61,7 +61,7 @@ function fixture(t, { allowed = () => true, participant = () => true, providerWr
 test('installed ESM exports only the portable composition API and requires explicit adapters', () => {
   assert.equal(createChronicleRuntime, createChronicleRuntimeCore);
   assert.equal(SESSION_COMMAND.name, 'session');
-  assert.deepEqual(Object.keys(chronicle).sort(), ['ChronicleCommandError', 'ChronicleCommands', 'ChronicleError', 'ChronicleStore', 'SESSION_COMMAND', 'createChronicleRuntime', 'createChronicleRuntimeCore']);
+  assert.deepEqual(Object.keys(chronicle).sort(), ['ChronicleCommandError', 'ChronicleCommands', 'ChronicleError', 'ChronicleStore', 'SESSION_COMMAND', 'createAdaptiveMusic', 'createChronicleRuntime', 'createChronicleRuntimeCore', 'createDavyChronicleHost', 'createVoiceReceiver', 'discordCampaignBindings']);
   assert.throws(() => createChronicleRuntime({}), /explicitly/);
   assert.equal(networkCalls, 0);
 });
@@ -192,4 +192,3 @@ test('concurrent close calls join one drain and close the dedicated store once',
   assert.throws(() => f.store.db.prepare('SELECT 1'), /closed|not open/i);
   assert.equal(f.calls.client, 0);
 });
-

@@ -1,0 +1,1 @@
+import{t as e}from"./http-BOXfcPXM.js";import{t}from"./runtime-BUiTaVOB.js";var n=`nodejs`,r=e(t).map;export{r as GET,n as runtime};

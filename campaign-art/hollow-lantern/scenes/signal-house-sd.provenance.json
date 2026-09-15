@@ -1,0 +1,28 @@
+{
+  "createdAt": "2026-09-10T15:25:26.789Z",
+  "kind": "offline-public-scene-art-preparation",
+  "provider": "AUTOMATIC1111 loopback",
+  "model": "v1-5-pruned-emaonly.safetensors [6ce0161689]",
+  "sceneId": "signal-house",
+  "request": {
+    "seed": 29091003,
+    "prompt": "Hand painted fantasy adventure background, wide cinematic composition, ancient medieval signal house interior, spacious stone chamber with a weathered brass signal lantern hanging from timber rafters, old stone arches and soft sea light from a high window, muted blue grey stone and warm amber lantern, beautifully painted atmospheric environment concept art, restrained elegant palette, believable old stone and timber, empty room, no people",
+    "negative_prompt": "photograph, photorealistic, modern furniture, computer, screen, electricity, neon, science fiction, futuristic, guns, people, face, text, letters, labels, watermark, signature, logo, grid, blurry, low quality, distorted architecture, oversaturated",
+    "steps": 28,
+    "width": 768,
+    "height": 448,
+    "cfg_scale": 7,
+    "sampler_name": "Euler a",
+    "batch_size": 1,
+    "n_iter": 1,
+    "send_images": true,
+    "save_images": false
+  },
+  "elapsedMs": 6244,
+  "sha256": "c41938ab35813ecee8b1dd93b019f38fb5a351180691169881ef31e655b26685",
+  "path": "C:\\Users\\Hermes\\LocalFiles\\hollow-lantern\\scene-design-20260910\\signal-house-candidate.png",
+  "approved": true,
+  "gameplayCommands": 0,
+  "visualReview": "Reviewed for public scene atmosphere only; illustration does not define geometry, obstacles, object positions, or discoveries.",
+  "approvedPath": "C:\\Users\\Hermes\\Projects\\Operator Special Forces Dungeon and Dragons\\campaign-art\\hollow-lantern\\scenes\\signal-house-sd.png"
+}

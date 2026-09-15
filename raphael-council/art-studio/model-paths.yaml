@@ -1,0 +1,7 @@
+# Reuse the existing local model; do not copy or download checkpoint weights.
+shared_local_models:
+  base_path: C:/Users/Hermes/stable-diffusion-data/
+  checkpoints: models/Stable-diffusion/
+  loras: models/Lora/
+  vae: models/VAE/
+  embeddings: embeddings/

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SethGammon/Citadel/v2.0.0/schemas/harness-config-v2.schema.json",
+  "schemaVersion": 2,
+  "execution": {
+    "profile": {
+      "id": "standard",
+      "version": "1.0.0"
+    }
+  },
+  "activation": {
+    "bundles": [
+      "core",
+      "persistence",
+      "parallel"
+    ],
+    "onDemand": "prompt",
+    "allowDegradedRuntime": true
+  },
+  "consent": {
+    "externalActions": "session-allow",
+    "daemonSpend": "always-ask",
+    "fleetSpawn": "always-ask"
+  },
+  "trust": {
+    "sessionsCompleted": 0,
+    "campaignsCompleted": 0,
+    "campaignsReverted": 0,
+    "fleetCleanMerges": 0,
+    "improveLoopsAccepted": 0,
+    "daemonRuns": 0,
+    "override": null
+  },
+  "policy": {},
+  "extensions": {}
+}
