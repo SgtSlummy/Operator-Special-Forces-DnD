@@ -240,4 +240,16 @@ RECAP · chapter close
 
 The recap is public at chapter close. Individual player discoveries remain available in their private feed, and the DM master thread retains the complete ruling history for continuity.
 
+```text
+WELCOME · campaign start
+┌ The Lantern Compact · Chapter 1 ─────────────────────────────┐
+│ You are in Briarhaven. The road north is known; nearby sites  │
+│ remain unnamed until the party learns them.                   │
+│                                                               │
+│ Raphael will guide the story and call for checks when needed. │
+│ Describe what your character wants to do in ordinary words.   │
+│ [Tell Raphael what you do] [Options]                          │
+└ 0 visible events · ready for the party’s first action ────────┘
+```
+
 The route is an address only; the adapter re-authorizes the interaction and campaign on every click. Unknown campaigns and unauthorized viewers receive a private acknowledgement without reading or projecting feed state.
