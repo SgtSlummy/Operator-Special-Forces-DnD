@@ -36,6 +36,13 @@ test('stale, paused and malformed rolls produce no mutation', () => {
   assert.equal(projectFeed(feed, AUDIENCES.PARTY).filter(event => event.resolution?.kind === 'result').length, 0);
 });
 
+test('pause and resume create visible state events only when state changes', () => {
+  let feed = createCampaignFeed({ campaignId: 'demo' });
+  feed = pauseFeed(feed, true); assert.equal(feed.paused, true); assert.match(feed.events.at(-1).text, /paused/);
+  const same = pauseFeed(feed, true); assert.strictEqual(same, feed);
+  feed = pauseFeed(feed, false); assert.equal(feed.paused, false); assert.match(feed.events.at(-1).text, /resumed/);
+});
+
 test('map discovery reveals one place and emits a party event once', () => {
   let feed = createCampaignFeed({ campaignId: 'demo' });
   const first = discoverMapName(feed, { actorId: 'p1', placeId: 'watchtower', name: 'Old Watchtower' });

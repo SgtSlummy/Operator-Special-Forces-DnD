@@ -148,4 +148,9 @@ export function ruleCheck(feed, { requestId, actorId, text, expectedRevision }) 
   next.events.push(event); return { feed: next, accepted: true, check: clone(check), event: clone(event) };
 }
 
-export function pauseFeed(feed, paused) { const next = clone(feed); next.paused = Boolean(paused); next.revision += 1; return next; }
+export function pauseFeed(feed, paused) {
+  const value = Boolean(paused); if (feed.paused === value) return feed;
+  const next = clone(feed); next.paused = value; next.revision += 1; next.sequence += 1;
+  next.events.push({ id: `${next.campaignId}:event:${next.sequence}`, sequence: next.sequence, campaignId: next.campaignId, chapterId: next.chapterId, actorId: 'system', audience: AUDIENCES.PARTY, text: value ? 'The campaign is paused.' : 'The campaign has resumed.', resolution: { kind: 'pause-state', paused: value }, source: 'system' });
+  return next;
+}
