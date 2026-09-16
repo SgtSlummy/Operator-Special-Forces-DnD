@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, requestPurchase, resolveIntent, ruleCheck, setEncounter, setShop, shareFact, submitIntent } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, requestPurchase, resolveIntent, resolvePurchase, ruleCheck, setEncounter, setShop, shareFact, submitIntent } from './campaign-feed-contract.mjs';
 
 const base = () => appendEvent(createCampaignFeed({ campaignId: 'silent-beacon' }), { actorId: 'dm', text: 'Only Briarhaven is named.', source: 'system' });
 
@@ -80,4 +80,6 @@ test('shop purchase requests stay DM-private and deduplicate', () => {
   const purchase = requestPurchase(feed, { requestId: 'buy-1', actorId: 'p1', itemId: 'potion', text: 'I buy the healing draught.' });
   assert.equal(purchase.accepted, true); assert.equal(projectFeed(purchase.feed).length, 0); assert.equal(projectFeed(purchase.feed, AUDIENCES.DM).at(-1).text, 'I buy the healing draught.');
   assert.equal(requestPurchase(purchase.feed, { requestId: 'buy-1', actorId: 'p1', itemId: 'potion', text: 'again' }).reason, 'DUPLICATE');
+  const resolved = resolvePurchase(purchase.feed, { requestId: 'buy-1', approved: true, text: 'Purchase approved.', expectedRevision: purchase.feed.revision });
+  assert.equal(resolved.accepted, true); assert.equal(projectFeed(resolved.feed).at(-1).text, 'Purchase approved.');
 });
