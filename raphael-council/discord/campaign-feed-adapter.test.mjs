@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, appendEvent, createCampaignFeed } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed } from './campaign-feed-contract.mjs';
 import { campaignFeedRoute, createCampaignFeedAdapter } from './campaign-feed-adapter.mjs';
 
 test('campaign feed routes reject malformed IDs and parse open/refresh', () => {
@@ -54,6 +54,14 @@ test('campaign feed roll button auto-selects the pending check dice', async () =
   await handler({ id: 'roll-1', token: 't1', data: { custom_id: `campaign:roll:briar:${feed.revision}` } });
   assert.equal(feed.checks.get('door').results.p1.total, 17);
   assert.match(calls[0][2].data.content, /Wisdom \(Perception\)/);
+});
+
+test('campaign feed share button publishes the player fact', async () => {
+  const calls = []; let feed = addFact(createCampaignFeed({ campaignId: 'briar' }), { id: 'fact-1', ownerId: 'p1', kind: 'clue', text: 'A loose stone.', sourceEventId: 'event-1' });
+  const handler = createCampaignFeedAdapter({ readFeed: async () => feed, writeFeed: async next => { feed = next; }, authorize: async (_interaction, route) => ({ campaignId: route.campaignId, actorId: 'p1' }), transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });
+  await handler({ id: 'share-1', token: 't1', data: { custom_id: `campaign:share:briar:${feed.revision}` } });
+  assert.ok(feed.facts[0].sharedAt);
+  assert.equal(calls[0][2].data.flags, 64);
 });
 
 test('campaign feed adapter uses edit for refresh and does not handle unrelated controls', async () => {

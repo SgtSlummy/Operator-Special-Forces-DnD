@@ -1,4 +1,4 @@
-import { AUDIENCES, recordRoll, submitIntent } from './campaign-feed-contract.mjs';
+import { AUDIENCES, recordRoll, shareFact, submitIntent } from './campaign-feed-contract.mjs';
 import { renderCampaignFeed } from './campaign-feed-renderer.mjs';
 
 const route = value => {
@@ -22,6 +22,20 @@ export function renderCampaignIntentModal({ campaignId, revision } = {}) {
 export function createCampaignFeedAdapter({ readFeed, writeFeed, authorize, transport, render = renderCampaignFeed, roll = ({ count, sides }) => Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1) } = {}) {
   if (typeof readFeed !== 'function' || typeof authorize !== 'function' || !transport?.respond || !transport?.edit) throw new Error('Campaign feed adapter requires readFeed, authorize, respond, and edit.');
   return async interaction => {
+    const shareRequest = /^campaign:share:([a-zA-Z0-9_-]{1,64}):(\d+)$/.exec(interaction?.data?.custom_id ?? '');
+    if (shareRequest) {
+      const scope = await authorize(interaction, { action: 'share', campaignId: shareRequest[1] });
+      const feed = scope?.campaignId === shareRequest[1] ? await readFeed(shareRequest[1]) : null;
+      const fact = feed?.facts.find(item => item.ownerId === scope?.actorId && !item.sharedAt);
+      if (!scope?.campaignId || !feed || feed.revision !== Number(shareRequest[2]) || !fact || typeof writeFeed !== 'function') {
+        await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'That information is no longer available to share.', flags: 64 } });
+        return true;
+      }
+      const result = shareFact(feed, scope.actorId, fact.id);
+      if (result.changed) await writeFeed(result.feed, feed.revision);
+      await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'Information shared with the party.', flags: 64 } });
+      return true;
+    }
     const rollRequest = /^campaign:roll:([a-zA-Z0-9_-]{1,64}):(\d+)$/.exec(interaction?.data?.custom_id ?? '');
     if (rollRequest) {
       const scope = await authorize(interaction, { action: 'roll', campaignId: rollRequest[1] });
