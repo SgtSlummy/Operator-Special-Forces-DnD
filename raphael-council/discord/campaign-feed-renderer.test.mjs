@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, addFact, appendEvent, createCampaignFeed, recordRoll, requestCheck, shareFact } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, recordRoll, requestCheck, requestPurchase, setShop, shareFact, submitIntent } from './campaign-feed-contract.mjs';
 import { renderCampaignFeed } from './campaign-feed-renderer.mjs';
 
 test('party rendering keeps the interaction surface compact and natural-language first', () => {
@@ -56,6 +56,15 @@ test('feed footer summarizes pending DM queues without exposing private text', (
   feed = appendEvent(feed, { actorId: 'p1', audience: AUDIENCES.DM, playerId: 'p1', text: 'I inspect the lock.', resolution: { kind: 'intent', requestId: 'i1' } });
   const payload = renderCampaignFeed(feed);
   assert.match(payload.embeds[0].footer.text, /0 pending actions/);
+  const dm = renderCampaignFeed(feed, { viewer: AUDIENCES.DM });
+  assert.match(dm.embeds[0].footer.text, /1 pending actions/);
+});
+
+test('DM footer counts a pending purchase request', () => {
+  let feed = setShop(createCampaignFeed({ campaignId: 'demo' }), { shopId: 'shop', name: 'Briar Apothecary', inventory: [{ id: 'potion', name: 'Healing Draught' }] });
+  feed = requestPurchase(feed, { requestId: 'buy-1', actorId: 'p1', itemId: 'potion', text: 'I buy it.' }).feed;
+  const dm = renderCampaignFeed(feed, { viewer: AUDIENCES.DM });
+  assert.match(dm.embeds[0].footer.text, /1 pending purchases/);
 });
 
 test('private player feed offers sharing only for that player’s unshared facts', () => {
