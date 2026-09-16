@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, ruleCheck, shareFact } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, ruleCheck, shareFact, submitIntent } from './campaign-feed-contract.mjs';
 
 const base = () => appendEvent(createCampaignFeed({ campaignId: 'silent-beacon' }), { actorId: 'dm', text: 'Only Briarhaven is named.', source: 'system' });
 
@@ -50,4 +50,12 @@ test('Raphael cues separate the public hint from DM detail and deduplicate', () 
   assert.equal(projectFeed(cue.feed).at(-1).text, 'Raphael senses a secret in this room.');
   assert.equal(projectFeed(cue.feed, AUDIENCES.DM).at(-1).text, 'The loose stone hides a passage behind the north shelf.');
   assert.equal(publishCue(cue.feed, { cueId: 'room-secret', hint: 'changed', detail: 'changed' }).changed, false);
+});
+
+test('natural-language intent acknowledges publicly while preserving exact text for the DM', () => {
+  let feed = createCampaignFeed({ campaignId: 'demo' });
+  const submitted = submitIntent(feed, { requestId: 'intent-1', actorId: 'p1', text: 'I pause at the doorway and listen upstairs.' });
+  assert.equal(projectFeed(submitted.feed).at(-1).text, 'p1 is taking an action.');
+  assert.equal(projectFeed(submitted.feed, AUDIENCES.DM).at(-1).text, 'I pause at the doorway and listen upstairs.');
+  assert.equal(submitIntent(submitted.feed, { requestId: 'intent-1', actorId: 'p1', text: 'changed' }).changed, false);
 });

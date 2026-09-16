@@ -47,6 +47,16 @@ export function publishCue(feed, { cueId, hint, detail }) {
   return { feed: next, changed: true, event: clone(partyEvent) };
 }
 
+export function submitIntent(feed, { requestId, actorId, text }) {
+  assertText(requestId, 'requestId'); assertText(actorId, 'actorId'); assertText(text, 'text');
+  if (feed.events.some(event => event.resolution?.requestId === requestId)) return { feed, changed: false };
+  const next = clone(feed); next.revision += 1; next.sequence += 1;
+  const partyEvent = { id: `${next.campaignId}:event:${next.sequence}`, sequence: next.sequence, campaignId: next.campaignId, chapterId: next.chapterId, actorId, audience: AUDIENCES.PARTY, text: `${actorId} is taking an action.`, resolution: { kind: 'intent-ack', requestId }, source: 'player' };
+  next.events.push(partyEvent); next.sequence += 1;
+  next.events.push({ id: `${next.campaignId}:event:${next.sequence}`, sequence: next.sequence, campaignId: next.campaignId, chapterId: next.chapterId, actorId, audience: AUDIENCES.DM, text, resolution: { kind: 'intent', requestId }, source: 'player' });
+  return { feed: next, changed: true, event: clone(partyEvent) };
+}
+
 export function shareFact(feed, actorId, factId) {
   assertText(actorId, 'actorId'); assertText(factId, 'factId');
   const next = clone(feed); const fact = next.facts.find(value => value.id === factId);
