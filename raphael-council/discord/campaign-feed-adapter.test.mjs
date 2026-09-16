@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, addFact, appendEvent, createCampaignFeed } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, recordRoll, requestCheck } from './campaign-feed-contract.mjs';
 import { campaignFeedRoute, createCampaignFeedAdapter } from './campaign-feed-adapter.mjs';
 
 test('campaign feed routes reject malformed IDs and parse open/refresh', () => {
@@ -70,6 +70,19 @@ test('campaign feed options opens a compact private expansion panel', async () =
   await handler({ id: 'options-1', token: 't1', data: { custom_id: 'campaign:options:briar:2' } });
   assert.equal(calls[0][2].data.flags, 64);
   assert.equal(calls[0][2].data.embeds[0].title, 'Campaign options');
+});
+
+test('DM campaign ruling modal publishes the check result', async () => {
+  const calls = []; let feed = createCampaignFeed({ campaignId: 'briar' });
+  feed = requestCheck(feed, { requestId: 'door', actorIds: ['p1'], ability: 'Wisdom', skill: 'Perception' }).feed;
+  feed = recordRoll(feed, { requestId: 'door', actorId: 'p1', dice: [17], expectedRevision: feed.revision, roll: { modifier: 0 } }).feed;
+  const handler = createCampaignFeedAdapter({ readFeed: async () => feed, writeFeed: async next => { feed = next; }, authorize: async (_interaction, route) => ({ campaignId: route.campaignId, actorId: 'dm-1', isDm: true }), transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });
+  await handler({ id: 'rule-1', token: 't1', data: { custom_id: `campaign:rule:briar:${feed.revision}` } });
+  const modal = calls.at(-1)[2];
+  assert.equal(modal.type, 9);
+  await handler({ id: 'rule-submit-1', token: 't2', data: { custom_id: modal.data.custom_id, components: [{ type: 18, component: { type: 4, custom_id: 'ruling', value: 'The doorway is clear.' } }] } });
+  assert.equal(feed.checks.get('door').status, 'ruled');
+  assert.match(calls.at(-1)[2].data.content, /Ruling published/);
 });
 
 test('campaign feed adapter uses edit for refresh and does not handle unrelated controls', async () => {
