@@ -116,7 +116,7 @@ async function proposal(h, kind, text) {
 }
 test('private board is available without mutation and hides unseen actors', async () => {
   const h = harness();
-  try { await h.handle(h.interaction('rpg:home')); assert.equal(h.responses[0].type, 5); assert.equal(h.responses[0].data.flags, 64); assert.ok(h.edits[0].files[0].data.length); assert.ok(!h.edits[0].components[0].content.includes('SECRET')); assert.ok(h.edits[0].components.flatMap(row => row.components || []).some(button => button.custom_id === `campaign:open:${scope.campaign}`)); assert.equal(h.game.view(scope).revision, 1); }
+  try { await h.handle(h.interaction('rpg:home')); assert.equal(h.responses[0].type, 5); assert.equal(h.responses[0].data.flags, 64); assert.ok(h.edits[0].files[0].data.length); assert.ok(!h.edits[0].components[0].content.includes('SECRET')); assert.equal(h.game.view(scope).revision, 1); }
   finally { h.game.close(); }
 });
 test('movement modal previews before committing and repeated confirmation moves once', async () => {

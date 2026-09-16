@@ -9,13 +9,14 @@ export function screen(title, body, buttons = [], privateView = true) {
     ...Array.from({ length: Math.ceil(buttons.length / 5) }, (_, i) => ({ type: 1, components: buttons.slice(i * 5, i * 5 + 5) })),
   ] };
 }
-export function entryScreen() {
+export function entryScreen(campaignId = process.env.RAPHAEL_CAMPAIGN_ID || 'campaign') {
   return screen('Raphael · Adventure desk', 'Import a 2024 character PDF or describe your hero. Your sheet and review stay private.\nChoose Show what I see for a private image at any time, including during pauses or another player’s turn.', [
     { type: 2, custom_id: 'rpi:home', label: 'My Hero', style: 1 },
     { type: 2, custom_id: 'rps:home', label: 'Show what I see', style: 2 },
     { type: 2, custom_id: 'rpg:home', label: 'Tactical table', style: 2 },
     { type: 2, custom_id: 'rpw:home', label: 'Mission & counsel', style: 2 },
     { type: 2, custom_id: 'rpc:home', label: 'More information', style: 2 },
+    { type: 2, custom_id: `campaign:open:${campaignId}`, label: 'Campaign feed', style: 2 },
   ], false);
 }
 function split(text, limit = 1900) {

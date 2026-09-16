@@ -24,7 +24,6 @@ export function board(game, scope, context, heading = '', view = game.view(scope
     { type: 2, custom_id: 'rpc:characters', label: 'Character details', style: 2 },
     { type: 2, custom_id: 'rpc:home', label: 'More information', style: 2 },
     { type: 2, custom_id: 'rpw:home', label: 'Mission & counsel', style: 2 },
-    { type: 2, custom_id: `campaign:open:${scope.campaign}`, label: 'Campaign feed', style: 2 },
   ]);
   const png = renderTacticalMap(view, { cellSize: Math.min(64, Math.floor(3900 / Math.max(view.map.width, view.map.height))) });
   if (png.length <= 9 * 1024 * 1024) {

@@ -165,10 +165,10 @@ export async function main(args = process.argv.slice(2)) {
       const existing = store.db.prepare('SELECT * FROM character_desks WHERE campaign=?').get(config.campaignId);
       let message;
       if (existing?.channel_id === config.channelId) {
-        try { message = await client.rest.patch(Routes.channelMessage(config.channelId, existing.message_id), { body: entryScreen() }); }
+        try { message = await client.rest.patch(Routes.channelMessage(config.channelId, existing.message_id), { body: entryScreen(config.campaignId) }); }
         catch (error) { if (error.code !== 10008) throw error; }
       }
-      if (!message) message = await client.rest.post(Routes.channelMessages(config.channelId), { body: entryScreen() });
+      if (!message) message = await client.rest.post(Routes.channelMessages(config.channelId), { body: entryScreen(config.campaignId) });
       store.db.prepare('INSERT INTO character_desks VALUES(?,?,?) ON CONFLICT(campaign) DO UPDATE SET channel_id=excluded.channel_id,message_id=excluded.message_id')
         .run(config.campaignId, config.channelId, message.id);
       console.log('Adventure desk published with character and image controls. Run npm run bot to keep its buttons active.');
