@@ -77,4 +77,6 @@ test('private player feed offers sharing only for that player’s unshared facts
   const shared = shareFact(feed, 'p1', 'fact-1');
   const after = renderCampaignFeed(shared.feed, { viewer: 'p1' });
   assert.equal(after.components[0].components.some(button => button.label === 'Share information'), false);
+  assert.equal(player.components[0].components.some(button => button.label === 'Refresh private feed'), true);
+  assert.equal(other.components[0].components.some(button => button.label === 'Refresh private feed'), true);
 });
