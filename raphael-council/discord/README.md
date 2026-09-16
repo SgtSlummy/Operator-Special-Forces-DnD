@@ -139,3 +139,20 @@ node --test discord/campaign-feed-contract.test.mjs discord/campaign-feed-render
 - `campaign:private:<campaign>` opens the requesting player's ephemeral projection.
 - A DM-scoped viewer receives the DM projection ephemerally, including private cue details and pending queues.
 - Private payloads include a `Refresh private feed` control that reuses the private route.
+
+### Feed layout contract
+
+The public campaign message is the wide table view. Its embed keeps the chapter and revision at the top, then presents known map names, the current encounter or ability-check strip, shop information when relevant, pending check cards, and the newest action-feed entries. Each action entry is a separate field (`actor · source`) so a long narrative never becomes an unstructured paragraph. The public footer reports only public counts.
+
+Player views reuse that layout but project only the player's visible facts, rolls, and events. A player can type an action in natural language through `Tell Raphael what you do`; controls are accelerators, not a replacement for the input. `Roll required die` is the single dice affordance and is disabled while the feed is paused. `Options` is reserved for secondary actions, while `Share information` appears only while that player's fact is still private.
+
+The DM view is the master thread projection. It retains the full action feed, private Raphael cue details, all pending check results, and pending intent/purchase queues. Its footer includes those queue counts, and `Rule pending checks` is the DM-only ruling entry point. DM and player views are delivered ephemerally; the public party view is the only projection that may be posted to the campaign channel.
+
+| Route | Projection | Delivery |
+| --- | --- | --- |
+| `campaign:open:<campaign>` | Public party feed | Channel response |
+| `campaign:private:<campaign>` | Requesting player's facts and events | Ephemeral response |
+| `campaign:refresh:<campaign>` | Public party feed refresh | Message edit |
+| `campaign:private:<campaign>` from a DM-scoped viewer | DM master feed | Ephemeral response |
+
+The route is an address only; the adapter re-authorizes the interaction and campaign on every click. Unknown campaigns and unauthorized viewers receive a private acknowledgement without reading or projecting feed state.
