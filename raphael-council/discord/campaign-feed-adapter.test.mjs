@@ -34,6 +34,16 @@ test('campaign feed adapter renders the DM projection for a DM scope', async () 
   assert.match(calls[0][2].data.embeds[0].fields[1].value, /hidden passage/);
 });
 
+test('campaign feed open is public while private route is ephemeral and player-scoped', async () => {
+  let feed = createCampaignFeed({ campaignId: 'briar' }); feed = appendEvent(feed, { actorId: 'p1', audience: 'player', playerId: 'p1', text: 'Private clue.' });
+  const calls = [];
+  const handler = createCampaignFeedAdapter({ readFeed: async () => feed, authorize: async () => ({ campaignId: 'briar', actorId: 'p1' }), transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });
+  await handler({ id: 'i1', token: 't1', data: { custom_id: 'campaign:open:briar' } });
+  assert.equal(calls[0][2].data.flags, undefined); assert.equal(calls[0][2].data.embeds[0].fields.some(field => /Private clue/.test(field.value)), false);
+  await handler({ id: 'i2', token: 't2', data: { custom_id: 'campaign:private:briar' } });
+  assert.equal(calls[1][2].data.flags & 64, 64); assert.equal(calls[1][2].data.embeds[0].fields.some(field => /Private clue/.test(field.value)), true);
+});
+
 test('campaign feed adapter denies unauthorized viewers before transport', async () => {
   const calls = [];
   const handler = createCampaignFeedAdapter({ readFeed: async () => { throw new Error('must not read'); }, authorize: async () => null, transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });

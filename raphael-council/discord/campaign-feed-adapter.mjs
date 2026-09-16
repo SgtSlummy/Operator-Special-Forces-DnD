@@ -2,8 +2,8 @@ import { AUDIENCES } from './campaign-feed-contract.mjs';
 import { renderCampaignFeed } from './campaign-feed-renderer.mjs';
 
 const route = value => {
-  const match = /^campaign:(open|refresh):([a-zA-Z0-9_-]{1,64})$/.exec(value ?? '');
-  return match ? { action: match[1], campaignId: match[2] } : null;
+  const match = /^campaign:(open|refresh|private):([a-zA-Z0-9_-]{1,64})$/.exec(value ?? '');
+  return match ? { action: match[1], campaignId: match[2], privateView: match[1] === 'private' } : null;
 };
 
 const viewerFor = ({ actorId, isDm = false } = {}) => isDm ? AUDIENCES.DM : actorId;
@@ -23,8 +23,10 @@ export function createCampaignFeedAdapter({ readFeed, authorize, transport, rend
       await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'Campaign feed is unavailable.', flags: 64 } });
       return true;
     }
-    const payload = render(feed, { viewer: viewerFor(scope), title: scope.title || 'Campaign feed' });
-    if (parsed.action === 'open') await transport.respond(interaction.id, interaction.token, { type: 4, data: payload });
+    const viewer = scope.isDm ? AUDIENCES.DM : (parsed.privateView ? viewerFor(scope) : AUDIENCES.PARTY);
+    const payload = render(feed, { viewer, title: scope.title || 'Campaign feed' });
+    if (scope.isDm || parsed.privateView) payload.flags = (payload.flags || 0) | 64;
+    if (parsed.action === 'open' || parsed.action === 'private') await transport.respond(interaction.id, interaction.token, { type: 4, data: payload });
     else await transport.edit(interaction.application_id, interaction.token, payload);
     return true;
   };
