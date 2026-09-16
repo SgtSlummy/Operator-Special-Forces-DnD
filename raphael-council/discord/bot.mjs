@@ -120,8 +120,12 @@ export async function main(args = process.argv.slice(2)) {
   const campaignFeedHandler = createCampaignFeedAdapter({
     readFeed: async campaignId => feedStore.read(campaignId) || feedStore.create(campaignId),
     authorize: async interaction => {
+      const owner = interaction.member?.user?.id;
+      const roles = interaction.member?.roles || [];
+      const dmAuthorized = Boolean(owner && !interaction.member?.user?.bot && interaction.guild_id === config.guildId && interaction.channel_id === config.channelId && (config.dmIds.includes(owner) || (config.dmRoleId && roles.includes(config.dmRoleId))));
+      if (dmAuthorized) return { campaignId: config.campaignId, actorId: owner, isDm: true };
       const scope = authenticateInteraction(interaction, config);
-      return { campaignId: scope.campaign, actorId: scope.owner, isDm: config.dmIds.includes(scope.owner) };
+      return { campaignId: scope.campaign, actorId: scope.owner, isDm: false };
     },
     transport,
   });
