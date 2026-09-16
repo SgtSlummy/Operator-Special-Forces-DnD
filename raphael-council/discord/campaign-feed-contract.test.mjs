@@ -26,7 +26,7 @@ test('roll lifecycle enforces ownership, revision, one result and separate DM ru
   assert.equal(rolled.event.resolution.total, 18); assert.equal(rolled.event.resolution.status, 'awaiting_dm');
   assert.equal(recordRoll(feed, { requestId: 'check-1', actorId: 'rowan', dice: [20], expectedRevision: feed.revision, roll: { modifier: 4 } }).reason, 'ALREADY_ROLLED');
   const ruled = ruleCheck(feed, { requestId: 'check-1', actorId: AUDIENCES.DM, text: 'You hear wind above the landing, but no footsteps.', expectedRevision: feed.revision });
-  assert.equal(ruled.accepted, true); assert.equal(ruled.check.status, 'ruled'); assert.equal(ruled.check.results.rowan.total, 18);
+  assert.equal(ruled.accepted, true); assert.equal(ruled.check.status, 'ruled'); assert.equal(ruled.check.results.rowan.total, 18); assert.equal(ruled.event.audience, AUDIENCES.PARTY); assert.match(ruled.event.text, /Perception:/);
 });
 
 test('stale, paused and malformed rolls produce no mutation', () => {

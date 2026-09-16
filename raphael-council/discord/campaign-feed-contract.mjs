@@ -67,7 +67,10 @@ export function ruleCheck(feed, { requestId, actorId, text, expectedRevision }) 
   assertText(actorId, 'actorId'); assertText(text, 'text');
   if (actorId !== AUDIENCES.DM || expectedRevision !== feed.revision) return { feed, accepted: false, reason: expectedRevision !== feed.revision ? 'STALE_REVISION' : 'NOT_AUTHORIZED' };
   const next = clone(feed), check = next.checks.get(requestId); if (!check || check.status !== 'awaiting_dm') return { feed, accepted: false, reason: 'NOT_PENDING' };
-  check.ruling = text; check.status = 'ruled'; next.revision += 1; return { feed: next, accepted: true, check: clone(check) };
+  check.ruling = text; check.status = 'ruled'; next.revision += 1;
+  const totals = Object.values(check.results).map(result => result.total);
+  const event = { id: `${next.campaignId}:event:${++next.sequence}`, sequence: next.sequence, campaignId: next.campaignId, chapterId: next.chapterId, actorId: AUDIENCES.DM, audience: AUDIENCES.PARTY, text: `${check.skill || check.ability}: ${totals.join(', ')} — ${text}`, resolution: { kind: 'check-ruling', requestId, totals, ruling: text }, source: 'dm' };
+  next.events.push(event); return { feed: next, accepted: true, check: clone(check), event: clone(event) };
 }
 
 export function pauseFeed(feed, paused) { const next = clone(feed); next.paused = Boolean(paused); next.revision += 1; return next; }
