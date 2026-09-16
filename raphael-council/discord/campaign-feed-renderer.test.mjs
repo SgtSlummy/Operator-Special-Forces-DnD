@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, addFact, appendEvent, createCampaignFeed, recordRoll, requestCheck } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, recordRoll, requestCheck, shareFact } from './campaign-feed-contract.mjs';
 import { renderCampaignFeed } from './campaign-feed-renderer.mjs';
 
 test('party rendering keeps the interaction surface compact and natural-language first', () => {
@@ -65,4 +65,7 @@ test('private player feed offers sharing only for that player’s unshared facts
   const other = renderCampaignFeed(feed, { viewer: 'p2' });
   assert.equal(player.components[0].components.some(button => button.label === 'Share information'), true);
   assert.equal(other.components[0].components.some(button => button.label === 'Share information'), false);
+  const shared = shareFact(feed, 'p1', 'fact-1');
+  const after = renderCampaignFeed(shared.feed, { viewer: 'p1' });
+  assert.equal(after.components[0].components.some(button => button.label === 'Share information'), false);
 });
