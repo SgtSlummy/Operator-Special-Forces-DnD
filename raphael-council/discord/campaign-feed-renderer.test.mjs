@@ -7,7 +7,7 @@ test('party rendering keeps the interaction surface compact and natural-language
   let feed = createCampaignFeed({ campaignId: 'demo' });
   feed = appendEvent(feed, { actorId: 'Raphael', text: 'A secret is nearby.', resolution: { kind: 'cue' } });
   const payload = renderCampaignFeed(feed);
-  assert.equal(payload.embeds[0].fields[0].value, 'A secret is nearby.');
+  assert.equal(payload.embeds[0].fields.find(field => field.name === 'Raphael · system').value, 'A secret is nearby.');
   assert.equal(payload.components[0].components[0].label, 'Roll required die');
   assert.equal(payload.components[1].components[0].type, 4);
   assert.equal(payload.components.length, 2);
