@@ -39,3 +39,11 @@ test('separate store instances can open the same new campaign safely', () => {
   assert.equal(first.read('briar').campaignId, 'briar'); assert.equal(second.read('briar').campaignId, 'briar');
   first.close(); second.close();
 });
+
+test('conditional writes reject a stale second instance', () => {
+  const path = join(mkdtempSync(join(tmpdir(), 'campaign-feed-race-')), 'feed.sqlite');
+  const first = new CampaignFeedStore(path); const second = new CampaignFeedStore(path); const base = first.create('briar');
+  const next = appendEvent(base, { actorId: 'p1', text: 'First writer.' }); assert.equal(first.write(next, 0).saved, true);
+  const stale = appendEvent(base, { actorId: 'p2', text: 'Stale writer.' }); assert.equal(second.write(stale, 0).saved, false);
+  first.close(); second.close();
+});

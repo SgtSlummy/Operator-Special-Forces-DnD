@@ -18,9 +18,14 @@ export class CampaignFeedStore {
   }
   write(feed, expectedRevision = feed.revision - 1) {
     const current = this.read(feed.campaignId);
-    if (current && current.revision !== expectedRevision) return { saved: false, reason: 'STALE_REVISION', feed: current };
-    if (!current && expectedRevision !== feed.revision) return { saved: false, reason: 'STALE_REVISION', feed: null };
-    this.db.prepare('INSERT INTO campaign_feeds(campaign_id, revision, payload) VALUES (?, ?, ?) ON CONFLICT(campaign_id) DO UPDATE SET revision=excluded.revision, payload=excluded.payload').run(feed.campaignId, feed.revision, encode(feed));
+    if (!current) {
+      if (expectedRevision !== feed.revision) return { saved: false, reason: 'STALE_REVISION', feed: null };
+      const inserted = this.db.prepare('INSERT OR IGNORE INTO campaign_feeds(campaign_id, revision, payload) VALUES (?, ?, ?)').run(feed.campaignId, feed.revision, encode(feed));
+      if (!Number(inserted.changes)) return { saved: false, reason: 'STALE_REVISION', feed: this.read(feed.campaignId) };
+      return { saved: true, feed };
+    }
+    const updated = this.db.prepare('UPDATE campaign_feeds SET revision=?, payload=? WHERE campaign_id=? AND revision=?').run(feed.revision, encode(feed), feed.campaignId, expectedRevision);
+    if (!Number(updated.changes)) return { saved: false, reason: 'STALE_REVISION', feed: this.read(feed.campaignId) };
     return { saved: true, feed };
   }
 }
