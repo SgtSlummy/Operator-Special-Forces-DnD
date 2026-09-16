@@ -211,4 +211,20 @@ EXPLORATION                         COMBAT                              SHOP
 
 Exploration reveals only learned names. Combat keeps the player/enemy strip and pending checks visible. Shops show bounded inventory and prices; purchases are expressed in natural language and resolved by the DM projection.
 
+### Campaign progression preview
+
+```text
+[Welcome] → [Briarhaven map] → [Exploration feed]
+                              ↓ ability check
+                         [Check + auto-roll]
+                              ↓ hostile scene
+                         [Combat feed]
+                              ↓ safe route
+                           [Shop feed]
+                              ↓ chapter end
+                         [Recap + next lead]
+```
+
+Each transition is a feed revision. The public message keeps the current step and summary visible, while the player and DM projections accumulate only the facts and adjudication details allowed for that audience.
+
 The route is an address only; the adapter re-authorizes the interaction and campaign on every click. Unknown campaigns and unauthorized viewers receive a private acknowledgement without reading or projecting feed state.
