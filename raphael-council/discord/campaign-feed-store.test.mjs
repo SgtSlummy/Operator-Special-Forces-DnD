@@ -31,3 +31,11 @@ test('campaign feed creation is idempotent for concurrent first opens', () => {
   const store = new CampaignFeedStore(); const first = store.create('briar'); const second = store.create('briar');
   assert.equal(first.campaignId, second.campaignId); assert.equal(second.revision, 0); store.close();
 });
+
+test('separate store instances can open the same new campaign safely', () => {
+  const path = join(mkdtempSync(join(tmpdir(), 'campaign-feed-workers-')), 'feed.sqlite');
+  const first = new CampaignFeedStore(path); const second = new CampaignFeedStore(path);
+  assert.doesNotThrow(() => { first.create('briar'); second.create('briar'); });
+  assert.equal(first.read('briar').campaignId, 'briar'); assert.equal(second.read('briar').campaignId, 'briar');
+  first.close(); second.close();
+});
