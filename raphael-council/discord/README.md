@@ -165,4 +165,6 @@ Action controls use the same owner- and revision-bound pattern:
 
 Every state-changing callback re-reads the feed and compares the submitted revision before writing. A stale callback receives a private explanation and cannot consume a roll, fact, intent, or ruling.
 
+Discord layout constraints are part of this contract: message action rows contain buttons only, natural-language text is collected in a modal, and every custom ID stays within Discord's 100-character limit. Long-lived state belongs in the feed store rather than in a custom ID.
+
 The route is an address only; the adapter re-authorizes the interaction and campaign on every click. Unknown campaigns and unauthorized viewers receive a private acknowledgement without reading or projecting feed state.
