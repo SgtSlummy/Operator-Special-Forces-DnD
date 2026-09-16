@@ -31,6 +31,21 @@ test('campaign feed natural-language button opens a modal', async () => {
   assert.equal(calls[0][2].data.components[0].component.custom_id, 'intent');
 });
 
+test('campaign feed modal submission stores the private intent and acknowledges the party update', async () => {
+  const calls = []; let feed = createCampaignFeed({ campaignId: 'briar' });
+  const handler = createCampaignFeedAdapter({
+    readFeed: async () => feed,
+    writeFeed: async next => { feed = next; return { saved: true, feed: next }; },
+    authorize: async (_interaction, route) => ({ campaignId: route.campaignId, actorId: 'p1' }),
+    transport: { respond: async (...args) => calls.push(args), edit: async () => {} },
+  });
+  await handler({ id: 'intent-1', token: 't1', data: { custom_id: 'campaign:say:briar:0:submit', components: [{ type: 18, component: { type: 4, custom_id: 'intent', value: 'I listen at the upstairs doorway.' } }] } });
+  assert.equal(feed.revision, 1);
+  assert.equal(feed.events.at(-1).audience, AUDIENCES.DM);
+  assert.equal(feed.events.at(-1).text, 'I listen at the upstairs doorway.');
+  assert.equal(calls[0][2].data.flags, 64);
+});
+
 test('campaign feed adapter uses edit for refresh and does not handle unrelated controls', async () => {
   const calls = []; const feed = createCampaignFeed({ campaignId: 'briar' });
   const handler = createCampaignFeedAdapter({ readFeed: async () => feed, authorize: async () => ({ campaignId: 'briar', actorId: 'p1' }), transport: { respond: async () => {}, edit: async (...args) => calls.push(args) } });

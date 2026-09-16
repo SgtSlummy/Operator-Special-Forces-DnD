@@ -1,4 +1,4 @@
-import { AUDIENCES } from './campaign-feed-contract.mjs';
+import { AUDIENCES, submitIntent } from './campaign-feed-contract.mjs';
 import { renderCampaignFeed } from './campaign-feed-renderer.mjs';
 
 const route = value => {
@@ -19,9 +19,27 @@ export function renderCampaignIntentModal({ campaignId, revision } = {}) {
   };
 }
 
-export function createCampaignFeedAdapter({ readFeed, authorize, transport, render = renderCampaignFeed } = {}) {
+export function createCampaignFeedAdapter({ readFeed, writeFeed, authorize, transport, render = renderCampaignFeed } = {}) {
   if (typeof readFeed !== 'function' || typeof authorize !== 'function' || !transport?.respond || !transport?.edit) throw new Error('Campaign feed adapter requires readFeed, authorize, respond, and edit.');
   return async interaction => {
+    const submitted = /^campaign:say:([a-zA-Z0-9_-]{1,64}):(\d+):submit$/.exec(interaction?.data?.custom_id ?? '');
+    if (submitted) {
+      const scope = await authorize(interaction, { action: 'say-submit', campaignId: submitted[1] });
+      const text = interaction?.data?.components?.flatMap(row => row?.component ? [row.component] : row?.components || []).find(component => component?.custom_id === 'intent')?.value;
+      if (!scope?.campaignId || scope.campaignId !== submitted[1] || typeof text !== 'string' || !text.trim() || typeof writeFeed !== 'function') {
+        await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'That action form is no longer available.', flags: 64 } });
+        return true;
+      }
+      const feed = await readFeed(submitted[1]);
+      if (!feed || feed.revision !== Number(submitted[2])) {
+        await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'That action form is stale. Open the campaign feed again.', flags: 64 } });
+        return true;
+      }
+      const result = submitIntent(feed, { requestId: interaction.id, actorId: scope.actorId, text: text.trim() });
+      if (result.changed) await writeFeed(result.feed, feed.revision);
+      await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'Raphael has your action. The party feed has been updated.', flags: 64 } });
+      return true;
+    }
     const say = /^campaign:say:([a-zA-Z0-9_-]{1,64}):(\d+)$/.exec(interaction?.data?.custom_id ?? '');
     if (say) {
       const scope = await authorize(interaction, { action: 'say', campaignId: say[1] });

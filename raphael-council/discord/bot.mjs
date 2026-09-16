@@ -119,6 +119,7 @@ export async function main(args = process.argv.slice(2)) {
   const launchHandler = createLaunchHandler({ config, transport });
   const campaignFeedHandler = createCampaignFeedAdapter({
     readFeed: async campaignId => feedStore.read(campaignId) || feedStore.create(campaignId),
+    writeFeed: async (feed, expectedRevision) => feedStore.write(feed, expectedRevision),
     authorize: async interaction => {
       const owner = interaction.member?.user?.id;
       const roles = interaction.member?.roles || [];
