@@ -1,0 +1,37 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, pauseFeed, projectFeed, recordRoll, requestCheck, ruleCheck, shareFact } from './campaign-feed-contract.mjs';
+
+const base = () => appendEvent(createCampaignFeed({ campaignId: 'silent-beacon' }), { actorId: 'dm', text: 'Only Briarhaven is named.', source: 'system' });
+
+test('audience projection keeps private facts out of the party and other players', () => {
+  let feed = appendEvent(base(), { actorId: 'Mira', audience: AUDIENCES.PLAYER, playerId: 'mira', text: 'Raphael: something is hidden.', source: 'dm' });
+  assert.equal(projectFeed(feed, AUDIENCES.PARTY).some(event => event.text.includes('hidden')), false);
+  assert.equal(projectFeed(feed, 'rowan').length, 1);
+  assert.equal(projectFeed(feed, 'mira').some(event => event.text.includes('hidden')), true);
+});
+
+test('a player can share one owned fact exactly once', () => {
+  let feed = addFact(base(), { id: 'cue', ownerId: 'mira', kind: 'cue', text: 'There is something hidden.', sourceEventId: 'e1' });
+  const first = shareFact(feed, 'mira', 'cue'); feed = first.feed;
+  assert.equal(first.changed, true); assert.equal(projectFeed(feed, AUDIENCES.PARTY).at(-1).text, 'shared cue: There is something hidden.');
+  assert.equal(shareFact(feed, 'mira', 'cue').changed, false); assert.equal(shareFact(feed, 'rowan', 'cue').changed, false);
+});
+
+test('roll lifecycle enforces ownership, revision, one result and separate DM ruling', () => {
+  let feed = base();
+  const requested = requestCheck(feed, { requestId: 'check-1', actorIds: ['rowan'], ability: 'Wisdom', skill: 'Perception', modifiers: { rowan: 4 } }); feed = requested.feed;
+  assert.equal(recordRoll(feed, { requestId: 'check-1', actorId: 'mira', dice: [12], expectedRevision: feed.revision, roll: { modifier: 4 } }).reason, 'NOT_AUTHORIZED');
+  const rolled = recordRoll(feed, { requestId: 'check-1', actorId: 'rowan', dice: [14], expectedRevision: feed.revision, roll: { modifier: 4 } }); assert.equal(rolled.accepted, true); feed = rolled.feed;
+  assert.equal(rolled.event.resolution.total, 18); assert.equal(rolled.event.resolution.status, 'awaiting_dm');
+  assert.equal(recordRoll(feed, { requestId: 'check-1', actorId: 'rowan', dice: [20], expectedRevision: feed.revision, roll: { modifier: 4 } }).reason, 'ALREADY_ROLLED');
+  const ruled = ruleCheck(feed, { requestId: 'check-1', actorId: AUDIENCES.DM, text: 'You hear wind above the landing, but no footsteps.', expectedRevision: feed.revision });
+  assert.equal(ruled.accepted, true); assert.equal(ruled.check.status, 'ruled'); assert.equal(ruled.check.results.rowan.total, 18);
+});
+
+test('stale, paused and malformed rolls produce no mutation', () => {
+  let feed = base(); feed = requestCheck(feed, { requestId: 'check-2', actorIds: ['rowan'], ability: 'Wisdom' }).feed;
+  assert.equal(recordRoll(feed, { requestId: 'check-2', actorId: 'rowan', dice: [1], expectedRevision: feed.revision - 1, roll: { modifier: 0 } }).reason, 'STALE_REVISION');
+  feed = pauseFeed(feed, true); assert.equal(recordRoll(feed, { requestId: 'check-2', actorId: 'rowan', dice: [1], expectedRevision: feed.revision, roll: { modifier: 0 } }).reason, 'PAUSED');
+  assert.equal(projectFeed(feed, AUDIENCES.PARTY).filter(event => event.resolution?.kind === 'result').length, 0);
+});
