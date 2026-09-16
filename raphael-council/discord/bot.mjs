@@ -23,6 +23,8 @@ import { createDepartureHandler } from './departure-adapter.mjs';
 import { createChronicleRuntime, registerSessionCommand } from './chronicle-runtime.mjs';
 import { createLaunchHandler, registerLaunchCommand } from './launch-adapter.mjs';
 import { createCharacterThreadDelivery } from './character-thread-delivery.mjs';
+import { createCampaignFeedAdapter } from './campaign-feed-adapter.mjs';
+import { CampaignFeedStore } from './campaign-feed-store.mjs';
 
 // Discord REST expects binary files beside the JSON body, never inside it.
 export function restPayload(payload) {
@@ -69,13 +71,14 @@ export async function main(args = process.argv.slice(2)) {
   const store = new CharacterStore(join(config.dataDir, 'characters.sqlite'));
   const portraitService = getCharacterPortraitService();
   const service = new ImportService(store, join(config.dataDir, 'sources'), { log, portraitService });
+  const feedStore = new CampaignFeedStore(join(config.dataDir, 'campaign-feed.sqlite'));
   let hostLock;
   if (!controlOnly) {
     // A separate SQLite lock survives concurrent starts but is automatically
     // released by the OS on a crash; it never locks the character database.
     hostLock = new DatabaseSync(join(config.dataDir, 'host-lock.sqlite'));
     try { hostLock.exec('PRAGMA busy_timeout=0; BEGIN EXCLUSIVE; CREATE TABLE IF NOT EXISTS running_host(id INTEGER)'); }
-    catch { hostLock.close(); store.close(); throw new Error('Another Raphael host is already using this data directory. Stop that host before starting another.'); }
+    catch { hostLock.close(); feedStore.close(); store.close(); throw new Error('Another Raphael host is already using this data directory. Stop that host before starting another.'); }
     await service.initialize();
   }
   const client = new Client({ intents: [GatewayIntentBits.Guilds, ...(config.chronicleEnabled && !controlOnly ? [GatewayIntentBits.GuildVoiceStates, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] : [])] });
@@ -114,7 +117,15 @@ export async function main(args = process.argv.slice(2)) {
   const chronicle = config.chronicleEnabled && !controlOnly ? createChronicleRuntime({ client, config, images: imageService, transport, log,
     authorizeCommand: scope => { try { return game.member(scope) === 'host'; } catch { return false; } } }) : null;
   const launchHandler = createLaunchHandler({ config, transport });
-  const handler = async interaction => (await launchHandler(interaction)) || (await chronicle?.handle(interaction)) || (await departureHandler(interaction)) || (await councilHandler(interaction)) || (await worldHandler(interaction)) || (await worldTimeHandler(interaction)) || (await adjudicationHandler(interaction)) || (await concentrationHandler(interaction)) || (await reactionsHandler(interaction)) || (await checksHandler(interaction)) || (await companionHandler(interaction)) || (await adventureHandler(interaction)) || (await imageHandler(interaction)) || importHandler(interaction);
+  const campaignFeedHandler = createCampaignFeedAdapter({
+    readFeed: async campaignId => feedStore.read(campaignId) || feedStore.create(campaignId),
+    authorize: async interaction => {
+      const scope = authenticateInteraction(interaction, config);
+      return { campaignId: scope.campaign, actorId: scope.owner, isDm: config.dmIds.includes(scope.owner) };
+    },
+    transport,
+  });
+  const handler = async interaction => (await launchHandler(interaction)) || (await chronicle?.handle(interaction)) || (await departureHandler(interaction)) || (await councilHandler(interaction)) || (await worldHandler(interaction)) || (await worldTimeHandler(interaction)) || (await adjudicationHandler(interaction)) || (await concentrationHandler(interaction)) || (await reactionsHandler(interaction)) || (await checksHandler(interaction)) || (await companionHandler(interaction)) || (await adventureHandler(interaction)) || (await imageHandler(interaction)) || (await campaignFeedHandler(interaction)) || importHandler(interaction);
   const inFlight = new Set();
   let closing = false;
   client.on(Events.Raw, packet => {
@@ -135,7 +146,7 @@ export async function main(args = process.argv.slice(2)) {
     // both transport and databases are still available, then close the host.
     await Promise.allSettled(inFlight); if (delivery.running) await delivery.running.catch(() => {});
     await chronicle?.close();
-    await client.destroy(); await imageService.close(); await service.close(); game.close(); store.close(); hostLock?.close();
+    await client.destroy(); await imageService.close(); await service.close(); game.close(); feedStore.close(); store.close(); hostLock?.close();
   };
   process.once('SIGINT', close); process.once('SIGTERM', close);
   try {
