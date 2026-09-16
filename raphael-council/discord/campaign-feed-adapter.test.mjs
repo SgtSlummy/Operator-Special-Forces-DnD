@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createCampaignFeed } from './campaign-feed-contract.mjs';
+import { AUDIENCES, appendEvent, createCampaignFeed } from './campaign-feed-contract.mjs';
 import { campaignFeedRoute, createCampaignFeedAdapter } from './campaign-feed-adapter.mjs';
 
 test('campaign feed routes reject malformed IDs and parse open/refresh', () => {
@@ -24,4 +24,12 @@ test('campaign feed adapter uses edit for refresh and does not handle unrelated 
   assert.equal(await handler({ data: { custom_id: 'other:control' } }), false);
   assert.equal(await handler({ application_id: 'app', token: 't1', data: { custom_id: 'campaign:refresh:briar' } }), true);
   assert.equal(calls.length, 1);
+});
+
+test('campaign feed adapter renders the DM projection for a DM scope', async () => {
+  const calls = []; let feed = createCampaignFeed({ campaignId: 'briar' });
+  feed = appendEvent(feed, { actorId: 'Raphael', audience: AUDIENCES.DM, text: 'The hidden passage is behind the shelf.' });
+  const handler = createCampaignFeedAdapter({ readFeed: async () => feed, authorize: async () => ({ campaignId: 'briar', actorId: 'dm-1', isDm: true }), transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });
+  await handler({ id: 'i1', token: 't1', data: { custom_id: 'campaign:open:briar' } });
+  assert.match(calls[0][2].data.embeds[0].fields[1].value, /hidden passage/);
 });
