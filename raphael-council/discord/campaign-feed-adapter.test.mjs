@@ -15,7 +15,7 @@ test('campaign feed adapter authorizes, projects and responds to open', async ()
     transport: { respond: async (...args) => calls.push(['respond', ...args]), edit: async () => {} },
   });
   assert.equal(await handler({ id: 'i1', token: 't1', data: { custom_id: 'campaign:open:briar' } }), true);
-  assert.equal(calls[0][0], 'respond'); assert.equal(calls[0][2].type, 4); assert.equal(calls[0][2].data.embeds[0].title, 'Briar feed');
+  assert.equal(calls[0][0], 'respond'); assert.equal(calls[0][3].type, 4); assert.equal(calls[0][3].data.embeds[0].title, 'Briar feed');
 });
 
 test('campaign feed adapter uses edit for refresh and does not handle unrelated controls', async () => {
