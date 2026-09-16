@@ -5,6 +5,8 @@ const limit = value => String(value ?? '').slice(0, 4000);
 export function renderCampaignFeed(feed, { viewer = AUDIENCES.PARTY, title = 'Campaign feed' } = {}) {
   const events = projectFeed(feed, viewer);
   const pending = [...feed.checks.values()].filter(check => check.status === 'pending' || check.status === 'awaiting_dm');
+  const pendingIntents = viewer === AUDIENCES.DM ? feed.events.filter(event => event.resolution?.kind === 'intent' && !feed.events.some(other => other.resolution?.kind === 'intent-resolution' && other.resolution.requestId === event.resolution.requestId)).length : 0;
+  const pendingPurchases = viewer === AUDIENCES.DM ? feed.events.filter(event => event.resolution?.kind === 'purchase-request' && !feed.events.some(other => other.resolution?.kind === 'purchase-resolution' && other.resolution.requestId === event.resolution.requestId)).length : 0;
   const mapField = { name: 'Known map names', value: [...feed.mapNames.values()].filter(name => name !== 'seed').join(' · ') || 'Briarhaven', inline: false };
   const encounter = feed.encounter;
   const encounterField = encounter ? { name: encounter.enemies.length ? `Encounter · Round ${encounter.round}` : 'Ability check', value: `${encounter.players.join(' · ') || 'No players'}${encounter.enemies.length ? ` vs ${encounter.enemies.join(' · ')}` : ` · ${encounter.abilityCheck || 'Awaiting check'}`}${encounter.activeActor ? ` · ${encounter.activeActor}'s turn` : ''}`, inline: false } : null;
@@ -24,7 +26,7 @@ export function renderCampaignFeed(feed, { viewer = AUDIENCES.PARTY, title = 'Ca
   ];
   if (viewer === AUDIENCES.DM && pending.length) components.push({ type: 1, components: [{ type: 2, style: 3, custom_id: `campaign:rule:${feed.revision}`, label: 'Rule pending checks' }] });
   return {
-    embeds: [{ title, description: `Chapter: ${feed.chapterId} · Revision ${feed.revision}${feed.paused ? ' · Paused' : ''}`, fields, footer: { text: `${events.length} visible events · ${pending.length} pending checks` } }],
+    embeds: [{ title, description: `Chapter: ${feed.chapterId} · Revision ${feed.revision}${feed.paused ? ' · Paused' : ''}`, fields, footer: { text: `${events.length} visible events · ${pending.length} pending checks · ${pendingIntents} pending actions · ${pendingPurchases} pending purchases` } }],
     components,
   };
 }

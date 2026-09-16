@@ -50,3 +50,10 @@ test('paused feed disables the dice action visibly', () => {
   assert.equal(payload.components[0].components[0].disabled, true);
   assert.match(payload.components[0].components[0].label, /Paused/);
 });
+
+test('feed footer summarizes pending DM queues without exposing private text', () => {
+  let feed = createCampaignFeed({ campaignId: 'demo' });
+  feed = appendEvent(feed, { actorId: 'p1', audience: AUDIENCES.DM, playerId: 'p1', text: 'I inspect the lock.', resolution: { kind: 'intent', requestId: 'i1' } });
+  const payload = renderCampaignFeed(feed);
+  assert.match(payload.embeds[0].footer.text, /0 pending actions/);
+});
