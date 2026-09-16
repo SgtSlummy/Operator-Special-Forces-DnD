@@ -40,3 +40,10 @@ test('campaign feed adapter denies unauthorized viewers before transport', async
   assert.equal(await handler({ id: 'i1', token: 't1', data: { custom_id: 'campaign:open:briar' } }), true);
   assert.equal(calls[0][2].data.flags, 64); assert.match(calls[0][2].data.content, /access denied/);
 });
+
+test('campaign feed adapter acknowledges an unavailable feed privately', async () => {
+  const calls = [];
+  const handler = createCampaignFeedAdapter({ readFeed: async () => null, authorize: async () => ({ campaignId: 'briar', actorId: 'p1' }), transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });
+  assert.equal(await handler({ id: 'i1', token: 't1', data: { custom_id: 'campaign:open:briar' } }), true);
+  assert.equal(calls[0][2].data.flags, 64); assert.match(calls[0][2].data.content, /unavailable/);
+});
