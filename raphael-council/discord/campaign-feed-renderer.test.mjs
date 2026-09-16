@@ -21,3 +21,12 @@ test('DM rendering exposes ruling only when a check is pending', () => {
   assert.equal(dm.components.at(-1).components[0].label, 'Rule pending checks');
   assert.equal(player.components.length, 2);
 });
+
+test('pending checks show the rule and every actor roll state', () => {
+  let feed = createCampaignFeed({ campaignId: 'demo' });
+  ({ feed } = requestCheck(feed, { requestId: 'door', actorIds: ['p1', 'p2'], ability: 'Wisdom', skill: 'Perception', count: 1, sides: 20, modifiers: { proficiency: 2 } }));
+  const payload = renderCampaignFeed(feed);
+  assert.match(payload.embeds[0].fields[0].value, /Wisdom \(Perception\) · 1d20/);
+  assert.match(payload.embeds[0].fields[0].value, /p1: awaiting roll/);
+  assert.match(payload.embeds[0].fields[0].value, /p2: awaiting roll/);
+});
