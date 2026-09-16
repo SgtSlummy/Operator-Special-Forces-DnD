@@ -227,4 +227,17 @@ Exploration reveals only learned names. Combat keeps the player/enemy strip and 
 
 Each transition is a feed revision. The public message keeps the current step and summary visible, while the player and DM projections accumulate only the facts and adjudication details allowed for that audience.
 
+```text
+RECAP · chapter close
+┌ The watchtower at Briarhaven ────────────────────────────────┐
+│ What happened  The party found the hidden stair and escaped.  │
+│ Learned names  Watchtower · Old Mill                         │
+│ Open leads     A sealed letter mentions the north road.      │
+│ Raphael cue    Something beneath the mill is still hidden.   │
+│ Next step      Describe what you do in natural language.     │
+└ 14 visible events · 2 unresolved leads · next chapter ready ┘
+```
+
+The recap is public at chapter close. Individual player discoveries remain available in their private feed, and the DM master thread retains the complete ruling history for continuity.
+
 The route is an address only; the adapter re-authorizes the interaction and campaign on every click. Unknown campaigns and unauthorized viewers receive a private acknowledgement without reading or projecting feed state.
