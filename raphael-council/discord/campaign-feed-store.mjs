@@ -13,8 +13,8 @@ export class CampaignFeedStore {
   read(campaignId) { const row = this.db.prepare('SELECT payload FROM campaign_feeds WHERE campaign_id=?').get(campaignId); return row ? decode(row.payload) : null; }
   create(campaignId, options = {}) {
     const feed = createCampaignFeed({ campaignId, ...options });
-    this.db.prepare('INSERT INTO campaign_feeds(campaign_id, revision, payload) VALUES (?, ?, ?)').run(campaignId, feed.revision, encode(feed));
-    return feed;
+    this.db.prepare('INSERT OR IGNORE INTO campaign_feeds(campaign_id, revision, payload) VALUES (?, ?, ?)').run(campaignId, feed.revision, encode(feed));
+    return this.read(campaignId);
   }
   write(feed, expectedRevision = feed.revision - 1) {
     const current = this.read(feed.campaignId);

@@ -26,3 +26,8 @@ test('campaign feed store survives close and reopen', () => {
   let store = new CampaignFeedStore(path); let feed = store.create('briar'); feed = appendEvent(feed, { actorId: 'system', text: 'Saved before restart.' }); store.write(feed, 0); store.close();
   store = new CampaignFeedStore(path); assert.equal(store.read('briar').events[0].text, 'Saved before restart.'); store.close();
 });
+
+test('campaign feed creation is idempotent for concurrent first opens', () => {
+  const store = new CampaignFeedStore(); const first = store.create('briar'); const second = store.create('briar');
+  assert.equal(first.campaignId, second.campaignId); assert.equal(second.revision, 0); store.close();
+});
