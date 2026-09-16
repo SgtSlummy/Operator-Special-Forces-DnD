@@ -23,7 +23,7 @@ test('campaign feed adapter uses edit for refresh and does not handle unrelated 
   const handler = createCampaignFeedAdapter({ readFeed: async () => feed, authorize: async () => ({ campaignId: 'briar', actorId: 'p1' }), transport: { respond: async () => {}, edit: async (...args) => calls.push(args) } });
   assert.equal(await handler({ data: { custom_id: 'other:control' } }), false);
   assert.equal(await handler({ application_id: 'app', token: 't1', data: { custom_id: 'campaign:refresh:briar' } }), true);
-  assert.equal(calls.length, 1);
+  assert.equal(calls.length, 1); assert.equal(calls[0][2].flags, undefined);
 });
 
 test('campaign feed adapter renders the DM projection for a DM scope', async () => {
