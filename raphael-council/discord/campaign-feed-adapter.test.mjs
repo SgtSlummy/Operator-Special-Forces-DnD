@@ -31,7 +31,7 @@ test('campaign feed adapter renders the DM projection for a DM scope', async () 
   feed = appendEvent(feed, { actorId: 'Raphael', audience: AUDIENCES.DM, text: 'The hidden passage is behind the shelf.' });
   const handler = createCampaignFeedAdapter({ readFeed: async () => feed, authorize: async () => ({ campaignId: 'briar', actorId: 'dm-1', isDm: true }), transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });
   await handler({ id: 'i1', token: 't1', data: { custom_id: 'campaign:open:briar' } });
-  assert.match(calls[0][2].data.embeds[0].fields[1].value, /hidden passage/);
+  assert.match(calls[0][2].data.embeds[0].fields[1].value, /hidden passage/); assert.equal(calls[0][2].data.flags & 64, 64);
 });
 
 test('campaign feed open is public while private route is ephemeral and player-scoped', async () => {
