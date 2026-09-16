@@ -197,4 +197,18 @@ PLAYER · private campaign feed                 DM · master thread
 
 The player card is ephemeral and owner-scoped. The DM card is ephemeral and contains the complete adjudication context; neither projection changes what the public channel is allowed to reveal.
 
+### Stage templates
+
+```text
+EXPLORATION                         COMBAT                              SHOP
+┌ Briarhaven · exploration ┐       ┌ Briarhaven · Round 2 ──────┐       ┌ Briar Apothecary ─────────┐
+│ Path: town → unnamed ruin │       │ Rowan · Mira vs guardian    │       │ Healing Draught · 50 gp    │
+│ Known: Watchtower         │       │ Active: Rowan               │       │ Torch bundle · 1 gp         │
+│ Raphael: a secret nearby  │       │ Check: AC 14 · awaiting roll│       │ Inventory is visible only   │
+│ [Options] [Tell Raphael]  │       │ [Roll required die]         │       │ [Tell Raphael what you do]  │
+└───────────────────────────┘       └─────────────────────────────┘       └────────────────────────────┘
+```
+
+Exploration reveals only learned names. Combat keeps the player/enemy strip and pending checks visible. Shops show bounded inventory and prices; purchases are expressed in natural language and resolved by the DM projection.
+
 The route is an address only; the adapter re-authorizes the interaction and campaign on every click. Unknown campaigns and unauthorized viewers receive a private acknowledgement without reading or projecting feed state.
