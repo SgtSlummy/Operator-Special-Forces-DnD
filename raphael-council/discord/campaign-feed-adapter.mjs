@@ -22,15 +22,16 @@ export function renderCampaignIntentModal({ campaignId, revision } = {}) {
 export function createCampaignFeedAdapter({ readFeed, writeFeed, authorize, transport, render = renderCampaignFeed, roll = ({ count, sides }) => Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1) } = {}) {
   if (typeof readFeed !== 'function' || typeof authorize !== 'function' || !transport?.respond || !transport?.edit) throw new Error('Campaign feed adapter requires readFeed, authorize, respond, and edit.');
   return async interaction => {
-    const ruleSubmit = /^campaign:rule:([a-zA-Z0-9_-]{1,64}):(\d+):([^:]{1,64}):submit$/.exec(interaction?.data?.custom_id ?? '');
+    const ruleSubmit = /^campaign:rule:([a-zA-Z0-9_-]{1,64}):(\d+):submit$/.exec(interaction?.data?.custom_id ?? '');
     if (ruleSubmit) {
       const scope = await authorize(interaction, { action: 'rule-submit', campaignId: ruleSubmit[1] });
       const text = interaction?.data?.components?.flatMap(row => row?.component ? [row.component] : row?.components || []).find(component => component?.custom_id === 'ruling')?.value;
       const feed = scope?.campaignId === ruleSubmit[1] ? await readFeed(ruleSubmit[1]) : null;
-      if (!scope?.isDm || !feed || feed.revision !== Number(ruleSubmit[2]) || typeof text !== 'string' || !text.trim() || typeof writeFeed !== 'function') {
+      const check = feed && [...feed.checks.values()].find(item => item.status === 'awaiting_dm' || item.status === 'pending');
+      if (!scope?.isDm || !feed || feed.revision !== Number(ruleSubmit[2]) || !check || typeof text !== 'string' || !text.trim() || typeof writeFeed !== 'function') {
         await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'That ruling form is no longer available.', flags: 64 } }); return true;
       }
-      const result = ruleCheck(feed, { requestId: ruleSubmit[3], actorId: AUDIENCES.DM, text: text.trim(), expectedRevision: feed.revision });
+      const result = ruleCheck(feed, { requestId: check.requestId, actorId: AUDIENCES.DM, text: text.trim(), expectedRevision: feed.revision });
       if (!result.accepted) { await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'That check changed. Refresh the DM feed before ruling.', flags: 64 } }); return true; }
       await writeFeed(result.feed, feed.revision);
       await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'Ruling published to the party feed.', flags: 64 } }); return true;
@@ -41,7 +42,7 @@ export function createCampaignFeedAdapter({ readFeed, writeFeed, authorize, tran
       const feed = scope?.campaignId === ruleRequest[1] ? await readFeed(ruleRequest[1]) : null;
       const check = feed && [...feed.checks.values()].find(item => item.status === 'awaiting_dm' || item.status === 'pending');
       if (!scope?.isDm || !feed || feed.revision !== Number(ruleRequest[2]) || !check) { await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'No pending check is available to rule.', flags: 64 } }); return true; }
-      await transport.respond(interaction.id, interaction.token, { type: 9, data: { custom_id: `campaign:rule:${ruleRequest[1]}:${feed.revision}:${check.requestId}:submit`, title: 'Rule pending check', components: [{ type: 18, label: `Ruling for ${check.skill || check.ability}`, component: { type: 4, custom_id: 'ruling', style: 2, required: true, min_length: 1, max_length: 1000, placeholder: 'The doorway is clear; continue upstairs.' } }] } }); return true;
+      await transport.respond(interaction.id, interaction.token, { type: 9, data: { custom_id: `campaign:rule:${ruleRequest[1]}:${feed.revision}:submit`, title: 'Rule pending check', components: [{ type: 18, label: `Ruling for ${check.skill || check.ability}`, component: { type: 4, custom_id: 'ruling', style: 2, required: true, min_length: 1, max_length: 1000, placeholder: 'The doorway is clear; continue upstairs.' } }] } }); return true;
     }
     const optionsRequest = /^campaign:options:([a-zA-Z0-9_-]{1,64}):(\d+)$/.exec(interaction?.data?.custom_id ?? '');
     if (optionsRequest) {
