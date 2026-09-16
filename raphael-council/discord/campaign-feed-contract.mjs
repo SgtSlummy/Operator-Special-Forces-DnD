@@ -29,6 +29,14 @@ export function addFact(feed, { id, ownerId, kind, text, sourceEventId }) {
   const next = clone(feed); if (!next.facts.some(fact => fact.id === id)) next.facts.push({ id, ownerId, kind, text, sourceEventId, sharedAt: null }); return next;
 }
 
+export function discoverMapName(feed, { actorId, placeId, name }) {
+  assertText(actorId, 'actorId'); assertText(placeId, 'placeId'); assertText(name, 'name');
+  const next = clone(feed); if (next.mapNames.get(placeId) === name) return { feed, changed: false };
+  next.mapNames.set(placeId, name); next.revision += 1;
+  const event = { id: `${next.campaignId}:event:${++next.sequence}`, sequence: next.sequence, campaignId: next.campaignId, chapterId: next.chapterId, actorId, audience: AUDIENCES.PARTY, text: `Map updated: ${name} added.`, resolution: { kind: 'map-discovery', placeId, name }, source: 'exploration' };
+  next.events.push(event); return { feed: next, changed: true, event: clone(event) };
+}
+
 export function shareFact(feed, actorId, factId) {
   assertText(actorId, 'actorId'); assertText(factId, 'factId');
   const next = clone(feed); const fact = next.facts.find(value => value.id === factId);

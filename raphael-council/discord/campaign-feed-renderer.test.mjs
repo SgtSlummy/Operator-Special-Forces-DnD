@@ -26,9 +26,10 @@ test('pending checks show the rule and every actor roll state', () => {
   let feed = createCampaignFeed({ campaignId: 'demo' });
   ({ feed } = requestCheck(feed, { requestId: 'door', actorIds: ['p1', 'p2'], ability: 'Wisdom', skill: 'Perception', count: 1, sides: 20, modifiers: { proficiency: 2 } }));
   const payload = renderCampaignFeed(feed);
-  assert.match(payload.embeds[0].fields[0].value, /Wisdom \(Perception\) · 1d20/);
-  assert.match(payload.embeds[0].fields[0].value, /p1: awaiting roll/);
-  assert.match(payload.embeds[0].fields[0].value, /p2: awaiting roll/);
+  const checkField = payload.embeds[0].fields.find(field => field.name.startsWith('Check ·'));
+  assert.match(checkField.value, /Wisdom \(Perception\) · 1d20/);
+  assert.match(checkField.value, /p1: awaiting roll/);
+  assert.match(checkField.value, /p2: awaiting roll/);
 });
 
 test('private player rendering includes only that player roll event', () => {
