@@ -14,9 +14,15 @@ export function createCampaignFeedAdapter({ readFeed, authorize, transport, rend
     const parsed = route(interaction?.data?.custom_id);
     if (!parsed) return false;
     const scope = await authorize(interaction, parsed);
-    if (!scope || scope.campaignId !== parsed.campaignId) throw new Error('Campaign feed access denied.');
+    if (!scope || scope.campaignId !== parsed.campaignId) {
+      await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'Campaign feed access denied.', flags: 64 } });
+      return true;
+    }
     const feed = await readFeed(parsed.campaignId);
-    if (!feed || feed.campaignId !== parsed.campaignId) throw new Error('Campaign feed is unavailable.');
+    if (!feed || feed.campaignId !== parsed.campaignId) {
+      await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'Campaign feed is unavailable.', flags: 64 } });
+      return true;
+    }
     const payload = render(feed, { viewer: viewerFor(scope), title: scope.title || 'Campaign feed' });
     if (parsed.action === 'open') await transport.respond(interaction.id, interaction.token, { type: 4, data: payload });
     else await transport.edit(interaction.application_id, interaction.token, payload);

@@ -35,8 +35,8 @@ test('campaign feed adapter renders the DM projection for a DM scope', async () 
 });
 
 test('campaign feed adapter denies unauthorized viewers before transport', async () => {
-  let calls = 0;
-  const handler = createCampaignFeedAdapter({ readFeed: async () => { throw new Error('must not read'); }, authorize: async () => null, transport: { respond: async () => { calls += 1; }, edit: async () => { calls += 1; } } });
-  await assert.rejects(() => handler({ data: { custom_id: 'campaign:open:briar' } }), /access denied/);
-  assert.equal(calls, 0);
+  const calls = [];
+  const handler = createCampaignFeedAdapter({ readFeed: async () => { throw new Error('must not read'); }, authorize: async () => null, transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });
+  assert.equal(await handler({ id: 'i1', token: 't1', data: { custom_id: 'campaign:open:briar' } }), true);
+  assert.equal(calls[0][2].data.flags, 64); assert.match(calls[0][2].data.content, /access denied/);
 });
