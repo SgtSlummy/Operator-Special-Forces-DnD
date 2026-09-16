@@ -116,3 +116,20 @@ Character import and scene images have transport, configuration, persistent view
 The existing browser prototype's local state and example outcome generation must not be used as authoritative multiplayer persistence or production dice resolution. The tests here verify presentation, parsing, authenticated image routing, owner-bound views, request deduplication, status recovery, attachment transport and the character importer. They do not establish live Discord compatibility or complete gameplay; the [acceptance gates](../../DISCORD_PLAY_DECK.md#9-acceptance-gates-before-calling-it-playable) cover those separately.
 
 Share [DISCORD_PLAYER_GUIDE.md](../../DISCORD_PLAYER_GUIDE.md) and [PLAYER_WORLD_PRIMER.md](../../PLAYER_WORLD_PRIMER.md) with players after installation. Keep the DM story framework and developer files outside the public channel.
+## Campaign feed contract
+
+`campaign-feed-contract.mjs` is the pure state boundary for public party events and private player/DM views. It leaves authentication, persistence, and dice generation to the host adapter.
+
+- `projectFeed` enforces party, player, and DM audience projections.
+- `requestCheck`, `recordRoll`, and `ruleCheck` cover ability-check lifecycle and DM rulings.
+- `publishCue` keeps Raphael's detailed secret DM-only; `discoverMapName` reveals locations one at a time.
+- `submitIntent` and `resolveIntent` support natural-language player actions.
+- `setEncounter` supplies players, enemies, round, and active actor for the mini-display.
+- `setShop`, `requestPurchase`, and `resolvePurchase` provide bounded inventory and explicit DM authorization.
+- `pauseFeed` emits visible pause/resume events and advances revisions only on change.
+
+`campaign-feed-renderer.mjs` maps the projections to compact Discord payloads with natural-language input, an auto-selected dice action, expandable options, check details, encounter/shop/map fields, and DM-only ruling controls. Focused checks:
+
+```powershell
+node --test discord/campaign-feed-contract.test.mjs discord/campaign-feed-renderer.test.mjs
+```
