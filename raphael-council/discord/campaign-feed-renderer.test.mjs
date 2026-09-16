@@ -42,3 +42,11 @@ test('private player rendering includes only that player roll event', () => {
   assert.match(p1.embeds[0].fields.at(-1).value, /rolled Perception/);
   assert.equal(p2.embeds[0].fields.some(field => /rolled Perception/.test(field.value)), false);
 });
+
+test('paused feed disables the dice action visibly', () => {
+  let feed = createCampaignFeed({ campaignId: 'demo' });
+  feed = { ...feed, paused: true };
+  const payload = renderCampaignFeed(feed);
+  assert.equal(payload.components[0].components[0].disabled, true);
+  assert.match(payload.components[0].components[0].label, /Paused/);
+});
