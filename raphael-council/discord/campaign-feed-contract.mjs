@@ -57,6 +57,18 @@ export function submitIntent(feed, { requestId, actorId, text }) {
   return { feed: next, changed: true, event: clone(partyEvent) };
 }
 
+export function resolveIntent(feed, { requestId, actorId = AUDIENCES.DM, text, expectedRevision }) {
+  assertText(requestId, 'requestId'); assertText(actorId, 'actorId'); assertText(text, 'text');
+  if (actorId !== AUDIENCES.DM) return { feed, accepted: false, reason: 'NOT_AUTHORIZED' };
+  if (expectedRevision !== feed.revision) return { feed, accepted: false, reason: 'STALE_REVISION' };
+  const source = feed.events.find(event => event.resolution?.kind === 'intent' && event.resolution.requestId === requestId);
+  if (!source) return { feed, accepted: false, reason: 'NOT_FOUND' };
+  if (feed.events.some(event => event.resolution?.kind === 'intent-resolution' && event.resolution.requestId === requestId)) return { feed, accepted: false, reason: 'ALREADY_RESOLVED' };
+  const next = clone(feed); next.revision += 1; next.sequence += 1;
+  const event = { id: `${next.campaignId}:event:${next.sequence}`, sequence: next.sequence, campaignId: next.campaignId, chapterId: next.chapterId, actorId, audience: AUDIENCES.PARTY, text, resolution: { kind: 'intent-resolution', requestId, actorId: source.actorId }, source: 'dm' };
+  next.events.push(event); return { feed: next, accepted: true, event: clone(event) };
+}
+
 export function shareFact(feed, actorId, factId) {
   assertText(actorId, 'actorId'); assertText(factId, 'factId');
   const next = clone(feed); const fact = next.facts.find(value => value.id === factId);

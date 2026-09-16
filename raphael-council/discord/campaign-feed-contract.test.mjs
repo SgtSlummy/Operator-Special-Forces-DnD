@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, ruleCheck, shareFact, submitIntent } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, resolveIntent, ruleCheck, shareFact, submitIntent } from './campaign-feed-contract.mjs';
 
 const base = () => appendEvent(createCampaignFeed({ campaignId: 'silent-beacon' }), { actorId: 'dm', text: 'Only Briarhaven is named.', source: 'system' });
 
@@ -58,4 +58,6 @@ test('natural-language intent acknowledges publicly while preserving exact text 
   assert.equal(projectFeed(submitted.feed).at(-1).text, 'p1 is taking an action.');
   assert.equal(projectFeed(submitted.feed, AUDIENCES.DM).at(-1).text, 'I pause at the doorway and listen upstairs.');
   assert.equal(submitIntent(submitted.feed, { requestId: 'intent-1', actorId: 'p1', text: 'changed' }).changed, false);
+  const resolved = resolveIntent(submitted.feed, { requestId: 'intent-1', text: 'You hear a floorboard creak above.', expectedRevision: submitted.feed.revision });
+  assert.equal(resolved.accepted, true); assert.equal(projectFeed(resolved.feed).at(-1).text, 'You hear a floorboard creak above.');
 });
