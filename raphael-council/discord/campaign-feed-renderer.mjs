@@ -26,7 +26,7 @@ export function renderCampaignFeed(feed, { viewer = AUDIENCES.PARTY, title = 'Ca
     { type: 1, components: [{ type: 2, style: 1, custom_id: `campaign:roll:${feed.revision}`, label: feed.paused ? 'Paused · rolling unavailable' : 'Roll required die', disabled: feed.paused }, { type: 2, style: 2, custom_id: `campaign:options:${feed.revision}`, label: 'Options' }, ...(unsharedFact ? [{ type: 2, style: 2, custom_id: `campaign:share:${feed.revision}`, label: 'Share information' }] : []), ...(privateViewer ? [{ type: 2, style: 2, custom_id: `campaign:private:${feed.campaignId}`, label: 'Refresh private feed' }] : [])] },
     // Discord message action rows accept buttons/selects only. The adapter opens
     // the natural-language modal after this button is pressed.
-    { type: 1, components: [{ type: 2, style: 1, custom_id: `campaign:say:${feed.revision}`, label: 'Tell Raphael what you do' }] },
+    { type: 1, components: [{ type: 2, style: 1, custom_id: `campaign:say:${feed.campaignId}:${feed.revision}`, label: 'Tell Raphael what you do' }] },
   ];
   if (viewer === AUDIENCES.DM && pending.length) components.push({ type: 1, components: [{ type: 2, style: 3, custom_id: `campaign:rule:${feed.revision}`, label: 'Rule pending checks' }] });
   return {

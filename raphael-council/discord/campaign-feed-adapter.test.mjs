@@ -18,6 +18,19 @@ test('campaign feed adapter authorizes, projects and responds to open', async ()
   assert.equal(calls[0][0], 'respond'); assert.equal(calls[0][3].type, 4); assert.equal(calls[0][3].data.embeds[0].title, 'Briar feed');
 });
 
+test('campaign feed natural-language button opens a modal', async () => {
+  const calls = [];
+  const handler = createCampaignFeedAdapter({
+    readFeed: async () => createCampaignFeed({ campaignId: 'briar', revision: 3 }),
+    authorize: async (_interaction, route) => ({ campaignId: route.campaignId, actorId: 'p1' }),
+    transport: { respond: async (...args) => calls.push(args), edit: async () => {} },
+  });
+  assert.equal(await handler({ id: 'i1', token: 't1', data: { custom_id: 'campaign:say:briar:3' } }), true);
+  assert.equal(calls[0][2].type, 9);
+  assert.equal(calls[0][2].data.custom_id, 'campaign:say:briar:3:submit');
+  assert.equal(calls[0][2].data.components[0].component.custom_id, 'intent');
+});
+
 test('campaign feed adapter uses edit for refresh and does not handle unrelated controls', async () => {
   const calls = []; const feed = createCampaignFeed({ campaignId: 'briar' });
   const handler = createCampaignFeedAdapter({ readFeed: async () => feed, authorize: async () => ({ campaignId: 'briar', actorId: 'p1' }), transport: { respond: async () => {}, edit: async (...args) => calls.push(args) } });

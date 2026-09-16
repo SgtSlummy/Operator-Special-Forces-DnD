@@ -8,9 +8,30 @@ const route = value => {
 
 const viewerFor = ({ actorId, isDm = false } = {}) => isDm ? AUDIENCES.DM : actorId;
 
+export function renderCampaignIntentModal({ campaignId, revision } = {}) {
+  return {
+    type: 9,
+    data: {
+      custom_id: `campaign:say:${campaignId}:${revision}:submit`,
+      title: 'Tell Raphael what you do',
+      components: [{ type: 18, label: 'Describe your action', component: { type: 4, custom_id: 'intent', style: 2, required: true, min_length: 1, max_length: 1000, placeholder: 'I pause at the doorway and listen upstairs.' } }],
+    },
+  };
+}
+
 export function createCampaignFeedAdapter({ readFeed, authorize, transport, render = renderCampaignFeed } = {}) {
   if (typeof readFeed !== 'function' || typeof authorize !== 'function' || !transport?.respond || !transport?.edit) throw new Error('Campaign feed adapter requires readFeed, authorize, respond, and edit.');
   return async interaction => {
+    const say = /^campaign:say:([a-zA-Z0-9_-]{1,64}):(\d+)$/.exec(interaction?.data?.custom_id ?? '');
+    if (say) {
+      const scope = await authorize(interaction, { action: 'say', campaignId: say[1] });
+      if (!scope?.campaignId || scope.campaignId !== say[1]) {
+        await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'Campaign feed access denied.', flags: 64 } });
+        return true;
+      }
+      await transport.respond(interaction.id, interaction.token, renderCampaignIntentModal({ campaignId: scope.campaignId, revision: Number(say[2]) }));
+      return true;
+    }
     const parsed = route(interaction?.data?.custom_id);
     if (!parsed) return false;
     const scope = await authorize(interaction, parsed);
