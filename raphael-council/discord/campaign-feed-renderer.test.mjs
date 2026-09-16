@@ -9,7 +9,8 @@ test('party rendering keeps the interaction surface compact and natural-language
   const payload = renderCampaignFeed(feed);
   assert.equal(payload.embeds[0].fields.find(field => field.name === 'Raphael · system').value, 'A secret is nearby.');
   assert.equal(payload.components[0].components[0].label, 'Roll required die');
-  assert.equal(payload.components[1].components[0].type, 4);
+  assert.equal(payload.components[1].components[0].type, 2);
+  assert.equal(payload.components[1].components[0].custom_id, 'campaign:say:0');
   assert.equal(payload.components.length, 2);
 });
 
