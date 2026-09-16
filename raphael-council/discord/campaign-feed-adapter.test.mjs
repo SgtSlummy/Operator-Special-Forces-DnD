@@ -4,7 +4,7 @@ import { AUDIENCES, appendEvent, createCampaignFeed } from './campaign-feed-cont
 import { campaignFeedRoute, createCampaignFeedAdapter } from './campaign-feed-adapter.mjs';
 
 test('campaign feed routes reject malformed IDs and parse open/refresh', () => {
-  assert.deepEqual(campaignFeedRoute('campaign:open:briar'), { action: 'open', campaignId: 'briar' });
+  assert.deepEqual(campaignFeedRoute('campaign:open:briar'), { action: 'open', campaignId: 'briar', privateView: false });
 });
 
 test('campaign feed adapter authorizes, projects and responds to open', async () => {
