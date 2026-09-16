@@ -64,6 +64,14 @@ test('campaign feed share button publishes the player fact', async () => {
   assert.equal(calls[0][2].data.flags, 64);
 });
 
+test('campaign feed options opens a compact private expansion panel', async () => {
+  const calls = [];
+  const handler = createCampaignFeedAdapter({ readFeed: async () => createCampaignFeed({ campaignId: 'briar', revision: 2 }), authorize: async (_interaction, route) => ({ campaignId: route.campaignId, actorId: 'p1' }), transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });
+  await handler({ id: 'options-1', token: 't1', data: { custom_id: 'campaign:options:briar:2' } });
+  assert.equal(calls[0][2].data.flags, 64);
+  assert.equal(calls[0][2].data.embeds[0].title, 'Campaign options');
+});
+
 test('campaign feed adapter uses edit for refresh and does not handle unrelated controls', async () => {
   const calls = []; const feed = createCampaignFeed({ campaignId: 'briar' });
   const handler = createCampaignFeedAdapter({ readFeed: async () => feed, authorize: async () => ({ campaignId: 'briar', actorId: 'p1' }), transport: { respond: async () => {}, edit: async (...args) => calls.push(args) } });

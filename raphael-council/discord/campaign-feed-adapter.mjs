@@ -22,6 +22,17 @@ export function renderCampaignIntentModal({ campaignId, revision } = {}) {
 export function createCampaignFeedAdapter({ readFeed, writeFeed, authorize, transport, render = renderCampaignFeed, roll = ({ count, sides }) => Array.from({ length: count }, () => Math.floor(Math.random() * sides) + 1) } = {}) {
   if (typeof readFeed !== 'function' || typeof authorize !== 'function' || !transport?.respond || !transport?.edit) throw new Error('Campaign feed adapter requires readFeed, authorize, respond, and edit.');
   return async interaction => {
+    const optionsRequest = /^campaign:options:([a-zA-Z0-9_-]{1,64}):(\d+)$/.exec(interaction?.data?.custom_id ?? '');
+    if (optionsRequest) {
+      const scope = await authorize(interaction, { action: 'options', campaignId: optionsRequest[1] });
+      const feed = scope?.campaignId === optionsRequest[1] ? await readFeed(optionsRequest[1]) : null;
+      if (!scope?.campaignId || !feed || feed.revision !== Number(optionsRequest[2])) {
+        await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'Those campaign options are stale. Refresh the feed and try again.', flags: 64 } });
+        return true;
+      }
+      await transport.respond(interaction.id, interaction.token, { type: 4, data: { content: 'Expanded options', embeds: [{ title: 'Campaign options', description: 'Use the main feed to describe actions in natural language. Available shortcuts:', fields: [{ name: 'Roll', value: 'Roll the currently pending ability check.' }, { name: 'Share information', value: 'Publish one of your undisclosed facts to the party.' }, { name: 'Refresh', value: 'Reload your private projection and newly revealed information.' }] }], flags: 64 } });
+      return true;
+    }
     const shareRequest = /^campaign:share:([a-zA-Z0-9_-]{1,64}):(\d+)$/.exec(interaction?.data?.custom_id ?? '');
     if (shareRequest) {
       const scope = await authorize(interaction, { action: 'share', campaignId: shareRequest[1] });
