@@ -28,7 +28,7 @@ export function renderCampaignFeed(feed, { viewer = AUDIENCES.PARTY, title = 'Ca
     // the natural-language modal after this button is pressed.
     { type: 1, components: [{ type: 2, style: 1, custom_id: `campaign:say:${feed.campaignId}:${feed.revision}`, label: 'Tell Raphael what you do' }] },
   ];
-  if (viewer === AUDIENCES.DM && pending.length) components.push({ type: 1, components: [{ type: 2, style: 3, custom_id: `campaign:rule:${feed.revision}`, label: 'Rule pending checks' }] });
+  if (viewer === AUDIENCES.DM && pending.length) components.push({ type: 1, components: [{ type: 2, style: 3, custom_id: `campaign:rule:${feed.campaignId}:${feed.revision}`, label: 'Rule pending checks' }] });
   return {
     embeds: [{ title, description: `Chapter: ${feed.chapterId} · Revision ${feed.revision}${feed.paused ? ' · Paused' : ''}`, fields, footer: { text: `${events.length} visible events · ${pending.length} pending checks · ${pendingIntents} pending actions · ${pendingPurchases} pending purchases` } }],
     components,
