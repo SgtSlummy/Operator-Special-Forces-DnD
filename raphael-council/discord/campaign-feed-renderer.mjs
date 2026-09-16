@@ -6,7 +6,9 @@ export function renderCampaignFeed(feed, { viewer = AUDIENCES.PARTY, title = 'Ca
   const events = projectFeed(feed, viewer);
   const pending = [...feed.checks.values()].filter(check => check.status === 'pending' || check.status === 'awaiting_dm');
   const mapField = { name: 'Known map names', value: [...feed.mapNames.values()].filter(name => name !== 'seed').join(' · ') || 'Briarhaven', inline: false };
-  const fields = [mapField].concat(pending.map(check => ({
+  const encounter = feed.encounter;
+  const encounterField = encounter ? { name: encounter.enemies.length ? 'Encounter' : 'Ability check', value: `${encounter.players.join(' · ') || 'No players'}${encounter.enemies.length ? ` vs ${encounter.enemies.join(' · ')}` : ` · ${encounter.abilityCheck || 'Awaiting check'}`}`, inline: false } : null;
+  const fields = [mapField, ...(encounterField ? [encounterField] : [])].concat(pending.map(check => ({
     name: `Check · ${check.skill || check.ability}`,
     value: `${check.ability}${check.skill ? ` (${check.skill})` : ''} · ${check.count}d${check.sides}${Object.values(check.modifiers || {}).length ? ` · modifiers ${JSON.stringify(check.modifiers)}` : ''}\n${check.actorIds.map(actorId => `${actorId}: ${check.results[actorId] ? `rolled ${check.results[actorId].total}` : 'awaiting roll'}`).join(' · ')}`,
     inline: false,
