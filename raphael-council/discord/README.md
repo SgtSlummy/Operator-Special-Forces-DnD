@@ -184,4 +184,17 @@ Discord layout constraints are part of this contract: message action rows contai
 
 The public card stays readable at a glance; private clues, unresolved player intent, and DM rulings stay in their respective projections.
 
+```text
+PLAYER · private campaign feed                 DM · master thread
+┌ Rowan’s visible facts ───────────────┐       ┌ Full campaign state ────────────┐
+│ Your clue: loose stone                 │       │ Raphael cue detail               │
+│ Your roll: awaiting DM ruling          │       │ Rowan’s private action            │
+│ [Roll required die] [Share information]│       │ Check results · pending rulings  │
+│ [Options] [Refresh private feed]       │       │ [Rule pending checks]             │
+└───────────────────────────────────────┘       │ 12 visible · 1 action · 1 check │
+                                                └──────────────────────────────────┘
+```
+
+The player card is ephemeral and owner-scoped. The DM card is ephemeral and contains the complete adjudication context; neither projection changes what the public channel is allowed to reveal.
+
 The route is an address only; the adapter re-authorizes the interaction and campaign on every click. Unknown campaigns and unauthorized viewers receive a private acknowledgement without reading or projecting feed state.
