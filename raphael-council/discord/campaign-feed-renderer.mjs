@@ -30,6 +30,7 @@ export function renderCampaignFeed(feed, { viewer = AUDIENCES.PARTY, title = 'Ca
   ];
   if (viewer === AUDIENCES.DM && pending.length) components.push({ type: 1, components: [{ type: 2, style: 3, custom_id: `campaign:rule:${feed.campaignId}:${feed.revision}`, label: 'Rule pending checks' }] });
   return {
+    allowed_mentions: { parse: [] },
     embeds: [{ title, description: `Chapter: ${feed.chapterId} · Revision ${feed.revision}${feed.paused ? ' · Paused' : ''}`, fields, footer: { text: `${events.length} visible events · ${pending.length} pending checks · ${pendingIntents} pending actions · ${pendingPurchases} pending purchases` } }],
     components,
   };
