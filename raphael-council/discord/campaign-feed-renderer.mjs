@@ -7,7 +7,7 @@ export function renderCampaignFeed(feed, { viewer = AUDIENCES.PARTY, title = 'Ca
   const pending = [...feed.checks.values()].filter(check => check.status === 'pending' || check.status === 'awaiting_dm');
   const mapField = { name: 'Known map names', value: [...feed.mapNames.values()].filter(name => name !== 'seed').join(' · ') || 'Briarhaven', inline: false };
   const encounter = feed.encounter;
-  const encounterField = encounter ? { name: encounter.enemies.length ? 'Encounter' : 'Ability check', value: `${encounter.players.join(' · ') || 'No players'}${encounter.enemies.length ? ` vs ${encounter.enemies.join(' · ')}` : ` · ${encounter.abilityCheck || 'Awaiting check'}`}`, inline: false } : null;
+  const encounterField = encounter ? { name: encounter.enemies.length ? `Encounter · Round ${encounter.round}` : 'Ability check', value: `${encounter.players.join(' · ') || 'No players'}${encounter.enemies.length ? ` vs ${encounter.enemies.join(' · ')}` : ` · ${encounter.abilityCheck || 'Awaiting check'}`}${encounter.activeActor ? ` · ${encounter.activeActor}'s turn` : ''}`, inline: false } : null;
   const shopField = feed.shop ? { name: `Shop · ${feed.shop.name}`, value: feed.shop.inventory.map(item => `${item.name}${item.price !== undefined ? ` · ${item.price}` : ''}`).join(' · ') || 'No visible inventory', inline: false } : null;
   const fields = [mapField, ...(encounterField ? [encounterField] : []), ...(shopField ? [shopField] : [])].concat(pending.map(check => ({
     name: `Check · ${check.skill || check.ability}`,

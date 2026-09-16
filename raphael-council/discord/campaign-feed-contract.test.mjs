@@ -64,8 +64,9 @@ test('natural-language intent acknowledges publicly while preserving exact text 
 
 test('encounter state supports combat or an ability-check mini display', () => {
   let feed = createCampaignFeed({ campaignId: 'demo' });
-  feed = setEncounter(feed, { players: ['p1', 'p2'], enemies: ['Ash Warden'] });
+  feed = setEncounter(feed, { players: ['p1', 'p2'], enemies: ['Ash Warden'], round: 2, activeActor: 'p1' });
   assert.deepEqual(feed.encounter.enemies, ['Ash Warden']);
+  assert.equal(feed.encounter.round, 2); assert.equal(feed.encounter.activeActor, 'p1');
   feed = setEncounter(feed, { players: ['p1', 'p2'], abilityCheck: 'Perception' });
   assert.equal(feed.encounter.abilityCheck, 'Perception'); assert.deepEqual(feed.encounter.enemies, []);
 });

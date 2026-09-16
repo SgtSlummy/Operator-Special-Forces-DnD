@@ -69,10 +69,12 @@ export function resolveIntent(feed, { requestId, actorId = AUDIENCES.DM, text, e
   next.events.push(event); return { feed: next, accepted: true, event: clone(event) };
 }
 
-export function setEncounter(feed, { players = [], enemies = [], abilityCheck = null }) {
+export function setEncounter(feed, { players = [], enemies = [], abilityCheck = null, round = 0, activeActor = null }) {
   if (!Array.isArray(players) || !Array.isArray(enemies) || players.some(value => typeof value !== 'string') || enemies.some(value => typeof value !== 'string')) throw new Error('Encounter names must be text arrays.');
   if (abilityCheck !== null) assertText(abilityCheck, 'abilityCheck');
-  const next = clone(feed); next.encounter = { players: [...players], enemies: [...enemies], ...(abilityCheck ? { abilityCheck } : {}) }; next.revision += 1; return next;
+  if (!Number.isSafeInteger(round) || round < 0) throw new Error('round must be a non-negative integer.');
+  if (activeActor !== null) assertText(activeActor, 'activeActor');
+  const next = clone(feed); next.encounter = { players: [...players], enemies: [...enemies], round, ...(activeActor ? { activeActor } : {}), ...(abilityCheck ? { abilityCheck } : {}) }; next.revision += 1; return next;
 }
 
 export function setShop(feed, { shopId, name, inventory = [] }) {
