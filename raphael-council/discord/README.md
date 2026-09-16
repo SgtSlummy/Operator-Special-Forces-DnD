@@ -167,4 +167,21 @@ Every state-changing callback re-reads the feed and compares the submitted revis
 
 Discord layout constraints are part of this contract: message action rows contain buttons only, natural-language text is collected in a modal, and every custom ID stays within Discord's 100-character limit. Long-lived state belongs in the feed store rather than in a custom ID.
 
+### Public embed preview
+
+```text
+┌ Campaign feed · Chapter: opening · Revision 12 ───────────────┐
+│ Known map names     Briarhaven · Watchtower                   │
+│ Encounter · Round 2  Rowan · Mira vs cellar guardian          │
+│ Check · Wisdom       Wisdom (Perception) · 1d20               │
+│ Action feed          Rowan · player                           │
+│                      I pause at the doorway and listen.       │
+│                      Raphael · system                         │
+│                      A secret is nearby.                      │
+│  [Roll required die] [Options] [Tell Raphael what you do]     │
+└ 8 visible events · 1 pending check · 0 pending actions ───────┘
+```
+
+The public card stays readable at a glance; private clues, unresolved player intent, and DM rulings stay in their respective projections.
+
 The route is an address only; the adapter re-authorizes the interaction and campaign on every click. Unknown campaigns and unauthorized viewers receive a private acknowledgement without reading or projecting feed state.
