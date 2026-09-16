@@ -81,6 +81,15 @@ export function setShop(feed, { shopId, name, inventory = [] }) {
   const next = clone(feed); next.shop = { shopId, name, inventory: inventory.map(item => ({ id: item.id, name: item.name, ...(item.price !== undefined ? { price: item.price } : {}) })) }; next.revision += 1; return next;
 }
 
+export function requestPurchase(feed, { requestId, actorId, itemId, text }) {
+  assertText(requestId, 'requestId'); assertText(actorId, 'actorId'); assertText(itemId, 'itemId'); assertText(text, 'text');
+  if (!feed.shop || !feed.shop.inventory.some(item => item.id === itemId)) return { feed, accepted: false, reason: 'ITEM_UNAVAILABLE' };
+  if (feed.events.some(event => event.resolution?.kind === 'purchase-request' && event.resolution.requestId === requestId)) return { feed, accepted: false, reason: 'DUPLICATE' };
+  const next = clone(feed); next.revision += 1; next.sequence += 1;
+  const event = { id: `${next.campaignId}:event:${next.sequence}`, sequence: next.sequence, campaignId: next.campaignId, chapterId: next.chapterId, actorId, audience: AUDIENCES.DM, playerId: actorId, text, resolution: { kind: 'purchase-request', requestId, itemId, status: 'pending' }, source: 'player' };
+  next.events.push(event); return { feed: next, accepted: true, event: clone(event) };
+}
+
 export function shareFact(feed, actorId, factId) {
   assertText(actorId, 'actorId'); assertText(factId, 'factId');
   const next = clone(feed); const fact = next.facts.find(value => value.id === factId);

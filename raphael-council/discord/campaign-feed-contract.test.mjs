@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, resolveIntent, ruleCheck, setEncounter, setShop, shareFact, submitIntent } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, requestPurchase, resolveIntent, ruleCheck, setEncounter, setShop, shareFact, submitIntent } from './campaign-feed-contract.mjs';
 
 const base = () => appendEvent(createCampaignFeed({ campaignId: 'silent-beacon' }), { actorId: 'dm', text: 'Only Briarhaven is named.', source: 'system' });
 
@@ -73,4 +73,11 @@ test('encounter state supports combat or an ability-check mini display', () => {
 test('shop state keeps visible inventory bounded for the shop template', () => {
   const feed = setShop(createCampaignFeed({ campaignId: 'demo' }), { shopId: 'briar-apothecary', name: 'Briar Apothecary', inventory: [{ id: 'potion', name: 'Healing Draught', price: 50 }] });
   assert.equal(feed.shop.name, 'Briar Apothecary'); assert.equal(feed.shop.inventory[0].price, 50);
+});
+
+test('shop purchase requests stay DM-private and deduplicate', () => {
+  let feed = setShop(createCampaignFeed({ campaignId: 'demo' }), { shopId: 'shop', name: 'Briar Apothecary', inventory: [{ id: 'potion', name: 'Healing Draught' }] });
+  const purchase = requestPurchase(feed, { requestId: 'buy-1', actorId: 'p1', itemId: 'potion', text: 'I buy the healing draught.' });
+  assert.equal(purchase.accepted, true); assert.equal(projectFeed(purchase.feed).length, 0); assert.equal(projectFeed(purchase.feed, AUDIENCES.DM).at(-1).text, 'I buy the healing draught.');
+  assert.equal(requestPurchase(purchase.feed, { requestId: 'buy-1', actorId: 'p1', itemId: 'potion', text: 'again' }).reason, 'DUPLICATE');
 });
