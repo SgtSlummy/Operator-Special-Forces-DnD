@@ -10,7 +10,7 @@ export function renderCampaignFeed(feed, { viewer = AUDIENCES.PARTY, title = 'Ca
     name: `Check · ${check.skill || check.ability}`,
     value: `${check.ability}${check.skill ? ` (${check.skill})` : ''} · ${check.count}d${check.sides}${Object.values(check.modifiers || {}).length ? ` · modifiers ${JSON.stringify(check.modifiers)}` : ''}\n${check.actorIds.map(actorId => `${actorId}: ${check.results[actorId] ? `rolled ${check.results[actorId].total}` : 'awaiting roll'}`).join(' · ')}`,
     inline: false,
-  })).concat(events.slice(-12).map(event => ({
+  })), ...events.slice(-12).map(event => ({
     name: `${event.actorId} · ${event.source}`,
     value: limit(event.text),
     inline: false,
