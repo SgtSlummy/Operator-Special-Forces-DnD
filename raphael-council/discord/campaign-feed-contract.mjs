@@ -37,6 +37,16 @@ export function discoverMapName(feed, { actorId, placeId, name }) {
   next.events.push(event); return { feed: next, changed: true, event: clone(event) };
 }
 
+export function publishCue(feed, { cueId, hint, detail }) {
+  assertText(cueId, 'cueId'); assertText(hint, 'hint'); assertText(detail, 'detail');
+  if (feed.events.some(event => event.resolution?.cueId === cueId)) return { feed, changed: false };
+  const next = clone(feed); next.sequence += 1; next.revision += 1;
+  const partyEvent = { id: `${next.campaignId}:event:${next.sequence}`, sequence: next.sequence, campaignId: next.campaignId, chapterId: next.chapterId, actorId: 'Raphael', audience: AUDIENCES.PARTY, text: hint, resolution: { kind: 'cue', cueId }, source: 'raphael' };
+  next.events.push(partyEvent); next.sequence += 1;
+  next.events.push({ id: `${next.campaignId}:event:${next.sequence}`, sequence: next.sequence, campaignId: next.campaignId, chapterId: next.chapterId, actorId: 'Raphael', audience: AUDIENCES.DM, text: detail, resolution: { kind: 'cue-detail', cueId }, source: 'raphael' });
+  return { feed: next, changed: true, event: clone(partyEvent) };
+}
+
 export function shareFact(feed, actorId, factId) {
   assertText(actorId, 'actorId'); assertText(factId, 'factId');
   const next = clone(feed); const fact = next.facts.find(value => value.id === factId);

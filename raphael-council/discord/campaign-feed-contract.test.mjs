@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, recordRoll, requestCheck, ruleCheck, shareFact } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, ruleCheck, shareFact } from './campaign-feed-contract.mjs';
 
 const base = () => appendEvent(createCampaignFeed({ campaignId: 'silent-beacon' }), { actorId: 'dm', text: 'Only Briarhaven is named.', source: 'system' });
 
@@ -42,4 +42,12 @@ test('map discovery reveals one place and emits a party event once', () => {
   assert.equal(first.changed, true); assert.equal(first.feed.mapNames.get('watchtower'), 'Old Watchtower');
   const replay = discoverMapName(first.feed, { actorId: 'p2', placeId: 'watchtower', name: 'Old Watchtower' });
   assert.equal(replay.changed, false); assert.equal(first.feed.events.at(-1).audience, AUDIENCES.PARTY);
+});
+
+test('Raphael cues separate the public hint from DM detail and deduplicate', () => {
+  let feed = createCampaignFeed({ campaignId: 'demo' });
+  const cue = publishCue(feed, { cueId: 'room-secret', hint: 'Raphael senses a secret in this room.', detail: 'The loose stone hides a passage behind the north shelf.' });
+  assert.equal(projectFeed(cue.feed).at(-1).text, 'Raphael senses a secret in this room.');
+  assert.equal(projectFeed(cue.feed, AUDIENCES.DM).at(-1).text, 'The loose stone hides a passage behind the north shelf.');
+  assert.equal(publishCue(cue.feed, { cueId: 'room-secret', hint: 'changed', detail: 'changed' }).changed, false);
 });
