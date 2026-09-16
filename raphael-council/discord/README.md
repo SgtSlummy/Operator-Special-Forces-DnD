@@ -133,3 +133,9 @@ Share [DISCORD_PLAYER_GUIDE.md](../../DISCORD_PLAYER_GUIDE.md) and [PLAYER_WORLD
 ```powershell
 node --test discord/campaign-feed-contract.test.mjs discord/campaign-feed-renderer.test.mjs
 ```
+### Live campaign-feed routes
+
+- `campaign:open:<campaign>` opens the public party projection.
+- `campaign:private:<campaign>` opens the requesting player's ephemeral projection.
+- A DM-scoped viewer receives the DM projection ephemerally, including private cue details and pending queues.
+- Private payloads include a `Refresh private feed` control that reuses the private route.
