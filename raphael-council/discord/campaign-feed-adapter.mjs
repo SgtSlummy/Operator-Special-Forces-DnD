@@ -124,7 +124,8 @@ export function createCampaignFeedAdapter({ readFeed, writeFeed, authorize, tran
       return true;
     }
     const viewer = scope.isDm ? AUDIENCES.DM : (parsed.privateView ? viewerFor(scope) : AUDIENCES.PARTY);
-    const payload = render(feed, { viewer, title: scope.title || 'Campaign feed' });
+    const title = scope.title || (scope.isDm ? 'DM master thread' : parsed.privateView ? 'Private campaign feed' : 'Campaign feed');
+    const payload = render(feed, { viewer, title });
     if (scope.isDm || parsed.privateView) payload.flags = (payload.flags || 0) | 64;
     if (parsed.action === 'open' || parsed.action === 'private') await transport.respond(interaction.id, interaction.token, { type: 4, data: payload });
     else await transport.edit(interaction.application_id, interaction.token, payload);
