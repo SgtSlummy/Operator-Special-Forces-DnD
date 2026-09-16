@@ -75,6 +75,12 @@ export function setEncounter(feed, { players = [], enemies = [], abilityCheck = 
   const next = clone(feed); next.encounter = { players: [...players], enemies: [...enemies], ...(abilityCheck ? { abilityCheck } : {}) }; next.revision += 1; return next;
 }
 
+export function setShop(feed, { shopId, name, inventory = [] }) {
+  assertText(shopId, 'shopId'); assertText(name, 'name');
+  if (!Array.isArray(inventory) || inventory.some(item => !item || typeof item.id !== 'string' || typeof item.name !== 'string')) throw new Error('Shop inventory must contain named items.');
+  const next = clone(feed); next.shop = { shopId, name, inventory: inventory.map(item => ({ id: item.id, name: item.name, ...(item.price !== undefined ? { price: item.price } : {}) })) }; next.revision += 1; return next;
+}
+
 export function shareFact(feed, actorId, factId) {
   assertText(actorId, 'actorId'); assertText(factId, 'factId');
   const next = clone(feed); const fact = next.facts.find(value => value.id === factId);

@@ -8,7 +8,8 @@ export function renderCampaignFeed(feed, { viewer = AUDIENCES.PARTY, title = 'Ca
   const mapField = { name: 'Known map names', value: [...feed.mapNames.values()].filter(name => name !== 'seed').join(' · ') || 'Briarhaven', inline: false };
   const encounter = feed.encounter;
   const encounterField = encounter ? { name: encounter.enemies.length ? 'Encounter' : 'Ability check', value: `${encounter.players.join(' · ') || 'No players'}${encounter.enemies.length ? ` vs ${encounter.enemies.join(' · ')}` : ` · ${encounter.abilityCheck || 'Awaiting check'}`}`, inline: false } : null;
-  const fields = [mapField, ...(encounterField ? [encounterField] : [])].concat(pending.map(check => ({
+  const shopField = feed.shop ? { name: `Shop · ${feed.shop.name}`, value: feed.shop.inventory.map(item => `${item.name}${item.price !== undefined ? ` · ${item.price}` : ''}`).join(' · ') || 'No visible inventory', inline: false } : null;
+  const fields = [mapField, ...(encounterField ? [encounterField] : []), ...(shopField ? [shopField] : [])].concat(pending.map(check => ({
     name: `Check · ${check.skill || check.ability}`,
     value: `${check.ability}${check.skill ? ` (${check.skill})` : ''} · ${check.count}d${check.sides}${Object.values(check.modifiers || {}).length ? ` · modifiers ${JSON.stringify(check.modifiers)}` : ''}\n${check.actorIds.map(actorId => `${actorId}: ${check.results[actorId] ? `rolled ${check.results[actorId].total}` : 'awaiting roll'}`).join(' · ')}`,
     inline: false,

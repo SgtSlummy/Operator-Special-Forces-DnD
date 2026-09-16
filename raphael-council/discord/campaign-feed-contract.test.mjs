@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, resolveIntent, ruleCheck, setEncounter, shareFact, submitIntent } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, discoverMapName, pauseFeed, projectFeed, publishCue, recordRoll, requestCheck, resolveIntent, ruleCheck, setEncounter, setShop, shareFact, submitIntent } from './campaign-feed-contract.mjs';
 
 const base = () => appendEvent(createCampaignFeed({ campaignId: 'silent-beacon' }), { actorId: 'dm', text: 'Only Briarhaven is named.', source: 'system' });
 
@@ -68,4 +68,9 @@ test('encounter state supports combat or an ability-check mini display', () => {
   assert.deepEqual(feed.encounter.enemies, ['Ash Warden']);
   feed = setEncounter(feed, { players: ['p1', 'p2'], abilityCheck: 'Perception' });
   assert.equal(feed.encounter.abilityCheck, 'Perception'); assert.deepEqual(feed.encounter.enemies, []);
+});
+
+test('shop state keeps visible inventory bounded for the shop template', () => {
+  const feed = setShop(createCampaignFeed({ campaignId: 'demo' }), { shopId: 'briar-apothecary', name: 'Briar Apothecary', inventory: [{ id: 'potion', name: 'Healing Draught', price: 50 }] });
+  assert.equal(feed.shop.name, 'Briar Apothecary'); assert.equal(feed.shop.inventory[0].price, 50);
 });
