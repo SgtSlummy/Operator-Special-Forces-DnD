@@ -155,4 +155,14 @@ The DM view is the master thread projection. It retains the full action feed, pr
 | `campaign:refresh:<campaign>` | Public party feed refresh | Message edit |
 | `campaign:private:<campaign>` from a DM-scoped viewer | DM master feed | Ephemeral response |
 
+Action controls use the same owner- and revision-bound pattern:
+
+- `campaign:say:<campaign>:<revision>` opens the natural-language modal; its `:submit` callback stores the player intent privately and posts only a short party acknowledgement.
+- `campaign:roll:<campaign>:<revision>` selects the requesting player's pending check automatically and records the configured dice result.
+- `campaign:share:<campaign>:<revision>` publishes that player's next undisclosed fact.
+- `campaign:options:<campaign>:<revision>` opens the compact private expansion panel.
+- `campaign:rule:<campaign>:<revision>` opens the DM ruling modal for the pending check; its `:submit` callback publishes the ruling to the party feed.
+
+Every state-changing callback re-reads the feed and compares the submitted revision before writing. A stale callback receives a private explanation and cannot consume a roll, fact, intent, or ruling.
+
 The route is an address only; the adapter re-authorizes the interaction and campaign on every click. Unknown campaigns and unauthorized viewers receive a private acknowledgement without reading or projecting feed state.
