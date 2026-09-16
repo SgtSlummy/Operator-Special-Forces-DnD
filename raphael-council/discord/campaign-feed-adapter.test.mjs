@@ -46,6 +46,16 @@ test('campaign feed modal submission stores the private intent and acknowledges 
   assert.equal(calls[0][2].data.flags, 64);
 });
 
+test('campaign feed roll button auto-selects the pending check dice', async () => {
+  const calls = []; let feed = createCampaignFeed({ campaignId: 'briar' });
+  const requested = (await import('./campaign-feed-contract.mjs')).requestCheck(feed, { requestId: 'door', actorIds: ['p1'], ability: 'Wisdom', skill: 'Perception', count: 1, sides: 20 });
+  feed = requested.feed;
+  const handler = createCampaignFeedAdapter({ readFeed: async () => feed, writeFeed: async next => { feed = next; }, roll: () => [17], authorize: async (_interaction, route) => ({ campaignId: route.campaignId, actorId: 'p1' }), transport: { respond: async (...args) => calls.push(args), edit: async () => {} } });
+  await handler({ id: 'roll-1', token: 't1', data: { custom_id: `campaign:roll:briar:${feed.revision}` } });
+  assert.equal(feed.checks.get('door').results.p1.total, 17);
+  assert.match(calls[0][2].data.content, /Wisdom \(Perception\)/);
+});
+
 test('campaign feed adapter uses edit for refresh and does not handle unrelated controls', async () => {
   const calls = []; const feed = createCampaignFeed({ campaignId: 'briar' });
   const handler = createCampaignFeedAdapter({ readFeed: async () => feed, authorize: async () => ({ campaignId: 'briar', actorId: 'p1' }), transport: { respond: async () => {}, edit: async (...args) => calls.push(args) } });
