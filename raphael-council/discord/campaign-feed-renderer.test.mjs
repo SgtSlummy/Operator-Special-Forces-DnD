@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { AUDIENCES, appendEvent, createCampaignFeed, recordRoll, requestCheck } from './campaign-feed-contract.mjs';
+import { AUDIENCES, addFact, appendEvent, createCampaignFeed, recordRoll, requestCheck } from './campaign-feed-contract.mjs';
 import { renderCampaignFeed } from './campaign-feed-renderer.mjs';
 
 test('party rendering keeps the interaction surface compact and natural-language first', () => {
@@ -56,4 +56,13 @@ test('feed footer summarizes pending DM queues without exposing private text', (
   feed = appendEvent(feed, { actorId: 'p1', audience: AUDIENCES.DM, playerId: 'p1', text: 'I inspect the lock.', resolution: { kind: 'intent', requestId: 'i1' } });
   const payload = renderCampaignFeed(feed);
   assert.match(payload.embeds[0].footer.text, /0 pending actions/);
+});
+
+test('private player feed offers sharing only for that player’s unshared facts', () => {
+  let feed = createCampaignFeed({ campaignId: 'demo' });
+  feed = addFact(feed, { id: 'fact-1', ownerId: 'p1', kind: 'clue', text: 'A loose stone.', sourceEventId: 'event-1' });
+  const player = renderCampaignFeed(feed, { viewer: 'p1' });
+  const other = renderCampaignFeed(feed, { viewer: 'p2' });
+  assert.equal(player.components[0].components.some(button => button.label === 'Share information'), true);
+  assert.equal(other.components[0].components.some(button => button.label === 'Share information'), false);
 });
